@@ -1,0 +1,64 @@
+{
+  "name": "vue-accessible-color-picker",
+  "version": "1.0.0-beta.1",
+  "license": "MIT",
+  "description": "Accessible color picker component for Vue.js",
+  "author": {
+    "name": "Philipp Rudloff",
+    "url": "https://kleinfreund.de"
+  },
+  "homepage": "https://github.com/kleinfreund/vue-accessible-color-picker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kleinfreund/vue-accessible-color-picker"
+  },
+  "bugs": {
+    "url": "https://github.com/kleinfreund/vue-accessible-color-picker/issues"
+  },
+  "keywords": [
+    "vue",
+    "accessible",
+    "color",
+    "picker",
+    "component",
+    "hsl",
+    "hwb"
+  ],
+  "main": "dist/vue-accessible-color-picker.js",
+  "files": [
+    "dist/vue-accessible-color-picker.js",
+    "dist/vue-accessible-color-picker-unstyled.js"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run lint && npm run test",
+    "build": "NODE_ENV=production rollup --config",
+    "start": "NODE_ENV=development rollup --config --watch",
+    "test": "jest",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --ext .js,.vue src --fix"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@rollup/plugin-babel": "^5.0.0",
+    "@types/jest": "^25.2.1",
+    "@vue/test-utils": "^1.0.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^26.0.1",
+    "eslint": "^7.0.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "rollup": "^2.9.1",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-vue": "^5.1.6",
+    "standard": "^14.3.4",
+    "vue": "^2.6.11",
+    "vue-jest": "^3.0.5",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
