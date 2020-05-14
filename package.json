@@ -10,7 +10,7 @@
   "homepage": "https://github.com/kleinfreund/vue-accessible-color-picker",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kleinfreund/vue-accessible-color-picker"
+    "url": "https://github.com/kleinfreund/vue-accessible-color-picker.git"
   },
   "bugs": {
     "url": "https://github.com/kleinfreund/vue-accessible-color-picker/issues"
