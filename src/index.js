@@ -14,16 +14,10 @@ const plugin = {
   install,
 }
 
-let GlobalVue = null
-
-if (typeof window !== 'undefined') {
-  GlobalVue = window.Vue
-} else if (typeof global !== 'undefined') {
-  GlobalVue = global.Vue
-}
-
-if (GlobalVue) {
-  GlobalVue.use(plugin)
+if (typeof window !== 'undefined' && window.Vue) {
+  window.Vue.use(plugin)
+} else if (typeof global !== 'undefined' && global.Vue) {
+  global.Vue.use(plugin)
 }
 
 export default plugin
