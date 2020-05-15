@@ -239,7 +239,3 @@ The color picker consists of the following main elements:
 - **Switch format button**:
 
   Cycles through the available color formats (currently HEX, HSL, HWB, and RGB).
-
-## Roadmap
-
-- **Feature**: Add Lab and LCH formats (see [CSS Color Module Level 4: Device-independent Colors: Lab and LCH](https://www.w3.org/TR/css-color-4/#lab-colors))
