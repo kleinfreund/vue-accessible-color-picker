@@ -10,8 +10,8 @@ Links:
 - [**npmjs.com**/package/vue-accessible-color-picker](https://www.npmjs.com/package/vue-accessible-color-picker)
   - [on BundlePhobia](https://bundlephobia.com/result?p=vue-accessible-color-picker)
 - [**github.com**/kleinfreund/vue-accessible-color-picker](https://github.com/kleinfreund/vue-accessible-color-picker)
-  - [Code of conduct](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CODE_OF_CONDUCT.md)
-  - [Contributing guidelines](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CONTRIBUTING.md)
+  - [code of conduct](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CODE_OF_CONDUCT.md)
+  - [contributing guidelines](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CONTRIBUTING.md)
 
 ## Contents
 
@@ -41,20 +41,52 @@ npm install vue-accessible-color-picker
 
 ## Usage
 
-In your Vue project’s `main.js` (i.e. where you call `new Vue(…)`), import the `ColorPicker` component and register it with `Vue.use`.
+### Register component locally
+
+In a Vue single file component (SFC), import the `ColorPicker` component and register it via the `components` property on the Vue instance. You can then use it in the file’s `template` section.
+
+```html
+<template>
+  <ColorPicker />
+</template>
+
+<script>
+import { ColorPicker } from "vue-accessible-color-picker";
+
+export default {
+  components: {
+    ColorPicker,
+  },
+}
+</script>
+```
+
+**Unstyled component**:
+
+If you want to use the unstyled variant of the component, you need to adjust the import statement slightly:
 
 ```js
-import ColorPicker from "vue-accessible-color-picker";
+import { ColorPicker } from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
+```
 
-Vue.use(ColorPicker);
+### Register component globally
+
+Registering a component globally allows you to use it in all Vue templates without the need to register it via the `components` property first.
+
+In your Vue project’s `main.js` (i.e. where you call `new Vue(…)`), import the `ColorPicker` plugin and register it with `Vue.use`.
+
+```js
+import ColorPickerPlugin from "vue-accessible-color-picker";
+
+Vue.use(ColorPickerPlugin);
 ```
 
 **Unstyled component**:
 
 ```js
-import ColorPicker from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
+import ColorPickerPlugin from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
 
-Vue.use(ColorPicker);
+Vue.use(ColorPickerPlugin);
 ```
 
 ## Documentation
@@ -90,7 +122,7 @@ Vue.use(ColorPicker);
   export default {
     data() {
       return {
-        color: 'hsl(270 100% 50% / 0.8)'
+        color: 'hsl(270 100% 50% / 0.8)',
       }
     },
 
@@ -98,7 +130,7 @@ Vue.use(ColorPicker);
       updateColor (eventData) {
         this.color = eventData.cssColor
       }
-    }
+    },
   }
   </script>
   ```
@@ -139,12 +171,12 @@ Vue.use(ColorPicker);
   {
     colors: {
       hex: string,
-      hsl: object
+      hsl: object,
       hsv: object,
       hwb: object,
-      rgb: object
+      rgb: object,
     },
-    cssColor: string
+    cssColor: string,
   }
   ```
 
@@ -161,7 +193,7 @@ Vue.use(ColorPicker);
       updateColor (eventData) {
         console.log(eventData)
       }
-    }
+    },
   }
   </script>
   ```
