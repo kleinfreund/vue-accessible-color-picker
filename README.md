@@ -71,22 +71,22 @@ import { ColorPicker } from "vue-accessible-color-picker/dist/vue-accessible-col
 
 ### Register component globally
 
-Registering a component globally allows you to use it in all Vue templates without the need to register it via the `components` property first.
+Registering a component globally allows you to use it in all Vue templates without the need to register it via an SFC’s `components` property first.
 
-In your Vue project’s `main.js` (i.e. where you call `new Vue(…)`), import the `ColorPicker` plugin and register it with `Vue.use`.
+In your Vue project’s `main.js` (i.e. where you call `new Vue(…)`), import the `ColorPicker` component and register it with `Vue.component`.
 
 ```js
-import ColorPickerPlugin from "vue-accessible-color-picker";
+import { ColorPickerPlugin } from "vue-accessible-color-picker";
 
-Vue.use(ColorPickerPlugin);
+Vue.component('ColorPickerPlugin', ColorPickerPlugin)
 ```
 
 **Unstyled component**:
 
 ```js
-import ColorPickerPlugin from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
+import { ColorPickerPlugin } from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
 
-Vue.use(ColorPickerPlugin);
+Vue.component('ColorPickerPlugin', ColorPickerPlugin)
 ```
 
 ## Documentation
