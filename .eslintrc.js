@@ -5,6 +5,6 @@ module.exports = {
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
   },
-  extends: ['plugin:vue/strongly-recommended', 'standard'],
+  extends: ['plugin:vue/recommended', 'standard'],
   plugins: ['vue'],
 }

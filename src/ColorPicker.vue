@@ -1,8 +1,8 @@
 <template>
   <div class="vacp-color-picker">
     <div
-      ref="colorSpace"
       v-if="showColorSpace"
+      ref="colorSpace"
       class="vacp-color-space"
       @mousedown="startMovingThumb"
       @touchstart="startMovingThumb"
