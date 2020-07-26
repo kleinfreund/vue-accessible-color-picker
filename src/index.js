@@ -14,9 +14,9 @@ const plugin = {
   install,
 }
 
-if (typeof window !== 'undefined' && window.Vue) {
+if (typeof window !== 'undefined' && window.Vue && typeof window.Vue.use === 'function') {
   window.Vue.use(plugin)
-} else if (typeof global !== 'undefined' && global.Vue) {
+} else if (typeof global !== 'undefined' && global.Vue && typeof global.Vue.use === 'function') {
   global.Vue.use(plugin)
 }
 
