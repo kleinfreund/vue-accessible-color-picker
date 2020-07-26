@@ -51,7 +51,7 @@ In a Vue single file component (SFC), import the `ColorPicker` component and reg
 </template>
 
 <script>
-import { ColorPicker } from "vue-accessible-color-picker";
+import { ColorPicker } from 'vue-accessible-color-picker';
 
 export default {
   components: {
@@ -66,7 +66,7 @@ export default {
 If you want to use the unstyled variant of the component, you need to adjust the import statement slightly:
 
 ```js
-import { ColorPicker } from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
+import { ColorPicker } from 'vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled';
 ```
 
 ### Register component globally
@@ -76,7 +76,7 @@ Registering a component globally allows you to use it in all Vue templates witho
 In your Vue project’s `main.js` (i.e. where you call `new Vue(…)`), import the `ColorPicker` component and register it with `Vue.component`.
 
 ```js
-import { ColorPickerPlugin } from "vue-accessible-color-picker";
+import { ColorPickerPlugin } from 'vue-accessible-color-picker';
 
 Vue.component('ColorPickerPlugin', ColorPickerPlugin)
 ```
@@ -84,7 +84,7 @@ Vue.component('ColorPickerPlugin', ColorPickerPlugin)
 **Unstyled component**:
 
 ```js
-import { ColorPickerPlugin } from "vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled";
+import { ColorPickerPlugin } from 'vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled';
 
 Vue.component('ColorPickerPlugin', ColorPickerPlugin)
 ```
