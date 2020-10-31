@@ -1,7 +1,6 @@
 <template>
   <div class="vacp-color-picker">
     <div
-      v-if="showColorSpace"
       ref="colorSpace"
       class="vacp-color-space"
       @mousedown="startMovingThumb"
@@ -346,7 +345,6 @@ export default {
 
   data () {
     return {
-      showColorSpace: true,
       pointerOriginatedInColorSpace: false,
       /** @type {VisibleColorFormats} */ activeFormat: 'rgb',
       /** @type {Colors} */ colors: {
