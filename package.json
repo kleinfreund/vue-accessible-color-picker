@@ -37,7 +37,7 @@
     "start": "NODE_ENV=development rollup --config --watch",
     "test": "jest",
     "lint": "eslint --ext .js,.vue src",
-    "lint:fix": "eslint --ext .js,.vue src --fix",
+    "lint:fix": "npm run lint -- --fix",
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
