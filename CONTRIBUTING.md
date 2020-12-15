@@ -45,4 +45,5 @@ fix: fixes a bug with color conversions to RGB
 ## Pull request guidelines
 
 - In case of submitting a contribution for a new feature, please explain briefly why you think the feature is necessary. Ideally, an issue for a feature request was submitted and approved beforehand, but this is not a requirement.
-- Please provide tests for feature of bug fix contributions.
+- In case of submitting a contribution that changes or introduces a user interface, ensure that the user interface remains accessible: It must be navigable using either a pointer device (e.g. mouse, track pad), a keyboard, or a screen reader. This can be tested manually and/or with the help of automated accessibility checkers such as axe.
+- Please provide unit tests for feature or bug fix contributions.
