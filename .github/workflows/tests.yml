@@ -3,20 +3,20 @@ name: tests
 on: [push]
 
 jobs:
-  test:
+  tests:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
-    name: Test (Node 12, Ubuntu)
+    name: Unit tests (Node 14, Ubuntu)
 
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js 12.x
+      - name: Setup Node.js 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 14.x
 
       - name: Install
         run: npm ci
