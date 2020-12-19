@@ -22,12 +22,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            node_modules
+            **/node_modules
             dist
-          key: node_modules-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install
-        run: npm ci
+        run: npm install
 
       - name: Lint
         run: npm run lint
@@ -43,12 +43,20 @@ jobs:
   release-dry-run:
     needs: tests
 
-    name: Release
+    name: Release (dry-run)
 
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache node_modules directory
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+            dist
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Release (dry-run)
         env:
