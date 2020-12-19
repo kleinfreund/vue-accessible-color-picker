@@ -1,8 +1,11 @@
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+
 /**
  * Converts a HEX color string to an RGB color object.
  *
- * @param {string} hex
- * @returns {{ r: number, g: number, b: number, a: number }}
+ * @param {ColorHex} hex
+ * @returns {ColorRgb}
  */
 export default function convertHexToRgb (hex) {
   const hexWithoutHash = hex.replace(/^#/, '')

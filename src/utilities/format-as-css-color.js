@@ -1,8 +1,16 @@
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
+
 import { round } from './round.js'
 
+/** @type {{ [key in VisibleColorFormat]: (arg0: any) => string }} */
 const formatters = {
   /**
-   * @param {string} hex
+   * @param {ColorHex} hex
    * @returns {string}
    */
   hex (hex) {
@@ -10,7 +18,7 @@ const formatters = {
   },
 
   /**
-   * @param {{ h: number, s: number, l: number, a: number }} hsl
+   * @param {ColorHsl} hsl
    * @returns {string}
    */
   hsl (hsl) {
@@ -23,7 +31,7 @@ const formatters = {
   },
 
   /**
-   * @param {{ h: number, w: number, b: number, a: number }} hwb
+   * @param {ColorHwb} hwb
    * @returns {string}
    */
   hwb (hwb) {
@@ -36,7 +44,7 @@ const formatters = {
   },
 
   /**
-   * @param {{ r: number, g: number, b: number, a: number }} rgb
+   * @param {ColorRgb} rgb
    * @returns {string}
    */
   rgb (rgb) {
@@ -52,8 +60,8 @@ const formatters = {
 /**
  * Formats a given color object as a CSS color string.
  *
- * @param {string|object} color
- * @param {'hex' | 'hsl' | 'hwb' | 'rgb'} format
+ * @param {ColorHex | ColorHsl | ColorHwb | ColorRgb} color
+ * @param {VisibleColorFormat} format
   * @returns {string}
  */
 export function formatAsCssColor (color, format) {

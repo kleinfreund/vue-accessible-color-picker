@@ -25,9 +25,10 @@
     "hwb"
   ],
   "main": "dist/vue-accessible-color-picker.js",
+  "types": "types/index.d.ts",
   "files": [
-    "dist/vue-accessible-color-picker.js",
-    "dist/vue-accessible-color-picker-unstyled.js"
+    "dist/*.js",
+    "types/*.d.ts"
   ],
   "sideEffects": false,
   "scripts": {

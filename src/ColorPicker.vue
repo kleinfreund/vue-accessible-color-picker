@@ -303,6 +303,16 @@
 </template>
 
 <script>
+/** @typedef {import('../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorChannel} ColorChannel */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.Colors} Colors */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+
 import { clamp } from './utilities/clamp.js'
 import { colorsAreValueEqual } from './utilities/colors-are-value-equal.js'
 import { colorChannels } from './utilities/color-channels.js'
@@ -315,13 +325,14 @@ import { isValidHexColor } from './utilities/is-valid-hex-color.js'
 import { parseRgbColor } from './utilities/parse-rgb-color.js'
 
 const STEP_FACTOR = 10
-/** @type {SupportedColorFormats} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
+/** @type {SupportedColorFormat[]} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
 
 export default {
   name: 'ColorPicker',
 
   props: {
     color: {
+      /** @type {import('vue').PropType<ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
       type: [String, Object],
       required: false,
       default: null,
@@ -334,19 +345,20 @@ export default {
     },
 
     visibleFormats: {
+      /** @type {import('vue').PropType<Array<VisibleColorFormat>>} */
       type: Array,
       required: false,
-      default: () => ['hex', 'hsl', 'hwb', 'rgb'],
+      default: () => ALLOWED_VISIBLE_FORMATS,
       validator (visibleFormats) {
-        return visibleFormats.length > 0 && visibleFormats.every(format => ALLOWED_VISIBLE_FORMATS.includes(format))
+        return visibleFormats.length > 0 && visibleFormats.every((/** @type {any} */ format) => ALLOWED_VISIBLE_FORMATS.includes(format))
       },
     },
   },
 
   data () {
     return {
-      pointerOriginatedInColorSpace: false,
-      /** @type {VisibleColorFormats} */ activeFormat: 'rgb',
+      /** @type {boolean} */ pointerOriginatedInColorSpace: false,
+      /** @type {VisibleColorFormat} */ activeFormat: /** @type {VisibleColorFormat} */  ('rgb'),
       /** @type {Colors} */ colors: {
         hex: '#ffffffff',
         hsl: { h: 0, s: 0, l: 1, a: 1 },
@@ -358,13 +370,16 @@ export default {
   },
 
   watch: {
-    color (newColor, oldColor) {
+    /**
+     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb | null} newColor
+     */
+    color (newColor) {
       this.setColorValueFromProp(newColor)
     },
   },
 
   created () {
-    /** @type {SupportedColorFormats} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
+    /** @type {SupportedColorFormat} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
   },
 
   mounted () {
@@ -486,8 +501,8 @@ export default {
     },
 
     /**
-     * @param {SupportedColorFormats} format
-     * @param {ColorChannel?} channel
+     * @param {SupportedColorFormat} format
+     * @param {ColorChannel} [channel]
      * @returns {object | number | string}
      */
     getColorValue (format, channel = undefined) {
@@ -499,9 +514,9 @@ export default {
     },
 
     /**
-     * @param {object | string} value
-     * @param {SupportedColorFormats} format
-     * @param {ColorChannel?} channel
+     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} value
+     * @param {SupportedColorFormat} format
+     * @param {ColorChannel} [channel]
      */
     setColorValue (value, format, channel = undefined) {
       if (channel === undefined && !colorsAreValueEqual(value, this.colors[format])) {
@@ -519,13 +534,16 @@ export default {
       this.$emit('color-change', eventData)
     },
 
+    /**
+     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb | null} propValue
+     */
     setColorValueFromProp (propValue) {
       if (propValue === null) {
         return
       }
 
-      let value
-      let format
+      /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let value
+      /** @type {SupportedColorFormat} */ let format
       if (typeof propValue === 'string') {
         if (isValidHexColor(propValue)) {
           value = propValue
@@ -554,11 +572,11 @@ export default {
      * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc.
      * colors.
      *
-     * @param {SupportedColorFormats} sourceFormat
+     * @param {SupportedColorFormat} sourceFormat
      */
     reCalculateColors (sourceFormat) {
       const sourceColor = this.getColorValue(sourceFormat)
-      const targetFormats = this.supportedFormats.filter(format => format !== sourceFormat)
+      const targetFormats = this.supportedFormats.filter((/** @type {SupportedColorFormat} */ format) => format !== sourceFormat)
 
       // Make a copy of the color object to avoid writing to it multiple times before the calculations are done.
       // This is done to avoid Vue’s reactivity kicking in more than once.
@@ -599,11 +617,11 @@ export default {
 
     /**
      * @param {Event} event
-     * @param {VisibleColorFormats} format
-     * @param {ColorChannel?} channel
+     * @param {VisibleColorFormat} format
+     * @param {ColorChannel} [channel]
      */
     updateColorValue (event, format, channel = undefined) {
-      let color
+      /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let color
       if (format === 'hex') {
         if (!isValidHexColor(event.target.value)) {
           // hex color is definitely not value.
@@ -629,7 +647,7 @@ export default {
     },
 
     switchFormat () {
-      const activeFormatIndex = this.visibleFormats.findIndex(format => format === this.activeFormat)
+      const activeFormatIndex = this.visibleFormats.findIndex((/** @type {VisibleColorFormat} */ format) => format === this.activeFormat)
       const newFormatIndex = activeFormatIndex === this.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
       this.activeFormat = this.visibleFormats[newFormatIndex]
     },
@@ -637,7 +655,7 @@ export default {
     /**
      * Wrapper function. Converts a color channel’s value into its CSS value representation.
      *
-     * @param {VisibleColorFormats} format
+     * @param {'hsl' | 'hwb' | 'rgb'} format
      * @param {ColorChannel} channel
      * @returns {string}
      */
@@ -648,7 +666,7 @@ export default {
 
     /**
      * @param {Colors} colors
-     * @param {VisibleColorFormats} activeFormat
+     * @param {VisibleColorFormat} activeFormat
      * @returns {{ colors: Colors, cssColor: string }}
      */
     getEventData (colors, activeFormat) {
@@ -683,10 +701,10 @@ export default {
      * @param {Colors} colors
      */
     setCssProps (element, colors) {
-      element.style.setProperty('--vacp-hsl-h', colors.hsl.h)
-      element.style.setProperty('--vacp-hsl-s', colors.hsl.s)
-      element.style.setProperty('--vacp-hsl-l', colors.hsl.l)
-      element.style.setProperty('--vacp-hsl-a', colors.hsl.a)
+      element.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
+      element.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
+      element.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
+      element.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
 
       this.$refs.colorSpace.style = `
         position: relative;
@@ -706,55 +724,6 @@ export default {
     },
   },
 }
-
-/** @typedef {'hex' | 'hsl' | 'hwb' | 'rgb'} VisibleColorFormats */
-
-/** @typedef {'hex' | 'hsl' | 'hsv' | 'hwb' | 'rgb'} SupportedColorFormats */
-
-/** @typedef {'r' | 'g' | 'b' | 'h' | 's' | 'l' | 'v' | 'w'} ColorChannel */
-
-/**
- * @typedef {object} Colors
- * @property {ColorHex} hex
- * @property {ColorHsl} hsl
- * @property {ColorHsv} hsv
- * @property {ColorHwb} hwb
- * @property {ColorRgb} rgb
- */
-
-/** @typedef {string} ColorHex */
-
-/**
- * @typedef {object} ColorHsl
- * @property {number} h
- * @property {number} s
- * @property {number} l
- * @property {number} a
- */
-
-/**
- * @typedef {object} ColorHsv
- * @property {number} h
- * @property {number} s
- * @property {number} v
- * @property {number} a
- */
-
-/**
- * @typedef {object} ColorHwb
- * @property {number} h
- * @property {number} w
- * @property {number} b
- * @property {number} a
- */
-
-/**
- * @typedef {object} ColorRgb
- * @property {number} r
- * @property {number} g
- * @property {number} b
- * @property {number} a
- */
 </script>
 
 <style>

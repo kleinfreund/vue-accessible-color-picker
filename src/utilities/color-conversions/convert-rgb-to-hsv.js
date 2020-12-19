@@ -1,10 +1,13 @@
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+
 /**
  * Converts an RGB color object to an HSV color object.
  *
  * Source: https://en.m.wikipedia.org/wiki/HSL_and_HSV#RGB_to_HSL_and_HSV
  *
- * @param {{ r: number, g: number, b: number, a: number }} rgb
- * @returns {{ h: number, s: number, v: number, a: number }}
+ * @param {ColorRgb} rgb
+ * @returns {ColorHsv}
  */
 export default function convertRgbToHsv (rgb) {
   const min = Math.min(rgb.r, rgb.g, rgb.b)

@@ -1,3 +1,9 @@
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+
 /**
  * Checks whether two objects are value equal.
  *
@@ -6,8 +12,8 @@
  * @returns {boolean}
  */
 export function colorsAreValueEqual (colorA, colorB) {
-  if (colorA === colorB) {
-    return true
+  if (typeof colorA === 'string' || typeof colorB === 'string') {
+    return colorA === colorB
   }
 
   for (const channelA in colorA) {

@@ -1,8 +1,11 @@
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+
 /**
  * Converts an HSV color object to an HWB color object.
  *
- * @param {{ h: number, s: number, v: number, a: number }} hsv
- * @returns {{ h: number, w: number, b: number, a: number }}
+ * @param {ColorHsv} hsv
+ * @returns {ColorHwb}
  */
 export default function convertHsvToHwb (hsv) {
   return {

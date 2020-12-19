@@ -1,10 +1,12 @@
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+
 import { CssValues } from './css-values.js'
 
 /**
  * Parses an RGB color string into an RGB color object.
  *
  * @param {string} rgbColorString
- * @returns {{r: number, g: number, b: number, a: number}}
+ * @returns {ColorRgb}
  */
 export function parseRgbColor (rgbColorString) {
   // We only care about the bits between the parentheses of `rgb()` or `rgba()`, so let’s strip those off.

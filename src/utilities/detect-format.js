@@ -1,10 +1,12 @@
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
+
 /**
  * Lazy functions that returns the format of a given color object.
  *
  * Doesn’t handle invalid formats.
  *
  * @param {object} color
- * @returns {'hsl' | 'hsv' | 'hwb' | 'rgb'}
+ * @returns {SupportedColorFormat}
  */
 export function detectFormat (color) {
   if (Object.prototype.hasOwnProperty.call(color, 'r')) {

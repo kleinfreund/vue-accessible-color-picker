@@ -1,8 +1,11 @@
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+
 /**
  * Converts an RGB color object to an HWB color object.
  *
- * @param {{ r: number, g: number, b: number, a: number }} rgb
- * @returns {{ h: number, w: number, b: number, a: number }}
+ * @param {ColorRgb} rgb
+ * @returns {ColorHwb}
  */
 export default function convertRgbToHwb (rgb) {
   const min = Math.min(rgb.r, rgb.g, rgb.b)
