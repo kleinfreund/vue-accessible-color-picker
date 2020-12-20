@@ -7,7 +7,7 @@
  * @param {ColorRgb} rgb
  * @returns {ColorHex}
  */
-export default function convertRgbToHex (rgb) {
+export function convertRgbToHex (rgb) {
   const hexChannels = Object.values(rgb).map(channel => {
     const int = channel * 255
     const hex = Math.round(int).toString(16)

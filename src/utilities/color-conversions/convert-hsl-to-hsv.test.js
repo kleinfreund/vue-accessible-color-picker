@@ -1,4 +1,4 @@
-import convertHslToHsv from './convert-hsl-to-hsv.js'
+import { convertHslToHsv } from './convert-hsl-to-hsv.js'
 
 describe('convertHslToHsv', () => {
   test.each([

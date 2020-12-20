@@ -1,4 +1,4 @@
-import convertHexToRgb from './convert-hex-to-rgb.js'
+import { convertHexToRgb } from './convert-hex-to-rgb.js'
 
 describe('convertHexToRgb', () => {
   test.each([

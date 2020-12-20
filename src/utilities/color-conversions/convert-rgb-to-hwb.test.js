@@ -1,4 +1,4 @@
-import convertRgbToHwb from './convert-rgb-to-hwb.js'
+import { convertRgbToHwb } from './convert-rgb-to-hwb.js'
 
 describe('convertRgbToHwb', () => {
   test.each([

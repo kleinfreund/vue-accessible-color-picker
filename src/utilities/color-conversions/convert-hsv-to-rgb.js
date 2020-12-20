@@ -9,7 +9,7 @@
  * @param {ColorHsv} hsv
  * @returns {ColorRgb}
  */
-export default function convertHsvToRgb (hsv) {
+export function convertHsvToRgb (hsv) {
   return {
     r: fn(5, hsv),
     g: fn(3, hsv),

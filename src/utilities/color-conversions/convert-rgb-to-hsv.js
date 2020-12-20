@@ -9,7 +9,7 @@
  * @param {ColorRgb} rgb
  * @returns {ColorHsv}
  */
-export default function convertRgbToHsv (rgb) {
+export function convertRgbToHsv (rgb) {
   const min = Math.min(rgb.r, rgb.g, rgb.b)
   const max = Math.max(rgb.r, rgb.g, rgb.b)
 

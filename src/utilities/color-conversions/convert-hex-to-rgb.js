@@ -4,10 +4,12 @@
 /**
  * Converts a HEX color string to an RGB color object.
  *
+ * Supports HEX color strings with length 3, 4, 6, and 8.
+ *
  * @param {ColorHex} hex
  * @returns {ColorRgb}
  */
-export default function convertHexToRgb (hex) {
+export function convertHexToRgb (hex) {
   const hexWithoutHash = hex.replace(/^#/, '')
 
   const hexChannels =

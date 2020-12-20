@@ -5,21 +5,21 @@
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
 
-import convertHexToRgb from './color-conversions/convert-hex-to-rgb.js'
+import { convertHexToRgb } from './color-conversions/convert-hex-to-rgb.js'
 
-import convertHslToHsv from './color-conversions/convert-hsl-to-hsv.js'
-import convertHslToRgb from './color-conversions/convert-hsl-to-rgb.js'
+import { convertHslToHsv } from './color-conversions/convert-hsl-to-hsv.js'
+import { convertHslToRgb } from './color-conversions/convert-hsl-to-rgb.js'
 
-import convertHsvToHsl from './color-conversions/convert-hsv-to-hsl.js'
-import convertHsvToHwb from './color-conversions/convert-hsv-to-hwb.js'
-import convertHsvToRgb from './color-conversions/convert-hsv-to-rgb.js'
+import { convertHsvToHsl } from './color-conversions/convert-hsv-to-hsl.js'
+import { convertHsvToHwb } from './color-conversions/convert-hsv-to-hwb.js'
+import { convertHsvToRgb } from './color-conversions/convert-hsv-to-rgb.js'
 
-import convertHwbToHsv from './color-conversions/convert-hwb-to-hsv.js'
+import { convertHwbToHsv } from './color-conversions/convert-hwb-to-hsv.js'
 
-import convertRgbToHsl from './color-conversions/convert-rgb-to-hsl.js'
-import convertRgbToHsv from './color-conversions/convert-rgb-to-hsv.js'
-import convertRgbToHex from './color-conversions/convert-rgb-to-hex.js'
-import convertRgbToHwb from './color-conversions/convert-rgb-to-hwb.js'
+import { convertRgbToHsl } from './color-conversions/convert-rgb-to-hsl.js'
+import { convertRgbToHsv } from './color-conversions/convert-rgb-to-hsv.js'
+import { convertRgbToHex } from './color-conversions/convert-rgb-to-hex.js'
+import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
 
 /**
  * @typedef {Object} HexConversions

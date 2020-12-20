@@ -1,4 +1,4 @@
-import convertHsvToRgb from './convert-hsv-to-rgb.js'
+import { convertHsvToRgb } from './convert-hsv-to-rgb.js'
 
 describe('convertHsvToRgb', () => {
   test.each([

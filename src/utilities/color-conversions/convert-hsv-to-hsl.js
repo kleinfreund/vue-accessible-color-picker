@@ -9,7 +9,7 @@
  * @param {ColorHsv} hsv
  * @returns {ColorHsl}
  */
-export default function convertHsvToHsl (hsv) {
+export function convertHsvToHsl (hsv) {
   const l = hsv.v - (hsv.v * hsv.s) / 2
   const lMin = Math.min(l, 1 - l)
   const s = lMin === 0 ? 0 : (hsv.v - l) / lMin

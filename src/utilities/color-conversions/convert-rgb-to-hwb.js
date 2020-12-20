@@ -7,7 +7,7 @@
  * @param {ColorRgb} rgb
  * @returns {ColorHwb}
  */
-export default function convertRgbToHwb (rgb) {
+export function convertRgbToHwb (rgb) {
   const min = Math.min(rgb.r, rgb.g, rgb.b)
   const max = Math.max(rgb.r, rgb.g, rgb.b)
 

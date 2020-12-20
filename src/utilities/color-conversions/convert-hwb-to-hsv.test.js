@@ -1,4 +1,4 @@
-import convertHwbToHsv from './convert-hwb-to-hsv.js'
+import { convertHwbToHsv } from './convert-hwb-to-hsv.js'
 
 describe('convertHwbToHsv', () => {
   test.each([

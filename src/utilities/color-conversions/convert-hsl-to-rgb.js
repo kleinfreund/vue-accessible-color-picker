@@ -9,7 +9,7 @@
  * @param {ColorHsl} hsl
  * @returns {ColorRgb}
  */
-export default function convertHslToRgb (hsl) {
+export function convertHslToRgb (hsl) {
   const q = hsl.l < 0.5 ? hsl.l * (1 + hsl.s) : hsl.l + hsl.s - hsl.l * hsl.s
   const p = 2 * hsl.l - q
 

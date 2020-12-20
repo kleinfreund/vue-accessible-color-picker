@@ -7,7 +7,7 @@
  * @param {ColorHsv} hsv
  * @returns {ColorHwb}
  */
-export default function convertHsvToHwb (hsv) {
+export function convertHsvToHwb (hsv) {
   return {
     h: hsv.h,
     w: (1 - hsv.s) * hsv.v,
