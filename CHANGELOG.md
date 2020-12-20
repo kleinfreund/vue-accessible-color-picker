@@ -5,7 +5,13 @@
 
 * **package:** bundle dist files ([9b15741](https://github.com/kleinfreund/vue-accessible-color-picker/commit/9b157413af303e749f8f9d70faef051f6af11f7b))
 
+  Fixes the dist files missing from the published npm package. It seems that the `files` field in the package.json must not contain paths that start with `./`.
+
 ## [1.1.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.1.0...v1.1.1) (2020-12-20)
+
+**Note**: This version cannot be used. Use version [1.1.2](https://github.com/kleinfreund/vue-accessible-color-picker/releases/tag/v1.1.2) instead.
+
+Due to an issue with the package.json file’s `files` field, version [1.1.1](https://github.com/kleinfreund/vue-accessible-color-picker/releases/tag/v1.1.1) **does not** include the dist files in the published npm package. The issue was fixed in [9b15741](https://github.com/kleinfreund/vue-accessible-color-picker/commit/9b157413af303e749f8f9d70faef051f6af11f7b) and a new version of the package was released.
 
 
 ### Bug Fixes
