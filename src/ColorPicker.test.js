@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import { shallowMount } from '@vue/test-utils'
+import { config, shallowMount } from '@vue/test-utils'
 
 import ColorPicker from './ColorPicker.vue'
 import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
@@ -13,7 +12,7 @@ import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
 
 // Suppresses Vue console errors (e.g. for prop validators logging an error).
 // See: https://vue-test-utils.vuejs.org/api/config.html#silent
-Vue.config.silent = true
+config.silent = true
 
 /**
  * Helper function for injecting a test element into the DOM
@@ -74,11 +73,11 @@ describe('ColorPicker', () => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
     const wrapper = shallowMount(ColorPicker)
 
-    wrapper.vm.color = '#f80c'
+    await wrapper.setProps({ color: '#f80c' })
     await wrapper.vm.$nextTick()
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
 
-    wrapper.vm.color = { h: 0.5, s: 0.33, v: 0.5, a: 1 }
+    await wrapper.setProps({ color: { h: 0.5, s: 0.33, v: 0.5, a: 1 } })
     await wrapper.vm.$nextTick()
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(2)
   })
