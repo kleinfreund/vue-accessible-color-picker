@@ -15,7 +15,7 @@ module.exports = {
       assets: [
         { path: 'dist/vue-accessible-color-picker.js' },
         { path: 'dist/vue-accessible-color-picker-unstyled.js' },
-        { path: 'dist/index.d.ts' },
+        { path: 'types/index.d.ts' },
       ],
     }],
 
