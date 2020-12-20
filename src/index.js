@@ -1,7 +1,7 @@
 import ColorPicker from './ColorPicker.vue'
 
 /**
- * @param {any} Vue
+ * @param {import('vue').VueConstructor} Vue
  */
 export function install (Vue) {
   if (install.installed) {
