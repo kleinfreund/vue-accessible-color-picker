@@ -1,4 +1,9 @@
 describe('index.js', () => {
+  beforeEach(() => {
+    jest.resetModuleRegistry()
+    jest.restoreAllMocks()
+  })
+
   test('default export has install function', async () => {
     const { default: defaultExport } = await import('./index.js')
 
@@ -26,7 +31,6 @@ describe('index.js', () => {
   })
 
   test('calls Vue.use if Vue is available on window (for browsers)', async () => {
-    jest.resetModuleRegistry()
     const vueUseMock = jest.fn()
     const windowSpy = jest.spyOn(global, 'window', 'get')
     windowSpy.mockImplementation(() => {
@@ -43,12 +47,15 @@ describe('index.js', () => {
   })
 
   test('calls Vue.use if Vue is available on global', async () => {
-    jest.resetModuleRegistry()
+    // This seems to be necessary and I don’t really understand why.
     const windowSpy = jest.spyOn(global, 'window', 'get')
     windowSpy.mockImplementation(() => undefined)
-    global.Vue = {
-      use: jest.fn(),
-    }
+
+    Object.defineProperty(global, 'Vue', {
+      value: {
+        use: jest.fn(),
+      },
+    })
 
     const { default: defaultExport } = await import('./index.js')
 
