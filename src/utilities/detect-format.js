@@ -1,3 +1,7 @@
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
 
 /**
@@ -5,7 +9,7 @@
  *
  * Doesn’t handle invalid formats.
  *
- * @param {object} color
+ * @param {ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
  * @returns {SupportedColorFormat}
  */
 export function detectFormat (color) {

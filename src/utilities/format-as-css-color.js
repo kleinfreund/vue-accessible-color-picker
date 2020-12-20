@@ -1,13 +1,20 @@
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
 
 import { round } from './round.js'
 
-/** @type {{ [key in VisibleColorFormat]: (arg0: any) => string }} */
+/**
+ * @typedef {Object} Formatters
+ * @property {(color: ColorHex) => string} hex
+ * @property {(color: ColorHsl) => string} hsl
+ * @property {(color: ColorHwb) => string} hwb
+ * @property {(color: ColorRgb) => string} rgb
+ */
+
+/** @type {Formatters} */
 const formatters = {
   /**
    * @param {ColorHex} hex
