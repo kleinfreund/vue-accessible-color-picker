@@ -7,7 +7,7 @@
     "name": "Philipp Rudloff",
     "url": "https://kleinfreund.de"
   },
-  "homepage": "https://github.com/kleinfreund/vue-accessible-color-picker",
+  "homepage": "https://vue-accessible-color-picker.netlify.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/kleinfreund/vue-accessible-color-picker.git"
