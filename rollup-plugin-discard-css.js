@@ -8,7 +8,7 @@
  */
 export default function discardCss () {
   return {
-    transform (code, id) {
+    transform (_code, id) {
       return id.endsWith('css') ? { code: '', map: null } : null
     },
   }
