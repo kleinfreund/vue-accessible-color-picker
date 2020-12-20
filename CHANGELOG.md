@@ -22,6 +22,10 @@ Due to an issue with the package.json file’s `files` field, version [1.1.1](ht
 
 ## [1.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.0.1...v1.1.0)
 
+**Note**: This version cannot be used. Use version [1.1.2](https://github.com/kleinfreund/vue-accessible-color-picker/releases/tag/v1.1.2) instead.
+
+Due to an issue with the package.json file’s `files` field, version [1.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/releases/tag/v1.1.0) **does not** include the dist files in the published npm package. The issue was fixed in [9b15741](https://github.com/kleinfreund/vue-accessible-color-picker/commit/9b157413af303e749f8f9d70faef051f6af11f7b) and a new version of the package was released.
+
 
 ### Features
 
