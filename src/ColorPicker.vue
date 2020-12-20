@@ -10,7 +10,7 @@
         Accessibility remark:
 
         I don’t know of a semantic HTML that would be adequate for the job of a planar range thumb.
-       -->
+      -->
       <div
         ref="thumb"
         class="vacp-color-space-thumb"
@@ -622,6 +622,7 @@ export default {
      */
     updateColorValue (event, format, channel = undefined) {
       /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let color
+
       if (format === 'hex') {
         if (!isValidHexColor(event.target.value)) {
           // hex color is definitely not value.
