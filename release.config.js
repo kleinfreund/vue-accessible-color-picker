@@ -1,5 +1,5 @@
 module.exports = {
-  branches: ['main', 'next', { name: 'beta', prerelease: true }],
+  branches: ['main', 'next'],
   plugins: [
     // This analyzes all new commits and determines whether to release a new version.
     // https://github.com/semantic-release/commit-analyzer

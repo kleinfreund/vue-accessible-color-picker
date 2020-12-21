@@ -1,22 +1,26 @@
 name: main
 
-on: [push]
+on: push
 
 jobs:
   test-unit:
+    # Skip this job if the head commit’s message contains the string “[skip ci]”.
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    name: Unit tests (Node 14, Ubuntu)
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        # https://github.com/actions/checkout
         uses: actions/checkout@v2
 
       - name: Setup Node.js
+        # https://github.com/actions/setup-node
         uses: actions/setup-node@v2
         with:
           node-version: '14'
 
       - name: Cache node_modules and dist
+        # https://github.com/actions/cache
         uses: actions/cache@v2
         with:
           path: |
@@ -39,15 +43,18 @@ jobs:
           CI: true
 
   test-release:
-    if: github.ref != 'refs/heads/main'
+    # Uses the inverted condition of the “release” job.
+    if: "!( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' )"
     needs: test-unit
     name: Release (test run)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
+        # https://github.com/actions/checkout
         uses: actions/checkout@v2
 
       - name: Cache node_modules and dist
+        # https://github.com/actions/cache
         uses: actions/cache@v2
         with:
           path: |
@@ -62,19 +69,18 @@ jobs:
         run: npx semantic-release --dry-run
 
   release:
-    if: github.ref == 'refs/heads/main'
-
+    # The release job runs only on pushes to or merges into the main or next branches.
+    if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next'"
     needs: test-unit
-
     name: Release
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
+        # https://github.com/actions/checkout
         uses: actions/checkout@v2
 
       - name: Cache node_modules and dist
+        # https://github.com/actions/cache
         uses: actions/cache@v2
         with:
           path: |
