@@ -276,11 +276,12 @@ describe('ColorPicker', () => {
 
     const wrapper = shallowMount(ColorPicker)
     const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
-    const originalInputValue = hueRangeInput.element.value
+    const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
+    const originalInputValue = hueRangeInputElement.value
 
     wrapper.vm.changeInputValue(keydownEvent)
 
-    expect(hueRangeInput.element.value).toBe(originalInputValue)
+    expect(hueRangeInputElement.value).toBe(originalInputValue)
   })
 
   test.each([
@@ -291,14 +292,14 @@ describe('ColorPicker', () => {
     ['increment', 1, 'ArrowRight', '9'],
     ['increment', 3, 'ArrowRight', '27'],
   ])('can %s range inputs %dx in big steps with %s', (_, numberOfPresses, key, expectedValue) => {
+    const wrapper = shallowMount(ColorPicker)
+    const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
+    const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
     const keydownEvent = {
       key,
       shiftKey: true,
+      currentTarget: hueRangeInputElement,
     }
-
-    const wrapper = shallowMount(ColorPicker)
-    const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
-    keydownEvent.currentTarget = hueRangeInput.element
 
     expect(hueRangeInput.exists()).toBe(true)
 
@@ -306,7 +307,7 @@ describe('ColorPicker', () => {
       wrapper.vm.changeInputValue(keydownEvent)
     }
 
-    expect(hueRangeInput.element.value).toBe(expectedValue)
+    expect(hueRangeInputElement.value).toBe(expectedValue)
   })
 
   test.each([
@@ -331,13 +332,12 @@ describe('ColorPicker', () => {
 
     const hueAngle = 30
     const alpha = 90
-    const hueInputEvent = {}
-    const alphaInputEvent = {}
 
     const wrapper = shallowMount(ColorPicker)
     const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
-    hueInputEvent.currentTarget = hueRangeInput.element
-    hueInputEvent.currentTarget.value = String(hueAngle)
+    const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
+    hueRangeInputElement.value = String(hueAngle)
+    const hueInputEvent = { currentTarget: hueRangeInputElement }
 
     hueRangeInput.trigger('input')
     expect(ColorPicker.methods.updateHue).toHaveBeenCalled()
@@ -347,8 +347,9 @@ describe('ColorPicker', () => {
     expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(hueAngle / 360, 'hsv', 'h')
 
     const alphaRangeInput = wrapper.find(`#${wrapper.vm.id}-alpha-slider`)
-    alphaInputEvent.currentTarget = hueRangeInput.element
-    alphaInputEvent.currentTarget.value = String(alpha)
+    const alphaRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
+    alphaRangeInputElement.value = String(alpha)
+    const alphaInputEvent = { currentTarget: alphaRangeInputElement }
 
     alphaRangeInput.trigger('input')
     expect(ColorPicker.methods.updateAlpha).toHaveBeenCalled()
@@ -367,8 +368,6 @@ describe('ColorPicker', () => {
   ])('updating a %s color input with an invalid value does not update the internal color data', async (format, channel, channelValue) => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
-    const inputEvent = {}
-
     const wrapper = shallowMount(ColorPicker)
 
     jest.resetAllMocks()
@@ -377,9 +376,9 @@ describe('ColorPicker', () => {
     await wrapper.vm.$nextTick()
 
     const inputSelector = `#${wrapper.vm.id}-color-${format}` + (channel !== undefined ? `-${channel}` : '')
-    const inputElement = wrapper.find(inputSelector)
-    inputEvent.target = inputElement.element
-    inputEvent.target.value = channelValue
+    const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+    inputElement.value = channelValue
+    const inputEvent = { target: inputElement }
 
     wrapper.vm.updateColorValue(inputEvent, format, channel)
 
@@ -394,8 +393,6 @@ describe('ColorPicker', () => {
   ])('updating a %s color input with a valid value updates the internal color data', async (format, channel, channelValue) => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
-    const inputEvent = {}
-
     const wrapper = shallowMount(ColorPicker)
 
     jest.resetAllMocks()
@@ -404,9 +401,9 @@ describe('ColorPicker', () => {
     await wrapper.vm.$nextTick()
 
     const inputSelector = `#${wrapper.vm.id}-color-${format}` + (channel !== undefined ? `-${channel}` : '')
-    const inputElement = wrapper.find(inputSelector)
-    inputEvent.target = inputElement.element
-    inputEvent.target.value = channelValue
+    const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+    inputElement.value = channelValue
+    const inputEvent = { target: inputElement }
 
     wrapper.vm.updateColorValue(inputEvent, format, channel)
 
