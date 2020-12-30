@@ -325,7 +325,7 @@ import { isValidHexColor } from './utilities/is-valid-hex-color.js'
 import { parseRgbColor } from './utilities/parse-rgb-color.js'
 
 const STEP_FACTOR = 10
-/** @type {SupportedColorFormat[]} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
+/** @type {VisibleColorFormat[]} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
 
 export default {
   name: 'ColorPicker',
@@ -349,8 +349,8 @@ export default {
       type: Array,
       required: false,
       default: () => ALLOWED_VISIBLE_FORMATS,
-      validator (visibleFormats) {
-        return visibleFormats.length > 0 && visibleFormats.every((/** @type {any} */ format) => ALLOWED_VISIBLE_FORMATS.includes(format))
+      validator (/** @type {any[]} */ visibleFormats) {
+        return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
       },
     },
   },
@@ -490,7 +490,7 @@ export default {
         return
       }
 
-      const input = event.currentTarget
+      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
       const step = parseFloat(input.step)
       const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
       const value = parseFloat(input.value) + direction * step * STEP_FACTOR
@@ -605,14 +605,16 @@ export default {
      * @param {Event} event
      */
     updateHue (event) {
-      this.setColorValue(parseInt(event.currentTarget.value) / 360, 'hsv', 'h')
+      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
+      this.setColorValue(parseInt(input.value) / 360, 'hsv', 'h')
     },
 
     /**
      * @param {Event} event
      */
     updateAlpha (event) {
-      this.setColorValue(parseInt(event.currentTarget.value) / 100, 'hsv', 'a')
+      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
+      this.setColorValue(parseInt(input.value) / 100, 'hsv', 'a')
     },
 
     /**
@@ -622,18 +624,19 @@ export default {
      */
     updateColorValue (event, format, channel = undefined) {
       /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let color
+      const input = /** @type {HTMLInputElement} */ (event.target)
 
       if (format === 'hex') {
-        if (!isValidHexColor(event.target.value)) {
+        if (!isValidHexColor(input.value)) {
           // hex color is definitely not value.
           return
         }
 
-        color = event.target.value
+        color = input.value
       } else {
         // Make a copy of the colors object to avoid writing to it before we know that the new color is valid.
         color = { ...this.colors[format] }
-        const value = colorChannels[format][channel].from(event.target.value)
+        const value = colorChannels[format][channel].from(input.value)
 
         if (Number.isNaN(value) || value === undefined) {
           // This means that the input value does not result in a valid CSS value.
