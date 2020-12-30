@@ -156,7 +156,6 @@ describe('ColorPicker', () => {
     jest.spyOn(ColorPicker.methods, 'startMovingThumb')
     jest.spyOn(ColorPicker.methods, 'moveThumbWithMouse')
     jest.spyOn(ColorPicker.methods, 'moveThumb')
-    jest.spyOn(ColorPicker.methods, 'getColorValue')
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
     const clientX = 0
@@ -180,7 +179,6 @@ describe('ColorPicker', () => {
     expect(ColorPicker.methods.moveThumbWithMouse).toHaveBeenCalledWith(mouseMoveEvent)
     expect(ColorPicker.methods.moveThumb).toHaveBeenCalledWith(clientX, clientY)
     expect(colorSpace.element.getBoundingClientRect).toHaveBeenCalled()
-    expect(ColorPicker.methods.getColorValue).toHaveBeenCalledWith('hsv')
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(wrapper.vm.colors.hsv, 'hsv')
 
     // Remove test HTML injected via the `attachTo` option during mount.
@@ -191,7 +189,6 @@ describe('ColorPicker', () => {
     jest.spyOn(ColorPicker.methods, 'startMovingThumb')
     jest.spyOn(ColorPicker.methods, 'moveThumbWithTouch')
     jest.spyOn(ColorPicker.methods, 'moveThumb')
-    jest.spyOn(ColorPicker.methods, 'getColorValue')
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
     const clientX = 0
@@ -216,7 +213,6 @@ describe('ColorPicker', () => {
     expect(ColorPicker.methods.moveThumbWithTouch).toHaveBeenNthCalledWith(2, touchMoveEvent)
     expect(ColorPicker.methods.moveThumb).toHaveBeenCalledWith(clientX, clientY)
     expect(colorSpace.element.getBoundingClientRect).toHaveBeenCalled()
-    expect(ColorPicker.methods.getColorValue).toHaveBeenCalledWith('hsv')
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(wrapper.vm.colors.hsv, 'hsv')
 
     // Remove test HTML injected via the `attachTo` option during mount.
@@ -246,7 +242,6 @@ describe('ColorPicker', () => {
     ['ArrowLeft', false, 's', 0.99],
     ['ArrowLeft', true, 's', 0.9],
   ])('can move the color space thumb with the %s key (holding shift: %s)', (key, shiftKey, expectedChannel, expectedChannelValue) => {
-    jest.spyOn(ColorPicker.methods, 'getColorValue')
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
     const keydownEvent = {
@@ -264,7 +259,6 @@ describe('ColorPicker', () => {
     wrapper.vm.moveThumbWithArrows(keydownEvent)
 
     expect(keydownEvent.preventDefault).toHaveBeenCalled()
-    expect(ColorPicker.methods.getColorValue).toHaveBeenCalledWith('hsv', expectedChannel)
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(expectedChannelValue, 'hsv', expectedChannel)
   })
 

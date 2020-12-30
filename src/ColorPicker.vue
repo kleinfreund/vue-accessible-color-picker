@@ -445,7 +445,7 @@ export default {
       const rect = this.$refs.colorSpace.getBoundingClientRect()
       const x = clientX - rect.left
       const y = clientY - rect.top
-      const hsv = { ...this.getColorValue('hsv') }
+      const hsv = { ...this.colors.hsv }
 
       hsv.s = clamp(x / rect.width, 0, 1)
       hsv.v = clamp(1 - y / rect.height, 0, 1)
@@ -469,7 +469,7 @@ export default {
       const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
       const step = event.shiftKey ? 10 : 1
 
-      const newColorValue = this.getColorValue('hsv', channel) + direction * step * 0.01
+      const newColorValue = this.colors.hsv[channel] + direction * step * 0.01
       this.setColorValue(clamp(newColorValue, 0, 1), 'hsv', channel)
     },
 
@@ -498,19 +498,6 @@ export default {
 
       // Remove one step because the default action needs to be able to set a new value for it to fire events, too.
       input.value = String(newValue - direction * step)
-    },
-
-    /**
-     * @param {SupportedColorFormat} format
-     * @param {ColorChannel} [channel]
-     * @returns {object | number | string}
-     */
-    getColorValue (format, channel = undefined) {
-      if (channel === undefined) {
-        return this.colors[format]
-      } else {
-        return this.colors[format][channel]
-      }
     },
 
     /**
@@ -575,7 +562,7 @@ export default {
      * @param {SupportedColorFormat} sourceFormat
      */
     reCalculateColors (sourceFormat) {
-      const sourceColor = this.getColorValue(sourceFormat)
+      const sourceColor = this.colors[sourceFormat]
       const targetFormats = this.supportedFormats.filter((/** @type {SupportedColorFormat} */ format) => format !== sourceFormat)
 
       // Make a copy of the color object to avoid writing to it multiple times before the calculations are done.
