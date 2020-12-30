@@ -382,7 +382,7 @@ export default {
   },
 
   created () {
-    /** @type {ColorFormat} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
+    /** @type {ColorFormat[]} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
   },
 
   mounted () {
