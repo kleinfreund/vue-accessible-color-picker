@@ -1,5 +1,8 @@
 <template>
-  <div class="vacp-color-picker">
+  <div
+    ref="colorPicker"
+    class="vacp-color-picker"
+  >
     <div
       ref="colorSpace"
       class="vacp-color-space"
@@ -515,7 +518,7 @@ export default {
       }
 
       this.reCalculateColors(format)
-      this.setCssProps(this.$el, this.colors)
+      this.setCssProps(this.$refs.colorPicker, this.$refs.colorSpace, this.$refs.thumb, this.colors)
 
       const eventData = this.getEventData(this.colors, this.activeFormat)
       this.$emit('color-change', eventData)
@@ -688,30 +691,32 @@ export default {
      *    and the color space thumb in the most top right corner of the color space.
      *    This will set the hue to 0, the saturation to 100%, and the value to 100%.
      *
-     * @param {HTMLElement} element
+     * @param {HTMLElement} colorPicker
+     * @param {HTMLElement} colorSpace
+     * @param {HTMLElement} thumb
      * @param {Colors} colors
      */
-    setCssProps (element, colors) {
-      element.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
-      element.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
-      element.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
-      element.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
+    setCssProps (colorPicker, colorSpace, thumb, colors) {
+      colorPicker.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
+      colorPicker.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
+      colorPicker.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
+      colorPicker.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
 
-      this.$refs.colorSpace.style = `
+      colorSpace.setAttribute('style', `
         position: relative;
         background-color: hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%); /* 1. */
         background-image:
           linear-gradient(to top, #000, transparent),  /* 2. */
           linear-gradient(to right, #fff, transparent) /* 2. */
         ;
-      `
+      `)
 
-      this.$refs.thumb.style = `
+      thumb.setAttribute('style', `
         box-sizing: border-box;
         position: absolute;
         left: ${colors.hsv.s * 100}%;   /* 3. */
         bottom: ${colors.hsv.v * 100}%; /* 3. */
-      `
+      `)
     },
   },
 }
