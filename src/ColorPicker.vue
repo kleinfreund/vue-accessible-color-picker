@@ -517,11 +517,18 @@ export default {
         return
       }
 
-      this.reCalculateColors(format)
+      const eventData = this.applyColorUpdates(format)
+      this.$emit('color-change', eventData)
+    },
+
+    /**
+     * @param {ColorFormat} format
+     */
+    applyColorUpdates (format) {
+      this.colors = this.reCalculateColors(this.colors, format)
       this.setCssProps(this.$refs.colorPicker, this.$refs.colorSpace, this.$refs.thumb, this.colors)
 
-      const eventData = this.getEventData(this.colors, this.activeFormat)
-      this.$emit('color-change', eventData)
+      return this.getEventData(this.colors, this.activeFormat)
     },
 
     /**
@@ -562,21 +569,22 @@ export default {
      * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc.
      * colors.
      *
+     * @param {Colors} colors
      * @param {ColorFormat} sourceFormat
      */
-    reCalculateColors (sourceFormat) {
-      const sourceColor = this.colors[sourceFormat]
+    reCalculateColors (colors, sourceFormat) {
+      const sourceColor = colors[sourceFormat]
       const targetFormats = this.supportedFormats.filter((/** @type {ColorFormat} */ format) => format !== sourceFormat)
 
       // Make a copy of the color object to avoid writing to it multiple times before the calculations are done.
       // This is done to avoid Vue’s reactivity kicking in more than once.
-      const newColors = { ...this.colors }
+      const newColors = { ...colors }
       for (const targetFormat of targetFormats) {
         const color = convertColor(sourceColor, sourceFormat, targetFormat)
         newColors[targetFormat] = color
       }
 
-      this.colors = newColors
+      return newColors
     },
 
     /**
@@ -654,8 +662,7 @@ export default {
      * @returns {string}
      */
     getChannelAsCssValue (format, channel) {
-      const value = this.colors[format][channel]
-      return colorChannels[format][channel].to(value)
+      return colorChannels[format][channel].to(this.colors[format][channel])
     },
 
     /**
