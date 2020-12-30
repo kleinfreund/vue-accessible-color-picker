@@ -1,5 +1,3 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
-
 import { CssValues } from './css-values.js'
 
 /**

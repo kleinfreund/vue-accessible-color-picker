@@ -3,7 +3,7 @@
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} ColorFormat */
 
 import { convertHexToRgb } from './color-conversions/convert-hex-to-rgb.js'
 
@@ -96,7 +96,7 @@ import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
   hwb: convertRgbToHwb,
 }
 
-/** @type {{ [key in SupportedColorFormat]: HexConversions | HslConversions | HsvConversions | HwbConversions | RgbConversions }} */
+/** @type {{ [key in ColorFormat]: HexConversions | HslConversions | HsvConversions | HwbConversions | RgbConversions }} */
 const conversions = {
   hex: hexConversions,
   hsl: hslConversions,
@@ -194,8 +194,8 @@ function convertHsvToHex (hsv) {
  * Converts a given color object from one color format to another.
  *
  * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
- * @param {SupportedColorFormat} sourceFormat
- * @param {SupportedColorFormat} targetFormat
+ * @param {ColorFormat} sourceFormat
+ * @param {ColorFormat} targetFormat
  * @returns {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb}
  */
 export function convertColor (color, sourceFormat, targetFormat) {

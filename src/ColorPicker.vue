@@ -304,7 +304,7 @@
 
 <script>
 /** @typedef {import('../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.SupportedColorFormat} SupportedColorFormat */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.SupportedColorFormat} ColorFormat */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorChannel} ColorChannel */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.Colors} Colors */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
@@ -379,7 +379,7 @@ export default {
   },
 
   created () {
-    /** @type {SupportedColorFormat} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
+    /** @type {ColorFormat} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
   },
 
   mounted () {
@@ -502,7 +502,7 @@ export default {
 
     /**
      * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} value
-     * @param {SupportedColorFormat} format
+     * @param {ColorFormat} format
      * @param {ColorChannel} [channel]
      */
     setColorValue (value, format, channel = undefined) {
@@ -530,7 +530,7 @@ export default {
       }
 
       /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let value
-      /** @type {SupportedColorFormat} */ let format
+      /** @type {ColorFormat} */ let format
       if (typeof propValue === 'string') {
         if (isValidHexColor(propValue)) {
           value = propValue
@@ -559,11 +559,11 @@ export default {
      * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc.
      * colors.
      *
-     * @param {SupportedColorFormat} sourceFormat
+     * @param {ColorFormat} sourceFormat
      */
     reCalculateColors (sourceFormat) {
       const sourceColor = this.colors[sourceFormat]
-      const targetFormats = this.supportedFormats.filter((/** @type {SupportedColorFormat} */ format) => format !== sourceFormat)
+      const targetFormats = this.supportedFormats.filter((/** @type {ColorFormat} */ format) => format !== sourceFormat)
 
       // Make a copy of the color object to avoid writing to it multiple times before the calculations are done.
       // This is done to avoid Vue’s reactivity kicking in more than once.
