@@ -335,7 +335,7 @@ export default {
 
   props: {
     color: {
-      /** @type {import('vue').PropType<ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
+      /** @type {import('vue').PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
       type: [String, Object],
       required: false,
       default: null,
