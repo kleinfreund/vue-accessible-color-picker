@@ -1,4 +1,4 @@
-import { config, shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import ColorPicker from './ColorPicker.vue'
 import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
@@ -9,10 +9,6 @@ import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
  * [1]: https://jestjs.io/
  * [2]: https://vue-test-utils.vuejs.org/
  */
-
-// Suppresses Vue console errors (e.g. for prop validators logging an error).
-// See: https://vue-test-utils.vuejs.org/api/config.html#silent
-config.silent = true
 
 /**
  * Helper function for injecting a test element into the DOM
@@ -74,11 +70,9 @@ describe('ColorPicker', () => {
     const wrapper = shallowMount(ColorPicker)
 
     await wrapper.setProps({ color: '#f80c' })
-    await wrapper.vm.$nextTick()
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
 
     await wrapper.setProps({ color: { h: 0.5, s: 0.33, v: 0.5, a: 1 } })
-    await wrapper.vm.$nextTick()
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(2)
   })
 
@@ -90,7 +84,7 @@ describe('ColorPicker', () => {
     document.dispatchEvent(new Event('mousemove'))
     expect(ColorPicker.methods.moveThumbWithMouse).toHaveBeenCalledTimes(1)
 
-    wrapper.destroy()
+    wrapper.unmount()
 
     document.dispatchEvent(new Event('mousemove'))
     // Note that we assert here that the method hasn’t been called *again*.
@@ -120,7 +114,7 @@ describe('ColorPicker', () => {
     expect(colorRgbAlphaInput.exists()).toBe(true)
 
     wrapper.vm.activeFormat = 'hsl'
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const colorHslHueInput = wrapper.find(`#${id}-color-hsl-h`)
     expect(colorHslHueInput.exists()).toBe(true)
@@ -137,8 +131,7 @@ describe('ColorPicker', () => {
 
     expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(false)
 
-    const colorSpace = wrapper.findComponent({ ref: 'colorSpace' })
-
+    const colorSpace = wrapper.find('.vacp-color-space')
     await colorSpace.trigger('mousedown')
     expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(true)
 
@@ -168,7 +161,7 @@ describe('ColorPicker', () => {
     }
 
     const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv() })
-    const colorSpace = wrapper.findComponent({ ref: 'colorSpace' })
+    const colorSpace = wrapper.find('.vacp-color-space')
     jest.spyOn(colorSpace.element, 'getBoundingClientRect')
 
     await colorSpace.trigger('mousedown')
@@ -182,7 +175,7 @@ describe('ColorPicker', () => {
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(wrapper.vm.colors.hsv, 'hsv')
 
     // Remove test HTML injected via the `attachTo` option during mount.
-    wrapper.destroy()
+    wrapper.unmount()
   })
 
   test('can initiate moving the color space thumb with a touch-based device', async () => {
@@ -199,7 +192,7 @@ describe('ColorPicker', () => {
     }
 
     const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv() })
-    const colorSpace = wrapper.findComponent({ ref: 'colorSpace' })
+    const colorSpace = wrapper.find('.vacp-color-space')
     jest.spyOn(colorSpace.element, 'getBoundingClientRect')
 
     wrapper.vm.moveThumbWithTouch(touchMoveEvent)
@@ -216,7 +209,7 @@ describe('ColorPicker', () => {
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(wrapper.vm.colors.hsv, 'hsv')
 
     // Remove test HTML injected via the `attachTo` option during mount.
-    wrapper.destroy()
+    wrapper.unmount()
   })
 
   test('can not move the color space thumb with the wrong key', () => {
@@ -367,7 +360,7 @@ describe('ColorPicker', () => {
     jest.resetAllMocks()
 
     wrapper.vm.activeFormat = format
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const inputSelector = `#${wrapper.vm.id}-color-${format}` + (channel !== undefined ? `-${channel}` : '')
     const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
@@ -392,7 +385,7 @@ describe('ColorPicker', () => {
     jest.resetAllMocks()
 
     wrapper.vm.activeFormat = format
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     const inputSelector = `#${wrapper.vm.id}-color-${format}` + (channel !== undefined ? `-${channel}` : '')
     const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)

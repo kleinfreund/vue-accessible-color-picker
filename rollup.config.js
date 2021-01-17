@@ -1,4 +1,5 @@
 import babel from '@rollup/plugin-babel'
+import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 import vue from 'rollup-plugin-vue'
 
@@ -19,13 +20,14 @@ https://github.com/TrySound/rollup-plugin-terser#options
 */
 
 const styledComponentPlugins = [
-  vue(),
+  vue({ preprocessStyles: true }),
+  postcss(),
   babel({ babelHelpers: 'bundled' }),
   terser(),
 ]
 
 const unstyledComponentPlugins = [
-  vue({ css: false }),
+  vue(),
   discardCss(),
   babel({ babelHelpers: 'bundled' }),
   terser(),
@@ -39,6 +41,9 @@ export default [
       name: 'AccessibleColorPicker',
       exports: 'named',
       file: 'dist/vue-accessible-color-picker.js',
+      globals: {
+        vue: 'vue',
+      },
     },
     plugins: styledComponentPlugins,
   },
@@ -50,6 +55,9 @@ export default [
       name: 'AccessibleColorPicker',
       exports: 'named',
       file: 'dist/vue-accessible-color-picker-unstyled.js',
+      globals: {
+        vue: 'vue',
+      },
     },
     plugins: unstyledComponentPlugins,
   },

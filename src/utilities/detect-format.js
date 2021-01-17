@@ -2,7 +2,7 @@
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} ColorFormat */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorFormat} ColorFormat */
 
 /**
  * Lazy functions that returns the format of a given color object.

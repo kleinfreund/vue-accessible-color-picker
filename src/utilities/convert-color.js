@@ -3,7 +3,7 @@
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.SupportedColorFormat} ColorFormat */
+/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorFormat} ColorFormat */
 
 import { convertHexToRgb } from './color-conversions/convert-hex-to-rgb.js'
 

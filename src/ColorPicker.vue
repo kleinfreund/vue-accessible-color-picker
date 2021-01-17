@@ -307,8 +307,7 @@
 
 <script>
 /** @typedef {import('../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.SupportedColorFormat} ColorFormat */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorChannel} ColorChannel */
+/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorFormat} ColorFormat */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.Colors} Colors */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
@@ -390,7 +389,7 @@ export default {
     this.setColorValueFromProp(this.color)
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     document.removeEventListener('mousemove', this.moveThumbWithMouse)
     document.removeEventListener('touchmove', this.moveThumbWithTouch)
 
@@ -506,7 +505,7 @@ export default {
     /**
      * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} value
      * @param {ColorFormat} format
-     * @param {ColorChannel} [channel]
+     * @param {string} [channel]
      */
     setColorValue (value, format, channel = undefined) {
       if (channel === undefined && !colorsAreValueEqual(value, this.colors[format])) {
@@ -618,7 +617,7 @@ export default {
     /**
      * @param {Event} event
      * @param {VisibleColorFormat} format
-     * @param {ColorChannel} [channel]
+     * @param {string} [channel]
      */
     updateColorValue (event, format, channel = undefined) {
       /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let color
@@ -658,7 +657,7 @@ export default {
      * Wrapper function. Converts a color channel’s value into its CSS value representation.
      *
      * @param {'hsl' | 'hwb' | 'rgb'} format
-     * @param {ColorChannel} channel
+     * @param {string} channel
      * @returns {string}
      */
     getChannelAsCssValue (format, channel) {

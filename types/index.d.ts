@@ -1,9 +1,7 @@
 export namespace VueAccessibleColorPicker {
   export type VisibleColorFormat = 'hex' | 'hsl' | 'hwb' | 'rgb'
 
-  export type SupportedColorFormat = 'hex' | 'hsl' | 'hsv' | 'hwb' | 'rgb'
-
-  export type ColorChannel = 'r' | 'g' | 'b' | 'h' | 's' | 'l' | 'v' | 'w'
+  export type ColorFormat = 'hex' | 'hsl' | 'hsv' | 'hwb' | 'rgb'
 
   export type ColorHex = string
 
