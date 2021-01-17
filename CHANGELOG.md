@@ -1,3 +1,22 @@
+# [2.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.1.2...v2.0.0) (2021-01-17)
+
+
+### Features
+
+* migrate to Vue.js version 3 ([26b8eb2](https://github.com/kleinfreund/vue-accessible-color-picker/commit/26b8eb2f30b8c57d65b26b71b62395a7e6295786))
+
+
+### BREAKING CHANGES
+
+* Migrates this package to use and be compatible with Vue.js 3. Upcoming versions of this package therefor no longer support Vue.js 2. Use the new application instance APIs to register components via `app.component`. The README.md file was updated to take these changes into account. Detailed instructions on the the general migration process to Vue.js 3 can be found in the [Vue 3 migration guide](https://v3.vuejs.org/guide/migration/introduction.html).
+* Deprecates global component registration via side effect.
+* Renames type `SupportedColorFormat` to `ColorFormat`.
+* Removes type `ColorChannel` because it’s not a useful type.
+
+Adds the vue package (`vue@^3.x`) as a peer dependency.
+
+Removes some tests from index.test.js because they were testing the behavior of Vue.js itself rather than that of the index.js file.
+
 ## [1.1.2](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.1.1...v1.1.2) (2020-12-20)
 
 
