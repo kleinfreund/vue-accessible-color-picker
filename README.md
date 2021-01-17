@@ -43,7 +43,7 @@ npm install vue-accessible-color-picker
 
 ### Register component locally
 
-In a Vue single file component (SFC), import the `ColorPicker` component and register it via the `components` property on the Vue instance. You can then use it in the file’s `template` section.
+In a Vue single file component (SFC), import the `ColorPicker` plugin and register the component via the `components` property on the Vue instance. You can then use it in the file’s `template` section.
 
 ```html
 <template>
@@ -73,7 +73,7 @@ import { ColorPicker } from 'vue-accessible-color-picker/dist/vue-accessible-col
 
 Registering a component globally allows you to use it in all Vue templates without the need to register it via an SFC’s `components` property first.
 
-In your Vue project’s `main.js` (i.e. where you call `new Vue(…)`), import the `ColorPicker` component and register it with `app.component`.
+In your Vue project’s `main.js` file (i.e. where you call `app.mount`), import the `ColorPicker` plugin and register the component using `app.component`.
 
 ```js
 import { ColorPicker } from 'vue-accessible-color-picker';
