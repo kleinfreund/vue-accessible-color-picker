@@ -47,7 +47,7 @@ describe('ColorPicker', () => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
     shallowMount(ColorPicker, {
-      propsData: {
+      props: {
         color: colorProp,
       },
     })
@@ -57,7 +57,7 @@ describe('ColorPicker', () => {
 
   test('mounts correctly with an invalid color prop', () => {
     const wrapper = shallowMount(ColorPicker, {
-      propsData: {
+      props: {
         color: '#ff',
       },
     })
@@ -94,7 +94,7 @@ describe('ColorPicker', () => {
   test('id attributes are set correctly', async () => {
     const id = 'test-color-picker'
     const wrapper = shallowMount(ColorPicker, {
-      propsData: {
+      props: {
         id,
       },
     })
@@ -244,7 +244,7 @@ describe('ColorPicker', () => {
     }
 
     const wrapper = shallowMount(ColorPicker, {
-      propsData: {
+      props: {
         color: 'rgb(128, 0, 255)',
       },
     })
