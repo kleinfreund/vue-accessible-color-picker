@@ -1,10 +1,7 @@
 /**
  * Returns whether a given HEX color string is a valid CSS color.
- *
- * @param {string} hexColor
- * @returns {boolean}
  */
-export function isValidHexColor (hexColor) {
+export function isValidHexColor (hexColor: string): boolean {
   if (!hexColor.startsWith('#')) {
     return false
   }

@@ -1,15 +1,11 @@
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+import { ColorHsl, ColorHsv } from '../../../types'
 
 /**
  * Converts an HSL color object to an HSV color object.
  *
  * Source: https://en.m.wikipedia.org/wiki/HSL_and_HSV#HSL_to_HSV
- *
- * @param {ColorHsl} hsl
- * @returns {ColorHsv}
  */
-export function convertHslToHsv (hsl) {
+export function convertHslToHsv (hsl: ColorHsl): ColorHsv {
   const v = hsl.l + hsl.s * Math.min(hsl.l, 1 - hsl.l)
   const s = v === 0 ? 0 : 2 - (2 * hsl.l) / v
 

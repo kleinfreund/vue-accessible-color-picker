@@ -3,11 +3,8 @@
  *
  * Note: This implementation is very lossy.
  * The color string `rgb(127.5 0 0)` results in `rgb(128, 0, 0).
- *
- * @param {string} colorString
- * @returns {string}
  */
-export function getCssColorAsRgbString (colorString) {
+export function getCssColorAsRgbString (colorString: string): string {
   const tempElement = document.createElement('span')
   tempElement.style.display = 'none'
   tempElement.style.color = colorString

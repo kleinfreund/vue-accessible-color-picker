@@ -1,15 +1,11 @@
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
+import { ColorHsl, ColorRgb } from '../../../types'
 
 /**
  * Converts an HSL color object to an RGB color object.
  *
  * Source: https://en.m.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
- *
- * @param {ColorHsl} hsl
- * @returns {ColorRgb}
  */
-export function convertHslToRgb (hsl) {
+export function convertHslToRgb (hsl: ColorHsl): ColorRgb {
   const q = hsl.l < 0.5 ? hsl.l * (1 + hsl.s) : hsl.l + hsl.s - hsl.l * hsl.s
   const p = 2 * hsl.l - q
 
@@ -21,13 +17,7 @@ export function convertHslToRgb (hsl) {
   }
 }
 
-/**
- * @param {number} p
- * @param {number} q
- * @param {number} t
- * @returns {number}
- */
-function hue2rgb (p, q, t) {
+function hue2rgb (p: number, q: number, t: number): number {
   if (t < 0) {
     t += 1
   } else if (t > 1) {

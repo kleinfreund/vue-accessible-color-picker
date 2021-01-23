@@ -6,7 +6,7 @@ export const CssValues = {
    * @param {string} value a string representing an arbitrary number
    * @returns {number} in the range [0, 1]
    */
-  fromHueAngle (value) {
+  fromHueAngle (value: string): number {
     if (value.endsWith('.')) {
       return NaN
     }
@@ -21,7 +21,7 @@ export const CssValues = {
    * @param {number} value in the range [0, 1]
    * @returns {string} in the range [0, 360]
    */
-  toHueAngle (value) {
+  toHueAngle (value: number): string {
     return round(value * 360)
   },
 
@@ -29,7 +29,7 @@ export const CssValues = {
    * @param {string} value a string representing an arbitrary percentage value
    * @returns {number} in the range [0, 1]
    */
-  fromPercentage (value) {
+  fromPercentage (value: string): number {
     if (!value.endsWith('%')) {
       return NaN
     }
@@ -53,7 +53,7 @@ export const CssValues = {
    * @param {number} value in the range [0, 1]
    * @returns {string} in the range [0%, 100%]
    */
-  toPercentage (value) {
+  toPercentage (value: number): string {
     return round(value * 100) + '%'
   },
 
@@ -61,7 +61,7 @@ export const CssValues = {
    * @param {string} value a string representing an arbitrary number value
    * @returns {number} in the range [0, 1]
    */
-  from8BitDecimal (value) {
+  from8BitDecimal (value: string): number {
     if (value.endsWith('%')) {
       return CssValues.fromPercentage(value)
     }
@@ -83,7 +83,7 @@ export const CssValues = {
    * @param {number} value in the range [0, 1]
    * @returns {string} in the range [0, 255]
    */
-  to8BitDecimal (value) {
+  to8BitDecimal (value: number): string {
     return round(value * 255)
   },
 
@@ -91,7 +91,7 @@ export const CssValues = {
    * @param {string} value in the range [0, 1] or [0%, 100%]
    * @returns {number} in the range [0, 1]
    */
-  fromAlpha (value) {
+  fromAlpha (value: string): number {
     if (value.endsWith('%')) {
       return CssValues.fromPercentage(value)
     } else {
@@ -103,7 +103,7 @@ export const CssValues = {
    * @param {number} value in the range [0, 1]
    * @returns {string} in the range [0, 1]
    */
-  toAlpha (value) {
+  toAlpha (value: number): string {
     return String(value)
   },
 }

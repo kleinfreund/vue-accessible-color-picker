@@ -1,13 +1,11 @@
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
+import { ColorHsl, ColorRgb } from '../../../types'
 
 /**
- * Converts an RGB color object to an HWB color object.
+ * Converts an RGB color object to an HSL color object.
  *
- * @param {ColorRgb} rgb
- * @returns {ColorHwb}
+ * Source: https://en.m.wikipedia.org/wiki/HSL_and_HSV#RGB_to_HSL_and_HSV
  */
-export function convertRgbToHwb (rgb) {
+export function convertRgbToHsl (rgb: ColorRgb): ColorHsl {
   const min = Math.min(rgb.r, rgb.g, rgb.b)
   const max = Math.max(rgb.r, rgb.g, rgb.b)
 
@@ -26,10 +24,19 @@ export function convertRgbToHwb (rgb) {
     h += 1
   }
 
+  const l = (max + min) / 2
+
+  let s
+  if (max === 0 || min === 1) {
+    s = 0
+  } else {
+    s = (max - l) / Math.min(l, 1 - l)
+  }
+
   return {
-    h: h,
-    w: min,
-    b: 1 - max,
+    h,
+    s,
+    l,
     a: rgb.a,
   }
 }

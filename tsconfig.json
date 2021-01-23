@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "alwaysStrict": true,
+    "checkJs": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    // Reason: https://github.com/microsoft/TypeScript/issues/14538#issuecomment-617761440
+    "**/*.d.ts"
+  ]
+}

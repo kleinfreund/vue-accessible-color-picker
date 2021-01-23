@@ -1,14 +1,10 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-
+import { ColorRgb } from '../../types/index.js'
 import { CssValues } from './css-values.js'
 
 /**
  * Parses an RGB color string into an RGB color object.
- *
- * @param {string} rgbColorString
- * @returns {ColorRgb}
  */
-export function parseRgbColor (rgbColorString) {
+export function parseRgbColor (rgbColorString: string): ColorRgb {
   // We only care about the bits between the parentheses of `rgb()` or `rgba()`, so let’s strip those off.
   const rawValueString = rgbColorString.substring(rgbColorString.indexOf('(') + 1, rgbColorString.indexOf(')'))
 

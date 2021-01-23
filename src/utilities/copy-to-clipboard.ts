@@ -5,11 +5,8 @@
  *
  * [1]: https://stackoverflow.com/a/33928558/2036825
  * [2]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
- *
- * @param {string} str
- * @returns {boolean}
  */
-export function copyToClipboard (str) {
+export function copyToClipboard (str: string): boolean {
   if (
     !(typeof document.queryCommandSupported === 'function' && document.queryCommandSupported('copy'))
   ) {

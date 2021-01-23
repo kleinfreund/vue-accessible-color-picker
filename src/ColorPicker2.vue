@@ -286,7 +286,7 @@
             class="vacp-color-input"
             type="text"
             :value="colors.hex"
-            @input="updateColorValue($event, 'hex')"
+            @input="updateHexColorValue($event)"
           >
         </label>
       </div>
@@ -305,37 +305,31 @@
   </div>
 </template>
 
-<script>
-/** @typedef {import('../types/index').VisibleColorFormat} VisibleColorFormat */
-/** @typedef {import('../types/index').ColorFormat} ColorFormat */
-/** @typedef {import('../types/index').Colors} Colors */
-/** @typedef {import('../types/index').ColorHex} ColorHex */
-/** @typedef {import('../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../types/index').ColorHsv} ColorHsv */
-/** @typedef {import('../types/index').ColorHwb} ColorHwb */
-/** @typedef {import('../types/index').ColorRgb} ColorRgb */
+<script lang="ts">
+import { defineComponent, onMounted, onBeforeUnmount, PropType, reactive, ref, watch } from 'vue'
+
+import { ColorFormat, Colors, VisibleColorFormat } from '../types/index'
 
 import { clamp } from './utilities/clamp.js'
-import { colorsAreValueEqual } from './utilities/colors-are-value-equal.js'
-import { colorChannels } from './utilities/color-channels.js'
-import { convertColor } from './utilities/convert-color.js'
-import { copyToClipboard } from './utilities/copy-to-clipboard.js'
-import { detectFormat } from './utilities/detect-format.js'
-import { formatAsCssColor } from './utilities/format-as-css-color.js'
-import { getCssColorAsRgbString } from './utilities/get-css-color-as-rgb-string.js'
-import { isValidHexColor } from './utilities/is-valid-hex-color.js'
-import { parseRgbColor } from './utilities/parse-rgb-color.js'
+import { colorChannels } from './utilities/color-channels'
+import { colorsAreValueEqual } from './utilities/colors-are-value-equal'
+import { conversions } from './utilities/convert-color'
+import { copyToClipboard } from './utilities/copy-to-clipboard'
+import { detectFormat } from './utilities/detect-format'
+import { formatAsCssColor } from './utilities/format-as-css-color'
+import { getCssColorAsRgbString } from './utilities/get-css-color-as-rgb-string'
+import { isValidHexColor } from './utilities/is-valid-hex-color'
+import { parseRgbColor } from './utilities/parse-rgb-color'
 
+const ALLOWED_VISIBLE_FORMATS: VisibleColorFormat[] = ['hex', 'hsl', 'hwb', 'rgb']
 const STEP_FACTOR = 10
-/** @type {ColorFormat[]} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
 
-export default {
+export default defineComponent({
   name: 'ColorPicker',
 
   props: {
     color: {
-      /** @type {import('vue').PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
-      type: [String, Object],
+      type: Object as PropType<{ [key: string]: number } | string>,
       required: false,
       default: null,
     },
@@ -347,120 +341,123 @@ export default {
     },
 
     visibleFormats: {
-      /** @type {import('vue').PropType<Array<VisibleColorFormat>>} */
-      type: Array,
+      type: Array as PropType<VisibleColorFormat[]>,
       required: false,
       default: () => ALLOWED_VISIBLE_FORMATS,
-      validator (/** @type {any[]} */ visibleFormats) {
-        return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
+      validator (visibleFormats: VisibleColorFormat[]) {
+        if (Array.isArray(visibleFormats) && visibleFormats.length > 0) {
+          return visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
+        } else {
+          return false
+        }
       },
     },
   },
 
-  data () {
-    return {
-      /** @type {boolean} */ pointerOriginatedInColorSpace: false,
-      /** @type {VisibleColorFormat} */ activeFormat: /** @type {VisibleColorFormat} */  ('rgb'),
-      /** @type {Colors} */ colors: {
-        hex: '#ffffffff',
-        hsl: { h: 0, s: 0, l: 1, a: 1 },
-        hsv: { h: 0, s: 0, v: 1, a: 1 },
-        hwb: { h: 0, w: 1, b: 0, a: 1 },
-        rgb: { r: 1, g: 1, b: 1, a: 1 },
-      },
-    }
-  },
+  setup (props, context) {
+    const colorPicker = ref<HTMLElement | null>(null)
+    const colorSpace = ref<HTMLElement | null>(null)
+    const thumb = ref<HTMLElement | null>(null)
 
-  watch: {
-    /**
-     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb | null} newColor
-     */
-    color (newColor) {
-      this.setColorValueFromProp(newColor)
-    },
-  },
+    const pointerOriginatedInColorSpace = ref(false)
+    const activeFormat = ref<VisibleColorFormat>('rgb')
+    const supportedFormats: ColorFormat[] = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
+    let colors = reactive<Colors>({
+      hex: '#ffffffff',
+      hsl: { h: 0, s: 0, l: 1, a: 1 },
+      hsv: { h: 0, s: 0, v: 1, a: 1 },
+      hwb: { h: 0, w: 1, b: 0, a: 1 },
+      rgb: { r: 1, g: 1, b: 1, a: 1 },
+    })
 
-  created () {
-    /** @type {ColorFormat[]} */ this.supportedFormats = ['hex', 'hsl', 'hsv', 'hwb', 'rgb']
-  },
+    watch(() => props.color, (color) => {
+      setColorValueFromProp(color)
+    })
 
-  mounted () {
-    this.initThumbPointerNavigation()
-    this.setColorValueFromProp(this.color)
-  },
-
-  beforeUnmount () {
-    document.removeEventListener('mousemove', this.moveThumbWithMouse)
-    document.removeEventListener('touchmove', this.moveThumbWithTouch)
-
-    document.removeEventListener('mouseup', this.stopMovingThumb)
-    document.removeEventListener('touchend', this.stopMovingThumb)
-  },
-
-  methods: {
-    initThumbPointerNavigation () {
-      document.addEventListener('mousemove', this.moveThumbWithMouse, { passive: false })
-      document.addEventListener('touchmove', this.moveThumbWithTouch, { passive: false })
-
-      document.addEventListener('mouseup', this.stopMovingThumb)
-      document.addEventListener('touchend', this.stopMovingThumb)
-    },
-
-    startMovingThumb () {
-      this.pointerOriginatedInColorSpace = true
-    },
-
-    stopMovingThumb () {
-      this.pointerOriginatedInColorSpace = false
-    },
-
-    /**
-     * @param {MouseEvent} event
-     */
-    moveThumbWithMouse (event) {
-      if (event.buttons !== 1 || this.pointerOriginatedInColorSpace === false) {
+    function setColorValueFromProp (colorProp: { [key: string]: number } | string | null) {
+      if (colorProp === null) {
         return
       }
 
-      this.moveThumb(event.clientX, event.clientY)
-    },
+      let color
+      let format: 'hsl' | 'hsv' | 'hwb' | 'rgb'
+      if (typeof colorProp === 'string') {
+        if (isValidHexColor(colorProp) && colorProp !== colors.hex) {
+          setHexColor(colorProp)
+          return
+        } else {
+          const rgbString = getCssColorAsRgbString(colorProp)
 
-    /**
-     * @param {TouchEvent} event
-     */
-    moveThumbWithTouch (event) {
-      if (this.pointerOriginatedInColorSpace === false) {
+          if (rgbString === '') {
+            return
+          }
+
+          color = parseRgbColor(rgbString)
+          format = 'rgb'
+        }
+      } else {
+        color = colorProp
+        format = detectFormat(colorProp)
+      }
+
+      if (colorsAreValueEqual(color, colors[format])) {
+        return
+      }
+
+      setColor(format, color)
+    }
+
+    function setHexColor (hexColor: string) {
+      colors.hex = hexColor
+      const eventData = applyColorUpdates('hex')
+      context.emit('color-change', eventData)
+    }
+
+    function setColor (format: 'hsl' | 'hsv' | 'hwb' | 'rgb', color: { [key: string]: number }) {
+      colors[format] = color
+      const eventData = applyColorUpdates(format)
+      context.emit('color-change', eventData)
+    }
+
+    function startMovingThumb () {
+      pointerOriginatedInColorSpace.value = true
+    }
+
+    function stopMovingThumb () {
+      pointerOriginatedInColorSpace.value = false
+    }
+
+    function moveThumbWithMouse (event: MouseEvent) {
+      if (event.buttons !== 1 || pointerOriginatedInColorSpace.value === false || !(colorSpace.value instanceof HTMLElement)) {
+        return
+      }
+
+      moveThumb(colorSpace.value, event.clientX, event.clientY)
+    }
+
+    function moveThumbWithTouch (event: TouchEvent) {
+      if (pointerOriginatedInColorSpace.value === false || !(colorSpace.value instanceof HTMLElement)) {
         return
       }
 
       // Prevent touch events from dragging the page.
       event.preventDefault()
 
-      this.moveThumb(event.touches[0].clientX, event.touches[0].clientY)
-    },
+      moveThumb(colorSpace.value, event.touches[0].clientX, event.touches[0].clientY)
+    }
 
-    /**
-     * @param {number} clientX
-     * @param {number} clientY
-     */
-    moveThumb (clientX, clientY) {
-      const rect = this.$refs.colorSpace.getBoundingClientRect()
-      const x = clientX - rect.left
-      const y = clientY - rect.top
-      const hsv = { ...this.colors.hsv }
+    function moveThumb (colorSpace: HTMLElement, clientX: number, clientY: number) {
+      const newThumbPosition = getNewThumbPosition(colorSpace, clientX, clientY)
+      const hsv = { ...colors.hsv }
+      hsv.s = newThumbPosition.x
+      hsv.v = newThumbPosition.y
 
-      hsv.s = clamp(x / rect.width, 0, 1)
-      hsv.v = clamp(1 - y / rect.height, 0, 1)
+      if (!colorsAreValueEqual(hsv, colors.hsv)) {
+        setColor('hsv', hsv)
+      }
+    }
 
-      this.setColorValue(hsv, 'hsv')
-    },
-
-    /**
-     * Controls the saturation and value portions of the color in HSV representation.
-     *
-     * @param {KeyboardEvent} event
-     */
-    moveThumbWithArrows (event) {
+    function moveThumbWithArrows (event: KeyboardEvent) {
       if (!['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key)) {
         return
       }
@@ -471,120 +468,21 @@ export default {
       const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
       const step = event.shiftKey ? 10 : 1
 
-      const newColorValue = this.colors.hsv[channel] + direction * step * 0.01
-      this.setColorValue(clamp(newColorValue, 0, 1), 'hsv', channel)
-    },
+      const newColorValue = colors.hsv[channel] + direction * step * 0.01
+      const color = { ...colors.hsv }
+      color[channel] = clamp(newColorValue, 0, 1)
+      setColor('hsv', color)
+    }
 
-    /**
-     * This event listener adds the ability to navigate
-     * a range input in larger steps by holding down Shift
-     * while pressing the arrow keys.
-     *
-     * @param {KeyboardEvent} event
-     */
-    changeInputValue (event) {
-      if (
-        !['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(
-          event.key,
-        ) ||
-        !event.shiftKey
-      ) {
-        return
+    function applyColorUpdates (format: ColorFormat) {
+      colors = reCalculateColors(colors, format)
+
+      if (colorPicker.value instanceof HTMLElement && colorSpace.value instanceof HTMLElement && thumb.value instanceof HTMLElement) {
+        setCssProps(colorPicker.value, colorSpace.value, thumb.value, colors)
       }
 
-      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      const step = parseFloat(input.step)
-      const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
-      const value = parseFloat(input.value) + direction * step * STEP_FACTOR
-      const newValue = clamp(value, parseInt(input.min), parseInt(input.max))
-
-      // Remove one step because the default action needs to be able to set a new value for it to fire events, too.
-      input.value = String(newValue - direction * step)
-    },
-
-    /**
-     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} value
-     * @param {ColorFormat} format
-     * @param {string} [channel]
-     */
-    setColorValue (value, format, channel = undefined) {
-      if (channel === undefined && !colorsAreValueEqual(value, this.colors[format])) {
-        this.colors[format] = value
-      } else if (channel !== undefined && this.colors[format][channel] !== value) {
-        this.colors[format][channel] = value
-      } else {
-        return
-      }
-
-      const eventData = this.applyColorUpdates(format)
-      this.$emit('color-change', eventData)
-    },
-
-    /**
-     * @param {ColorFormat} format
-     */
-    applyColorUpdates (format) {
-      this.colors = this.reCalculateColors(this.colors, format)
-      this.setCssProps(this.$refs.colorPicker, this.$refs.colorSpace, this.$refs.thumb, this.colors)
-
-      return this.getEventData(this.colors, this.activeFormat)
-    },
-
-    /**
-     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb | null} propValue
-     */
-    setColorValueFromProp (propValue) {
-      if (propValue === null) {
-        return
-      }
-
-      /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let value
-      /** @type {ColorFormat} */ let format
-      if (typeof propValue === 'string') {
-        if (isValidHexColor(propValue)) {
-          value = propValue
-          format = 'hex'
-        } else {
-          const rgbString = getCssColorAsRgbString(propValue)
-
-          if (rgbString === '') {
-            return
-          }
-
-          value = parseRgbColor(rgbString)
-          format = 'rgb'
-        }
-      } else {
-        value = propValue
-        format = detectFormat(propValue)
-      }
-
-      this.setColorValue(value, format)
-    },
-
-    /**
-     * Re-calculates all colors based on a changed color.
-     *
-     * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc.
-     * colors.
-     *
-     * @param {Colors} colors
-     * @param {ColorFormat} sourceFormat
-     */
-    reCalculateColors (colors, sourceFormat) {
-      const sourceColor = colors[sourceFormat]
-      const targetFormats = this.supportedFormats.filter((/** @type {ColorFormat} */ format) => format !== sourceFormat)
-
-      // Make a copy of the color object to avoid writing to it multiple times before the calculations are done.
-      // This is done to avoid Vue’s reactivity kicking in more than once.
-      const newColors = { ...colors }
-      for (const targetFormat of targetFormats) {
-        const color = convertColor(sourceColor, sourceFormat, targetFormat)
-        newColors[targetFormat] = color
-      }
-
-      return newColors
-    },
+      return getEventData(colors, activeFormat.value)
+    }
 
     /**
      * Copies the current color (determined by the active color format).
@@ -592,139 +490,198 @@ export default {
      * For example, if the active color format is HSL, the copied text will be a valid CSS color in
      * HSL format.
      */
-    copyColor () {
-      const activeColor = this.colors[this.activeFormat]
-      const cssColor = formatAsCssColor(activeColor, this.activeFormat)
+    function copyColor () {
+      const activeColor = colors[activeFormat.value]
+      const cssColor = formatAsCssColor(activeColor, activeFormat.value)
       copyToClipboard(cssColor)
-    },
+    }
 
-    /**
-     * @param {Event} event
-     */
-    updateHue (event) {
-      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      this.setColorValue(parseInt(input.value) / 360, 'hsv', 'h')
-    },
+    function updateHue (event: Event) {
+      colors.hsv.h = parseInt((event.currentTarget as HTMLInputElement).value) / 360
+    }
 
-    /**
-     * @param {Event} event
-     */
-    updateAlpha (event) {
-      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      this.setColorValue(parseInt(input.value) / 100, 'hsv', 'a')
-    },
+    function updateAlpha (event: Event) {
+      colors.hsv.a = parseInt((event.currentTarget as HTMLInputElement).value) / 100
+    }
 
-    /**
-     * @param {Event} event
-     * @param {VisibleColorFormat} format
-     * @param {string} [channel]
-     */
-    updateColorValue (event, format, channel = undefined) {
-      /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let color
-      const input = /** @type {HTMLInputElement} */ (event.target)
+    function updateHexColorValue (event: Event) {
+      const input = event.target as HTMLInputElement
 
-      if (format === 'hex') {
-        if (!isValidHexColor(input.value)) {
-          // hex color is definitely not value.
-          return
-        }
+      if (isValidHexColor(input.value)) {
+        setHexColor(input.value)
+      }
+    }
 
-        color = input.value
-      } else {
-        // Make a copy of the colors object to avoid writing to it before we know that the new color is valid.
-        color = { ...this.colors[format] }
-        const value = colorChannels[format][channel].from(input.value)
+    function updateColorValue (event: Event, format: 'hsl' | 'hwb' | 'rgb', channel: string) {
+      const input = event.target as HTMLInputElement
+      const channelValue = colorChannels[format][channel].from(input.value)
 
-        if (Number.isNaN(value) || value === undefined) {
-          // This means that the input value does not result in a valid CSS value.
-          // We return now because any further work would be futile.
-          return
-        }
-
-        color[channel] = value
+      // TODO: Verify that `channelValue` can possibly be `undefined`.
+      // Check if the input value did not result in a valid CSS value.
+      if (Number.isNaN(channelValue) || channelValue === undefined) {
+        return
       }
 
-      this.setColorValue(color, format)
-    },
+      const colorCopy = { ...colors[format] }
+      colorCopy[channel] = channelValue
+      setColor(format, colorCopy)
+    }
 
-    switchFormat () {
-      const activeFormatIndex = this.visibleFormats.findIndex((/** @type {VisibleColorFormat} */ format) => format === this.activeFormat)
-      const newFormatIndex = activeFormatIndex === this.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
-      this.activeFormat = this.visibleFormats[newFormatIndex]
-    },
-
-    /**
-     * Wrapper function. Converts a color channel’s value into its CSS value representation.
-     *
-     * @param {'hsl' | 'hwb' | 'rgb'} format
-     * @param {string} channel
-     * @returns {string}
-     */
-    getChannelAsCssValue (format, channel) {
-      return colorChannels[format][channel].to(this.colors[format][channel])
-    },
+    function switchFormat () {
+      const activeFormatIndex = props.visibleFormats.findIndex((format: VisibleColorFormat) => format === activeFormat.value)
+      const newFormatIndex = activeFormatIndex === props.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
+      activeFormat.value = props.visibleFormats[newFormatIndex]
+    }
 
     /**
-     * @param {Colors} colors
-     * @param {VisibleColorFormat} activeFormat
-     * @returns {{ colors: Colors, cssColor: string }}
+     * Converts a color channel’s value into its CSS value representation.
      */
-    getEventData (colors, activeFormat) {
-      return {
-        colors: { ...colors },
-        cssColor: formatAsCssColor(colors[activeFormat], activeFormat),
-      }
-    },
+    function getChannelAsCssValue (format: 'hsl' | 'hwb' | 'rgb', channel: string): string {
+      return colorChannels[format][channel].to(colors[format][channel])
+    }
 
-    /**
-     * Sets some CSS properties.
-     *
-     * 1. Sets the background of the hue slice to the color
-     *    represented by the currently selected hue
-     *    with full saturation and half the lightness (which is 100% value for an HSV color).
-     *
-     * 2. These overlapping gradients together with the underlying background color
-     *    create a visual representation of a slice through the HSV cylinder.
-     *    The slice’s angle is determined by the current hue.
-     *    Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
-     *
-     * 3. The X and Y coordinates of the color space thumb’s position
-     *    are expressed in the saturation and value parts of an HSV color.
-     *    This is because the color space represents the hue slice of the HSV cylinder.
-     *    This the most convenient option because a fully saturated color at 50% lightness
-     *    is located in the top right corner of that slice (i.e. at saturation 100% and value 100%).
-     *    A full red (#f00) can thus be picked by dragging the hue slider all the way to either end
-     *    and the color space thumb in the most top right corner of the color space.
-     *    This will set the hue to 0, the saturation to 100%, and the value to 100%.
-     *
-     * @param {HTMLElement} colorPicker
-     * @param {HTMLElement} colorSpace
-     * @param {HTMLElement} thumb
-     * @param {Colors} colors
-     */
-    setCssProps (colorPicker, colorSpace, thumb, colors) {
-      colorPicker.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
-      colorPicker.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
-      colorPicker.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
-      colorPicker.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
+    onMounted(() => {
+      document.addEventListener('mousemove', moveThumbWithMouse, { passive: false })
+      document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
+      document.addEventListener('mouseup', stopMovingThumb)
+      document.addEventListener('touchend', stopMovingThumb)
 
-      colorSpace.setAttribute('style', `
-        position: relative;
-        background-color: hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%); /* 1. */
-        background-image:
-          linear-gradient(to top, #000, transparent),  /* 2. */
-          linear-gradient(to right, #fff, transparent) /* 2. */
-        ;
-      `)
+      setColorValueFromProp(props.color)
+    })
 
-      thumb.setAttribute('style', `
-        box-sizing: border-box;
-        position: absolute;
-        left: ${colors.hsv.s * 100}%;   /* 3. */
-        bottom: ${colors.hsv.v * 100}%; /* 3. */
-      `)
-    },
+    onBeforeUnmount(() => {
+      document.removeEventListener('mousemove', moveThumbWithMouse)
+      document.removeEventListener('touchmove', moveThumbWithTouch)
+      document.removeEventListener('mouseup', stopMovingThumb)
+      document.removeEventListener('touchend', stopMovingThumb)
+    })
+
+    return {
+      // template refs
+      colorPicker,
+      colorSpace,
+      thumb,
+
+      // data props
+      activeFormat,
+      colors,
+      pointerOriginatedInColorSpace,
+      supportedFormats,
+
+      // methods
+      startMovingThumb,
+      moveThumbWithArrows,
+      changeInputValue,
+      copyColor,
+      updateHue,
+      updateAlpha,
+      updateColorValue,
+      updateHexColorValue,
+      switchFormat,
+      getChannelAsCssValue,
+    }
   },
+})
+
+/**
+ * Re-calculates all colors based on a changed color.
+ *
+ * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc.
+ * colors.
+ */
+function reCalculateColors (colors: Colors, sourceFormat: ColorFormat): Colors {
+  const sourceColor = colors[sourceFormat]
+
+  // Make a copy of the color object to avoid writing to it multiple times before the calculations are done.
+  // This is done to avoid Vue’s reactivity kicking in more than once.
+  // TODO: Destructuring might destroy reactivity of the `colors` state.
+  const newColors = { ...colors }
+
+  for (const conversion of conversions[sourceFormat]) {
+    newColors[conversion.format] = conversion.convert(sourceColor)
+  }
+
+  return newColors
+}
+
+/**
+ * Sets some CSS properties.
+ *
+ * 1. Sets the background of the hue slice to the color
+ *    represented by the currently selected hue
+ *    with full saturation and half the lightness (which is 100% value for an HSV color).
+ *
+ * 2. These overlapping gradients together with the underlying background color
+ *    create a visual representation of a slice through the HSV cylinder.
+ *    The slice’s angle is determined by the current hue.
+ *    Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
+ *
+ * 3. The X and Y coordinates of the color space thumb’s position
+ *    are expressed in the saturation and value parts of an HSV color.
+ *    This is because the color space represents the hue slice of the HSV cylinder.
+ *    This the most convenient option because a fully saturated color at 50% lightness
+ *    is located in the top right corner of that slice (i.e. at saturation 100% and value 100%).
+ *    A full red (#f00) can thus be picked by dragging the hue slider all the way to either end
+ *    and the color space thumb in the most top right corner of the color space.
+ *    This will set the hue to 0, the saturation to 100%, and the value to 100%.
+ */
+function setCssProps (colorPicker: HTMLElement, colorSpace: HTMLElement, thumb: HTMLElement, colors: Colors) {
+  colorPicker.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
+  colorPicker.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
+  colorPicker.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
+  colorPicker.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
+
+  colorSpace.setAttribute('style', `
+    position: relative;
+    background-color: hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%); /* 1. */
+    background-image:
+      linear-gradient(to top, #000, transparent),  /* 2. */
+      linear-gradient(to right, #fff, transparent) /* 2. */
+    ;
+  `)
+
+  thumb.setAttribute('style', `
+    box-sizing: border-box;
+    position: absolute;
+    left: ${colors.hsv.s * 100}%;   /* 3. */
+    bottom: ${colors.hsv.v * 100}%; /* 3. */
+  `)
+}
+
+function getEventData (colors: Colors, activeFormat: VisibleColorFormat): { colors: Colors, cssColor: string } {
+  return {
+    colors: { ...colors },
+    cssColor: formatAsCssColor(colors[activeFormat], activeFormat),
+  }
+}
+
+function getNewThumbPosition (colorSpace: HTMLElement, clientX: number, clientY: number) {
+  const rect = colorSpace.getBoundingClientRect()
+  const x = clientX - rect.left
+  const y = clientY - rect.top
+
+  return {
+    x: clamp(x / rect.width, 0, 1),
+    y: clamp(1 - y / rect.height, 0, 1),
+  }
+}
+
+function changeInputValue (event: KeyboardEvent) {
+  if (
+    !['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key) ||
+    !event.shiftKey
+  ) {
+    return
+  }
+
+  const input = event.currentTarget as HTMLInputElement
+  const step = parseFloat(input.step)
+  const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
+  const value = parseFloat(input.value) + direction * step * STEP_FACTOR
+  const newValue = clamp(value, parseInt(input.min), parseInt(input.max))
+
+  // Remove one step because the default action needs to be able to set a new value for it to fire events, too.
+  input.value = String(newValue - direction * step)
 }
 </script>
 
