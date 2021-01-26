@@ -357,6 +357,8 @@ export default {
     },
   },
 
+  emits: ['color-change'],
+
   data () {
     return {
       /** @type {boolean} */ pointerOriginatedInColorSpace: false,
