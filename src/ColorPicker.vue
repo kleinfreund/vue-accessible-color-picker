@@ -9,11 +9,7 @@
       @mousedown="startMovingThumb"
       @touchstart="startMovingThumb"
     >
-      <!--
-        Accessibility remark:
-
-        I don’t know of a semantic HTML that would be adequate for the job of a planar range thumb.
-      -->
+      <!-- Accessibility remark: I don’t know of a semantic HTML that would be adequate for the job of a planar range thumb. -->
       <div
         ref="thumb"
         class="vacp-color-space-thumb"
@@ -362,7 +358,7 @@ export default {
   data () {
     return {
       /** @type {boolean} */ pointerOriginatedInColorSpace: false,
-      /** @type {VisibleColorFormat} */ activeFormat: /** @type {VisibleColorFormat} */  ('rgb'),
+      /** @type {VisibleColorFormat} */ activeFormat: /** @type {VisibleColorFormat} */ ('rgb'),
       /** @type {Colors} */ colors: {
         hex: '#ffffffff',
         hsl: { h: 0, s: 0, l: 1, a: 1 },
@@ -478,9 +474,7 @@ export default {
     },
 
     /**
-     * This event listener adds the ability to navigate
-     * a range input in larger steps by holding down Shift
-     * while pressing the arrow keys.
+     * This event listener adds the ability to navigate a range input in larger steps by holding down Shift while pressing the arrow keys.
      *
      * @param {KeyboardEvent} event
      */
@@ -567,8 +561,7 @@ export default {
     /**
      * Re-calculates all colors based on a changed color.
      *
-     * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc.
-     * colors.
+     * For example, if an HSL color was changed, this method re-calculates the RGB, HSV, etc. colors.
      *
      * @param {Colors} colors
      * @param {ColorFormat} sourceFormat
@@ -591,8 +584,7 @@ export default {
     /**
      * Copies the current color (determined by the active color format).
      *
-     * For example, if the active color format is HSL, the copied text will be a valid CSS color in
-     * HSL format.
+     * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
      */
     copyColor () {
       const activeColor = this.colors[this.activeFormat]
@@ -638,8 +630,7 @@ export default {
         const value = colorChannels[format][channel].from(input.value)
 
         if (Number.isNaN(value) || value === undefined) {
-          // This means that the input value does not result in a valid CSS value.
-          // We return now because any further work would be futile.
+          // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
           return
         }
 
@@ -681,23 +672,11 @@ export default {
     /**
      * Sets some CSS properties.
      *
-     * 1. Sets the background of the hue slice to the color
-     *    represented by the currently selected hue
-     *    with full saturation and half the lightness (which is 100% value for an HSV color).
+     * 1. Sets the background of the hue slice to the color represented by the currently selected hue with full saturation and half the lightness (which is 100% value for an HSV color).
      *
-     * 2. These overlapping gradients together with the underlying background color
-     *    create a visual representation of a slice through the HSV cylinder.
-     *    The slice’s angle is determined by the current hue.
-     *    Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
+     * 2. These overlapping gradients together with the underlying background color create a visual representation of a slice through the HSV cylinder. The slice’s angle is determined by the current hue. Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
      *
-     * 3. The X and Y coordinates of the color space thumb’s position
-     *    are expressed in the saturation and value parts of an HSV color.
-     *    This is because the color space represents the hue slice of the HSV cylinder.
-     *    This the most convenient option because a fully saturated color at 50% lightness
-     *    is located in the top right corner of that slice (i.e. at saturation 100% and value 100%).
-     *    A full red (#f00) can thus be picked by dragging the hue slider all the way to either end
-     *    and the color space thumb in the most top right corner of the color space.
-     *    This will set the hue to 0, the saturation to 100%, and the value to 100%.
+     * 3. The X and Y coordinates of the color space thumb’s position are expressed in the saturation and value parts of an HSV color. This is because the color space represents the hue slice of the HSV cylinder. This the most convenient option because a fully saturated color at 50% lightness is located in the top right corner of that slice (i.e. at saturation 100% and value 100%). A full red (#f00) can thus be picked by dragging the hue slider all the way to either end and the color space thumb in the most top right corner of the color space. This will set the hue to 0, the saturation to 100%, and the value to 100%.
      *
      * @param {HTMLElement} colorPicker
      * @param {HTMLElement} colorSpace
@@ -734,11 +713,9 @@ export default {
 /*
 This style block is unscoped intentionally.
 
-This is done to have a lower specificity for its selectors
-which in turn makes it easier to override their styles.
+This is done to have a lower specificity for its selectors which in turn makes it easier to override their styles.
 
-The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20
-while the specifcitity for `.vacp-color-space` is 10.
+The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specifcitity for `.vacp-color-space` is 10.
 */
 .vacp-color-picker {
   --vacp-color: hsl(
@@ -819,8 +796,7 @@ while the specifcitity for `.vacp-color-space` is 10.
 }
 
 /*
-1. Don’t fully remove a focus outline or border.
-   This is important to maintain a focus style in Windows’ high contrast mode.
+1. Don’t fully remove a focus outline or border. This is important to maintain a focus style in Windows’ high contrast mode.
 */
 .vacp-color-space-thumb:focus {
   outline-color: transparent; /* 1. */
@@ -1033,11 +1009,7 @@ Range input: thumbs
 }
 
 /*
-1. Justification for removing the outline:
-   The focus styles are maintained using a solid border style.
-   This maintains a focus style in Windows’ high contrast mode
-   which would be lost with a combination of `outline: none` and a box shadow
-   because box shadows are removed in high contrast mode.
+1. Justification for removing the outline: The focus styles are maintained using a solid border style. This maintains a focus style in Windows’ high contrast mode which would be lost with a combination of `outline: none` and a box shadow because box shadows are removed in high contrast mode.
 */
 .vacp-copy-button:enabled:focus {
   outline: none; /* 1. */
