@@ -358,28 +358,17 @@ export default {
         return
       }
 
-      /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let value
-      /** @type {ColorFormat} */ let format
-      if (typeof propValue === 'string') {
-        if (isValidHexColor(propValue)) {
-          value = propValue
-          format = 'hex'
-        } else {
-          const rgbString = getCssColorAsRgbString(propValue)
-
-          if (rgbString === '') {
-            return
-          }
-
-          value = parseRgbColor(rgbString)
-          format = 'rgb'
-        }
+      if (typeof propValue !== 'string') {
+        const format = detectFormat(propValue)
+        this.setColorValue(propValue, format)
+      } else if (isValidHexColor(propValue)) {
+        this.setColorValue(propValue, 'hex')
       } else {
-        value = propValue
-        format = detectFormat(propValue)
+        const rgbString = getCssColorAsRgbString(propValue)
+        if (rgbString !== '') {
+          this.setColorValue(parseRgbColor(rgbString), 'rgb')
+        }
       }
-
-      this.setColorValue(value, format)
     },
 
     /**
