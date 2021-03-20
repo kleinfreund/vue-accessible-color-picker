@@ -72,210 +72,15 @@
     </button>
 
     <div class="vacp-color-inputs">
-      <div
-        v-if="activeFormat === 'hsl'"
-        class="vacp-color-input-group"
-      >
+      <div class="vacp-color-input-group">
         <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hsl-h`"
-        >
-          <span class="vacp-color-input-label-text">H</span>
-
-          <input
-            :id="`${id}-color-hsl-h`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hsl', 'h')"
-            @input="updateColorValue($event, 'hsl', 'h')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hsl-s`"
-        >
-          <span class="vacp-color-input-label-text">S</span>
-
-          <input
-            :id="`${id}-color-hsl-s`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hsl', 's')"
-            @input="updateColorValue($event, 'hsl', 's')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hsl-l`"
-        >
-          <span class="vacp-color-input-label-text">L</span>
-
-          <input
-            :id="`${id}-color-hsl-l`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hsl', 'l')"
-            @input="updateColorValue($event, 'hsl', 'l')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hsl-a`"
-        >
-          <span class="vacp-color-input-label-text">A</span>
-
-          <input
-            :id="`${id}-color-hsl-a`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hsl', 'a')"
-            @input="updateColorValue($event, 'hsl', 'a')"
-          >
-        </label>
-      </div>
-
-      <div
-        v-else-if="activeFormat === 'hwb'"
-        class="vacp-color-input-group"
-      >
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hwb-h`"
-        >
-          <span class="vacp-color-input-label-text">H</span>
-
-          <input
-            :id="`${id}-color-hwb-h`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hwb', 'h')"
-            @input="updateColorValue($event, 'hwb', 'h')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hwb-w`"
-        >
-          <span class="vacp-color-input-label-text">W</span>
-
-          <input
-            :id="`${id}-color-hwb-w`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hwb', 'w')"
-            @input="updateColorValue($event, 'hwb', 'w')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hwb-b`"
-        >
-          <span class="vacp-color-input-label-text">B</span>
-
-          <input
-            :id="`${id}-color-hwb-b`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hwb', 'b')"
-            @input="updateColorValue($event, 'hwb', 'b')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-hwb-a`"
-        >
-          <span class="vacp-color-input-label-text">A</span>
-
-          <input
-            :id="`${id}-color-hwb-a`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('hwb', 'a')"
-            @input="updateColorValue($event, 'hwb', 'a')"
-          >
-        </label>
-      </div>
-
-      <div
-        v-else-if="activeFormat === 'rgb'"
-        class="vacp-color-input-group"
-      >
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-rgb-r`"
-        >
-          <span class="vacp-color-input-label-text">R</span>
-
-          <input
-            :id="`${id}-color-rgb-r`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('rgb', 'r')"
-            @input="updateColorValue($event, 'rgb', 'r')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-rgb-g`"
-        >
-          <span class="vacp-color-input-label-text">G</span>
-
-          <input
-            :id="`${id}-color-rgb-g`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('rgb', 'g')"
-            @input="updateColorValue($event, 'rgb', 'g')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-rgb-b`"
-        >
-          <span class="vacp-color-input-label-text">B</span>
-
-          <input
-            :id="`${id}-color-rgb-b`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('rgb', 'b')"
-            @input="updateColorValue($event, 'rgb', 'b')"
-          >
-        </label>
-
-        <label
-          class="vacp-color-input-label"
-          :for="`${id}-color-rgb-a`"
-        >
-          <span class="vacp-color-input-label-text">A</span>
-
-          <input
-            :id="`${id}-color-rgb-a`"
-            class="vacp-color-input"
-            type="text"
-            :value="getChannelAsCssValue('rgb', 'a')"
-            @input="updateColorValue($event, 'rgb', 'a')"
-          >
-        </label>
-      </div>
-
-      <div
-        v-else-if="activeFormat === 'hex'"
-        class="vacp-color-input-group"
-      >
-        <label
+          v-if="activeFormat === 'hex'"
           class="vacp-color-input-label"
           :for="`${id}-color-hex`"
         >
-          <span class="vacp-color-input-label-text">Hex</span>
+          <span class="vacp-color-input-label-text">
+            Hex
+          </span>
 
           <input
             :id="`${id}-color-hex`"
@@ -283,6 +88,29 @@
             type="text"
             :value="colors.hex"
             @input="updateColorValue($event, 'hex')"
+          >
+        </label>
+
+        <label
+          v-for="channel in Object.keys(colors[activeFormat])"
+          v-else
+          :id="`${id}-color-${activeFormat}-${channel}`"
+          :key="`${id}-color-${activeFormat}-${channel}`"
+          class="vacp-color-input-label"
+          :value="getChannelAsCssValue(activeFormat, channel)"
+          :for="`${id}-color-${activeFormat}`"
+          @input="updateColorValue($event, activeFormat, channel)"
+        >
+          <span class="vacp-color-input-label-text">
+            {{ channel.toUpperCase() }}
+          </span>
+
+          <input
+            :id="`${id}-color-${activeFormat}`"
+            class="vacp-color-input"
+            type="text"
+            :value="getChannelAsCssValue(activeFormat, channel)"
+            @input="updateColorValue($event, activeFormat, channel)"
           >
         </label>
       </div>
