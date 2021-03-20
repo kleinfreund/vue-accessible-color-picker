@@ -179,6 +179,15 @@ export default {
         return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
       },
     },
+
+    defaultFormat: {
+      type: String,
+      required: false,
+      default: 'rgb',
+      validator (/** @type {VisibleColorFormat} */ defaultFormat) {
+        return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
+      },
+    },
   },
 
   emits: ['color-change'],
@@ -186,7 +195,7 @@ export default {
   data () {
     return {
       /** @type {boolean} */ pointerOriginatedInColorSpace: false,
-      /** @type {VisibleColorFormat} */ activeFormat: /** @type {VisibleColorFormat} */ ('rgb'),
+      /** @type {VisibleColorFormat} */ activeFormat: this.defaultFormat,
       /** @type {Colors} */ colors: {
         hex: '#ffffffff',
         hsl: { h: 0, s: 0, l: 1, a: 1 },

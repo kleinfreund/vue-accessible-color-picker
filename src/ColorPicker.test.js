@@ -65,6 +65,22 @@ describe('ColorPicker', () => {
     expect(wrapper.vm.colors.hex).toBe('#ffffffff')
   })
 
+  test.each([
+    [undefined, 'rgb'],
+    ['hex', 'hex'],
+    ['hsl', 'hsl'],
+    ['hwb', 'hwb'],
+    ['rgb', 'rgb'],
+  ])('sets active color format to “%s” when providing default format prop', (defaultFormat, expectedActiveFormat) => {
+    const wrapper = shallowMount(ColorPicker, {
+      propsData: {
+        defaultFormat,
+      },
+    })
+
+    expect(wrapper.vm.activeFormat).toBe(expectedActiveFormat)
+  })
+
   test('recomputes colors when color prop changes', async () => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
     const wrapper = shallowMount(ColorPicker)
