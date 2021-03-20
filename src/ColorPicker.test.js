@@ -252,7 +252,8 @@ describe('ColorPicker', () => {
     wrapper.vm.moveThumbWithArrows(keydownEvent)
 
     expect(keydownEvent.preventDefault).toHaveBeenCalled()
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(expectedChannelValue, 'hsv', expectedChannel)
+    const expectedColor = { ...wrapper.vm.colors.hsv, [expectedChannel]: expectedChannelValue }
+    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(expectedColor, 'hsv')
   })
 
   test('can not increment/decrement in big steps without holding down shift', () => {
@@ -331,7 +332,8 @@ describe('ColorPicker', () => {
 
     wrapper.vm.updateHue(hueInputEvent)
     expect(ColorPicker.methods.updateHue).toHaveBeenLastCalledWith(hueInputEvent)
-    expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(hueAngle / 360, 'hsv', 'h')
+    let expectedColor = { ...wrapper.vm.colors.hsv, h: hueAngle / 360 }
+    expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(expectedColor, 'hsv')
 
     const alphaRangeInput = wrapper.find(`#${wrapper.vm.id}-alpha-slider`)
     const alphaRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
@@ -343,7 +345,8 @@ describe('ColorPicker', () => {
 
     wrapper.vm.updateAlpha(alphaInputEvent)
     expect(ColorPicker.methods.updateAlpha).toHaveBeenLastCalledWith(alphaInputEvent)
-    expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(alpha / 100, 'hsv', 'a')
+    expectedColor = { ...wrapper.vm.colors.hsv, a: alpha / 100 }
+    expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(expectedColor, 'hsv')
   })
 
   test.each([

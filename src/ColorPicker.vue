@@ -273,11 +273,10 @@ export default {
       const rect = this.$refs.colorSpace.getBoundingClientRect()
       const x = clientX - rect.left
       const y = clientY - rect.top
-      const hsv = { ...this.colors.hsv }
 
+      const hsv = { ...this.colors.hsv }
       hsv.s = clamp(x / rect.width, 0, 1)
       hsv.v = clamp(1 - y / rect.height, 0, 1)
-
       this.setColorValue(hsv, 'hsv')
     },
 
@@ -298,7 +297,9 @@ export default {
       const step = event.shiftKey ? 10 : 1
 
       const newColorValue = this.colors.hsv[channel] + direction * step * 0.01
-      this.setColorValue(clamp(newColorValue, 0, 1), 'hsv', channel)
+      const color = { ...this.colors.hsv }
+      color[channel] = clamp(newColorValue, 0, 1)
+      this.setColorValue(color, 'hsv')
     },
 
     /**
@@ -327,21 +328,16 @@ export default {
     },
 
     /**
-     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} value
+     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
      * @param {ColorFormat} format
-     * @param {string} [channel]
      */
-    setColorValue (value, format, channel = undefined) {
-      if (channel === undefined && !colorsAreValueEqual(value, this.colors[format])) {
-        this.colors[format] = value
-      } else if (channel !== undefined && this.colors[format][channel] !== value) {
-        this.colors[format][channel] = value
-      } else {
-        return
+    setColorValue (color, format) {
+      const currentColor = { ...this.colors[format] }
+      if (!colorsAreValueEqual(currentColor, color)) {
+        this.colors[format] = color
+        const eventData = this.applyColorUpdates(format)
+        this.$emit('color-change', eventData)
       }
-
-      const eventData = this.applyColorUpdates(format)
-      this.$emit('color-change', eventData)
     },
 
     /**
@@ -425,7 +421,9 @@ export default {
      */
     updateHue (event) {
       const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      this.setColorValue(parseInt(input.value) / 360, 'hsv', 'h')
+      const color = { ...this.colors.hsv }
+      color.h = parseInt(input.value) / 360
+      this.setColorValue(color, 'hsv')
     },
 
     /**
@@ -433,7 +431,9 @@ export default {
      */
     updateAlpha (event) {
       const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      this.setColorValue(parseInt(input.value) / 100, 'hsv', 'a')
+      const color = { ...this.colors.hsv }
+      color.a = parseInt(input.value) / 100
+      this.setColorValue(color, 'hsv')
     },
 
     /**
@@ -445,7 +445,7 @@ export default {
       const input = /** @type {HTMLInputElement} */ (event.target)
 
       // Make a shallow copy of the colors object to avoid writing to it before we know that the new color is valid.
-      /** @type {ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ const color = { ...this.colors[format] }
+      const color = { ...this.colors[format] }
       const value = colorChannels[format][channel].from(input.value)
 
       if (Number.isNaN(value) || value === undefined) {
