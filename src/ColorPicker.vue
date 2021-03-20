@@ -87,7 +87,7 @@
             class="vacp-color-input"
             type="text"
             :value="colors.hex"
-            @input="updateColorValue($event, 'hex')"
+            @input="updateHexColorValue($event)"
           >
         </label>
 
@@ -438,34 +438,35 @@ export default {
 
     /**
      * @param {Event} event
-     * @param {VisibleColorFormat} format
-     * @param {string} [channel]
+     * @param {'hsl' | 'hwb' | 'rgb'} format
+     * @param {string} channel
      */
-    updateColorValue (event, format, channel = undefined) {
-      /** @type {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ let color
+    updateColorValue (event, format, channel) {
       const input = /** @type {HTMLInputElement} */ (event.target)
 
-      if (format === 'hex') {
-        if (!isValidHexColor(input.value)) {
-          // hex color is definitely not value.
-          return
-        }
+      // Make a shallow copy of the colors object to avoid writing to it before we know that the new color is valid.
+      /** @type {ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ const color = { ...this.colors[format] }
+      const value = colorChannels[format][channel].from(input.value)
 
-        color = input.value
-      } else {
-        // Make a copy of the colors object to avoid writing to it before we know that the new color is valid.
-        color = { ...this.colors[format] }
-        const value = colorChannels[format][channel].from(input.value)
-
-        if (Number.isNaN(value) || value === undefined) {
-          // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
-          return
-        }
-
-        color[channel] = value
+      if (Number.isNaN(value) || value === undefined) {
+        // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
+        return
       }
 
+      color[channel] = value
+
       this.setColorValue(color, format)
+    },
+
+    /**
+     * @param {Event} event
+     */
+    updateHexColorValue (event) {
+      const input = /** @type {HTMLInputElement} */ (event.target)
+
+      if (isValidHexColor(input.value)) {
+        this.setColorValue(input.value, 'hex')
+      }
     },
 
     switchFormat () {

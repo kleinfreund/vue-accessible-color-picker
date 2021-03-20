@@ -350,8 +350,6 @@ describe('ColorPicker', () => {
     ['rgb', 'r', '127.'],
     ['hsl', 's', 'a'],
     ['hwb', 'b', '25.%'],
-    ['hex', undefined, 'abc'],
-    ['hex', undefined, '25%'],
   ])('updating a %s color input with an invalid value does not update the internal color data', async (format, channel, channelValue) => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
@@ -362,7 +360,7 @@ describe('ColorPicker', () => {
     wrapper.vm.activeFormat = format
     await flushPromises()
 
-    const inputSelector = `#${wrapper.vm.id}-color-${format}` + (channel !== undefined ? `-${channel}` : '')
+    const inputSelector = `#${wrapper.vm.id}-color-${format}-${channel}`
     const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
     inputElement.value = channelValue
     const inputEvent = { target: inputElement }
@@ -373,10 +371,32 @@ describe('ColorPicker', () => {
   })
 
   test.each([
+    ['abc'],
+    ['25%'],
+  ])('updating a hex color input with an invalid value does not update the internal color data', async (invalidHexColorString) => {
+    jest.spyOn(ColorPicker.methods, 'setColorValue')
+
+    const wrapper = shallowMount(ColorPicker)
+
+    jest.resetAllMocks()
+
+    wrapper.vm.activeFormat = 'hex'
+    await flushPromises()
+
+    const inputSelector = `#${wrapper.vm.id}-color-hex`
+    const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+    inputElement.value = invalidHexColorString
+    const inputEvent = { target: inputElement }
+
+    wrapper.vm.updateHexColorValue(inputEvent)
+
+    expect(ColorPicker.methods.setColorValue).not.toHaveBeenCalled()
+  })
+
+  test.each([
     ['rgb', 'r', '127.5'],
     ['hsl', 's', '75%'],
     ['hwb', 'b', '25.5%'],
-    ['hex', undefined, '#ff8800cc'],
   ])('updating a %s color input with a valid value updates the internal color data', async (format, channel, channelValue) => {
     jest.spyOn(ColorPicker.methods, 'setColorValue')
 
@@ -387,12 +407,34 @@ describe('ColorPicker', () => {
     wrapper.vm.activeFormat = format
     await flushPromises()
 
-    const inputSelector = `#${wrapper.vm.id}-color-${format}` + (channel !== undefined ? `-${channel}` : '')
+    const inputSelector = `#${wrapper.vm.id}-color-${format}-${channel}`
     const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
     inputElement.value = channelValue
     const inputEvent = { target: inputElement }
 
     wrapper.vm.updateColorValue(inputEvent, format, channel)
+
+    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
+  })
+
+  test.each([
+    ['#ff8800cc'],
+  ])('updating a %s color input with a valid value updates the internal color data', async (channelValue) => {
+    jest.spyOn(ColorPicker.methods, 'setColorValue')
+
+    const wrapper = shallowMount(ColorPicker)
+
+    jest.resetAllMocks()
+
+    wrapper.vm.activeFormat = 'hex'
+    await flushPromises()
+
+    const inputSelector = `#${wrapper.vm.id}-color-hex`
+    const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+    inputElement.value = channelValue
+    const inputEvent = { target: inputElement }
+
+    wrapper.vm.updateHexColorValue(inputEvent)
 
     expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
   })
