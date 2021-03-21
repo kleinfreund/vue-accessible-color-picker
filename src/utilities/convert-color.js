@@ -22,87 +22,39 @@ import { convertRgbToHex } from './color-conversions/convert-rgb-to-hex.js'
 import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
 
 /**
- * @typedef {Object} HexConversions
- * @property {(arg0: ColorHex) => ColorHsl} hsl
- * @property {(arg0: ColorHex) => ColorHsv} hsv
- * @property {(arg0: ColorHex) => ColorHwb} hwb
- * @property {(arg0: ColorHex) => ColorRgb} rgb
+ * @type {{ [key in ColorFormat]: Array<{ format: ColorFormat, convert: (color: any) => any }> }}
  */
-
-/**
- * @typedef {Object} HslConversions
- * @property {(arg0: ColorHsl) => ColorHex} hex
- * @property {(arg0: ColorHsl) => ColorHsv} hsv
- * @property {(arg0: ColorHsl) => ColorHwb} hwb
- * @property {(arg0: ColorHsl) => ColorRgb} rgb
- */
-
-/**
- * @typedef {Object} HsvConversions
- * @property {(arg0: ColorHsv) => ColorHex} hex
- * @property {(arg0: ColorHsv) => ColorHsl} hsl
- * @property {(arg0: ColorHsv) => ColorHwb} hwb
- * @property {(arg0: ColorHsv) => ColorRgb} rgb
- */
-
-/**
- * @typedef {Object} HwbConversions
- * @property {(arg0: ColorHwb) => ColorHex} hex
- * @property {(arg0: ColorHwb) => ColorHsl} hsl
- * @property {(arg0: ColorHwb) => ColorHsv} hsv
- * @property {(arg0: ColorHwb) => ColorRgb} rgb
- */
-
-/**
- * @typedef {Object} RgbConversions
- * @property {(arg0: ColorRgb) => ColorHex} hex
- * @property {(arg0: ColorRgb) => ColorHsl} hsl
- * @property {(arg0: ColorRgb) => ColorHsv} hsv
- * @property {(arg0: ColorRgb) => ColorHwb} hwb
- */
-
-/** @type {HexConversions} */ const hexConversions = {
-  hsl: convertHexToHsl,
-  hsv: convertHexToHsv,
-  hwb: convertHexToHwb,
-  rgb: convertHexToRgb,
-}
-
-/** @type {HslConversions} */ const hslConversions = {
-  hex: convertHslToHex,
-  hsv: convertHslToHsv,
-  hwb: convertHslToHwb,
-  rgb: convertHslToRgb,
-}
-
-/** @type {HsvConversions} */ const hsvConversions = {
-  hex: convertHsvToHex,
-  hsl: convertHsvToHsl,
-  hwb: convertHsvToHwb,
-  rgb: convertHsvToRgb,
-}
-
-/** @type {HwbConversions} */ const hwbConversions = {
-  hex: convertHwbToHex,
-  hsl: convertHwbToHsl,
-  hsv: convertHwbToHsv,
-  rgb: convertHwbToRgb,
-}
-
-/** @type {RgbConversions} */ const rgbConversions = {
-  hex: convertRgbToHex,
-  hsl: convertRgbToHsl,
-  hsv: convertRgbToHsv,
-  hwb: convertRgbToHwb,
-}
-
-/** @type {{ [key in ColorFormat]: HexConversions | HslConversions | HsvConversions | HwbConversions | RgbConversions }} */
-const conversions = {
-  hex: hexConversions,
-  hsl: hslConversions,
-  hsv: hsvConversions,
-  hwb: hwbConversions,
-  rgb: rgbConversions,
+export const conversions = {
+  hex: [
+    { format: 'hsl', convert: convertHexToHsl },
+    { format: 'hsv', convert: convertHexToHsv },
+    { format: 'hwb', convert: convertHexToHwb },
+    { format: 'rgb', convert: convertHexToRgb },
+  ],
+  hsl: [
+    { format: 'hex', convert: convertHslToHex },
+    { format: 'hsv', convert: convertHslToHsv },
+    { format: 'hwb', convert: convertHslToHwb },
+    { format: 'rgb', convert: convertHslToRgb },
+  ],
+  hsv: [
+    { format: 'hex', convert: convertHsvToHex },
+    { format: 'hsl', convert: convertHsvToHsl },
+    { format: 'hwb', convert: convertHsvToHwb },
+    { format: 'rgb', convert: convertHsvToRgb },
+  ],
+  hwb: [
+    { format: 'hex', convert: convertHwbToHex },
+    { format: 'hsl', convert: convertHwbToHsl },
+    { format: 'hsv', convert: convertHwbToHsv },
+    { format: 'rgb', convert: convertHwbToRgb },
+  ],
+  rgb: [
+    { format: 'hex', convert: convertRgbToHex },
+    { format: 'hsl', convert: convertRgbToHsl },
+    { format: 'hsv', convert: convertRgbToHsv },
+    { format: 'hwb', convert: convertRgbToHwb },
+  ],
 }
 
 /**
@@ -188,16 +140,4 @@ function convertHwbToRgb (hwb) {
 function convertHsvToHex (hsv) {
   const rgb = convertHsvToRgb(hsv)
   return convertRgbToHex(rgb)
-}
-
-/**
- * Converts a given color object from one color format to another.
- *
- * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
- * @param {ColorFormat} sourceFormat
- * @param {ColorFormat} targetFormat
- * @returns {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb}
- */
-export function convertColor (color, sourceFormat, targetFormat) {
-  return conversions[sourceFormat][targetFormat](color)
 }

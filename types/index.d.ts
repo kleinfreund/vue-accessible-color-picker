@@ -32,12 +32,4 @@ export namespace VueAccessibleColorPicker {
     b: number
     a: number
   }
-
-  export type Colors = {
-    hex: ColorHex
-    hsl: ColorHsl
-    hsv: ColorHsv
-    hwb: ColorHwb
-    rgb: ColorRgb
-  }
 }

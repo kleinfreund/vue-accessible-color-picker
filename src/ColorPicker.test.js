@@ -38,21 +38,19 @@ describe('ColorPicker', () => {
   })
 
   test.each([
-    ['hex', '#f00', '#f00'],
-    ['rgb', { r: 1, g: 0.5, b: 0, a: 0.5 }, { r: 1, g: 0.5, b: 0, a: 0.5 }],
-    ['hsl', { h: 0, s: 1, l: 0.5, a: 1 }, { h: 0, s: 1, l: 0.5, a: 1 }],
-    ['hwb', { h: 0.5, w: 0.33, b: 0.5, a: 1 }, { h: 0.5, w: 0.33, b: 0.5, a: 1 }],
-    ['hsv', { h: 0.5, s: 0.33, v: 0.5, a: 1 }, { h: 0.5, s: 0.33, v: 0.5, a: 1 }],
-  ])('mounts correctly with a valid color prop', (format, colorProp, rgbColor) => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
-    shallowMount(ColorPicker, {
+    ['hex', '#f00'],
+    ['rgb', { r: 1, g: 0.5, b: 0, a: 0.5 }],
+    ['hsl', { h: 0, s: 1, l: 0.5, a: 1 }],
+    ['hwb', { h: 0.5, w: 0.33, b: 0.5, a: 1 }],
+    ['hsv', { h: 0.5, s: 0.33, v: 0.5, a: 1 }],
+  ])('mounts correctly with a valid color prop', (format, colorProp) => {
+    const wrapper = shallowMount(ColorPicker, {
       props: {
         color: colorProp,
       },
     })
 
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(rgbColor, format)
+    expect(wrapper.vm.colors[format]).toEqual(colorProp)
   })
 
   test('mounts correctly with an invalid color prop', () => {
@@ -81,30 +79,52 @@ describe('ColorPicker', () => {
     expect(wrapper.vm.activeFormat).toBe(expectedActiveFormat)
   })
 
-  test('recomputes colors when color prop changes', async () => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
+  test.each([
+    [
+      '#f80c',
+      { r: 1, g: 0.5333333333333333, b: 0, a: 0.8 },
+    ],
+    [
+      { h: 0.5, s: 0.33, v: 0.5, a: 1 },
+      { r: 0.33499999999999996, g: 0.5, b: 0.5, a: 1 },
+    ],
+  ])('recomputes colors when color prop changes', async (colorProp, expectedColorChangePayload) => {
     const wrapper = shallowMount(ColorPicker)
 
-    await wrapper.setProps({ color: '#f80c' })
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
+    await wrapper.setProps({ color: colorProp })
+    let emittedColorChangeEvents = wrapper.emitted()['color-change']
+    // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
+    let emittedRgbColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.rgb
+    expect(emittedRgbColor).toEqual(expectedColorChangePayload)
 
-    await wrapper.setProps({ color: { h: 0.5, s: 0.33, v: 0.5, a: 1 } })
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(2)
+    await wrapper.setProps({ color: '#fffc' })
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
+    emittedRgbColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.rgb
+    expect(emittedRgbColor).toEqual({ r: 1, g: 1, b: 1, a: 0.8 })
   })
 
-  test('removes event listeners on beforeDestroy', () => {
-    jest.spyOn(ColorPicker.methods, 'moveThumbWithMouse')
-
+  test('removes event listeners on unmount', async () => {
     const wrapper = shallowMount(ColorPicker)
 
-    document.dispatchEvent(new Event('mousemove'))
-    expect(ColorPicker.methods.moveThumbWithMouse).toHaveBeenCalledTimes(1)
+    const colorSpace = wrapper.find('.vacp-color-space')
+    await colorSpace.trigger('mousedown')
+    const mouseMoveEvent = new MouseEvent('mousemove', { buttons: 1 })
+
+    document.dispatchEvent(mouseMoveEvent)
+    let emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(1)
+
+    document.dispatchEvent(mouseMoveEvent)
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(2)
 
     wrapper.unmount()
 
-    document.dispatchEvent(new Event('mousemove'))
+    document.dispatchEvent(mouseMoveEvent)
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
     // Note that we assert here that the method hasn’t been called *again*.
-    expect(ColorPicker.methods.moveThumbWithMouse).toHaveBeenCalledTimes(1)
+    expect(emittedColorChangeEvents.length).toBe(2)
   })
 
   test('id attributes are set correctly', async () => {
@@ -162,11 +182,6 @@ describe('ColorPicker', () => {
   })
 
   test('can initiate moving the color space thumb with a mouse', async () => {
-    jest.spyOn(ColorPicker.methods, 'startMovingThumb')
-    jest.spyOn(ColorPicker.methods, 'moveThumbWithMouse')
-    jest.spyOn(ColorPicker.methods, 'moveThumb')
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
     const clientX = 0
     const clientY = 0
     const mouseMoveEvent = {
@@ -176,30 +191,23 @@ describe('ColorPicker', () => {
       clientY,
     }
 
-    const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv() })
+    const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
+
+    let emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(1)
+
     const colorSpace = wrapper.find('.vacp-color-space')
-    jest.spyOn(colorSpace.element, 'getBoundingClientRect')
-
     await colorSpace.trigger('mousedown')
+    await colorSpace.trigger('mousemove', mouseMoveEvent)
 
-    expect(ColorPicker.methods.startMovingThumb).toHaveBeenCalled()
-    wrapper.vm.moveThumbWithMouse(mouseMoveEvent)
-
-    expect(ColorPicker.methods.moveThumbWithMouse).toHaveBeenCalledWith(mouseMoveEvent)
-    expect(ColorPicker.methods.moveThumb).toHaveBeenCalledWith(clientX, clientY)
-    expect(colorSpace.element.getBoundingClientRect).toHaveBeenCalled()
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(wrapper.vm.colors.hsv, 'hsv')
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(2)
 
     // Remove test HTML injected via the `attachTo` option during mount.
     wrapper.unmount()
   })
 
   test('can initiate moving the color space thumb with a touch-based device', async () => {
-    jest.spyOn(ColorPicker.methods, 'startMovingThumb')
-    jest.spyOn(ColorPicker.methods, 'moveThumbWithTouch')
-    jest.spyOn(ColorPicker.methods, 'moveThumb')
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
     const clientX = 0
     const clientY = 0
     const touchMoveEvent = {
@@ -207,22 +215,23 @@ describe('ColorPicker', () => {
       touches: [{ clientX, clientY }],
     }
 
-    const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv() })
-    const colorSpace = wrapper.find('.vacp-color-space')
-    jest.spyOn(colorSpace.element, 'getBoundingClientRect')
+    const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
 
-    wrapper.vm.moveThumbWithTouch(touchMoveEvent)
-    expect(ColorPicker.methods.moveThumbWithTouch).toHaveBeenNthCalledWith(1, touchMoveEvent)
+    let emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(1)
+
+    const colorSpace = wrapper.find('.vacp-color-space')
+    await colorSpace.trigger('touchstart')
+    await colorSpace.trigger('touchmove', touchMoveEvent)
+
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(2)
 
     await colorSpace.trigger('touchstart')
+    await colorSpace.trigger('touchmove', touchMoveEvent)
 
-    expect(ColorPicker.methods.startMovingThumb).toHaveBeenCalled()
-    wrapper.vm.moveThumbWithTouch(touchMoveEvent)
-
-    expect(ColorPicker.methods.moveThumbWithTouch).toHaveBeenNthCalledWith(2, touchMoveEvent)
-    expect(ColorPicker.methods.moveThumb).toHaveBeenCalledWith(clientX, clientY)
-    expect(colorSpace.element.getBoundingClientRect).toHaveBeenCalled()
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(wrapper.vm.colors.hsv, 'hsv')
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(3)
 
     // Remove test HTML injected via the `attachTo` option during mount.
     wrapper.unmount()
@@ -250,9 +259,7 @@ describe('ColorPicker', () => {
     ['ArrowRight', true, 's', 1],
     ['ArrowLeft', false, 's', 0.99],
     ['ArrowLeft', true, 's', 0.9],
-  ])('can move the color space thumb with the %s key (holding shift: %s)', (key, shiftKey, expectedChannel, expectedChannelValue) => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
+  ])('can move the color space thumb with the %s key (holding shift: %s)', (key, shiftKey, channel, expectedColorValue) => {
     const keydownEvent = {
       key,
       shiftKey,
@@ -264,12 +271,15 @@ describe('ColorPicker', () => {
         color: 'rgb(128, 0, 255)',
       },
     })
+    expect(keydownEvent.preventDefault).not.toHaveBeenCalled()
 
     wrapper.vm.moveThumbWithArrows(keydownEvent)
 
     expect(keydownEvent.preventDefault).toHaveBeenCalled()
-    const expectedColor = { ...wrapper.vm.colors.hsv, [expectedChannel]: expectedChannelValue }
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledWith(expectedColor, 'hsv')
+    const emittedColorChangeEvents = wrapper.emitted()['color-change']
+    // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
+    const emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
+    expect(emittedHsvColor[channel]).toEqual(expectedColorValue)
   })
 
   test('can not increment/decrement in big steps without holding down shift', () => {
@@ -329,13 +339,9 @@ describe('ColorPicker', () => {
     expect(copyToClipboardModule.copyToClipboard).toHaveBeenCalledWith(cssColor)
   })
 
-  test('hue slider updates internal colors', () => {
-    jest.spyOn(ColorPicker.methods, 'updateHue')
-    jest.spyOn(ColorPicker.methods, 'updateAlpha')
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
+  test('hue slider updates internal colors', async () => {
     const hueAngle = 30
-    const alpha = 90
+    const expectedHueValue = hueAngle / 360
 
     const wrapper = shallowMount(ColorPicker)
     const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
@@ -343,26 +349,31 @@ describe('ColorPicker', () => {
     hueRangeInputElement.value = String(hueAngle)
     const hueInputEvent = { currentTarget: hueRangeInputElement }
 
-    hueRangeInput.trigger('input')
-    expect(ColorPicker.methods.updateHue).toHaveBeenCalled()
+    await hueRangeInput.trigger('input', hueInputEvent)
 
-    wrapper.vm.updateHue(hueInputEvent)
-    expect(ColorPicker.methods.updateHue).toHaveBeenLastCalledWith(hueInputEvent)
-    let expectedColor = { ...wrapper.vm.colors.hsv, h: hueAngle / 360 }
-    expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(expectedColor, 'hsv')
+    let emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(1)
+
+    // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
+    let emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
+    expect(emittedHsvColor.h).toEqual(expectedHueValue)
+
+    const alpha = 90
+    const expectedAlphaValue = alpha / 100
 
     const alphaRangeInput = wrapper.find(`#${wrapper.vm.id}-alpha-slider`)
-    const alphaRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
+    const alphaRangeInputElement = /** @type {HTMLInputElement} */ (alphaRangeInput.element)
     alphaRangeInputElement.value = String(alpha)
     const alphaInputEvent = { currentTarget: alphaRangeInputElement }
 
-    alphaRangeInput.trigger('input')
-    expect(ColorPicker.methods.updateAlpha).toHaveBeenCalled()
+    await alphaRangeInput.trigger('input', alphaInputEvent)
 
-    wrapper.vm.updateAlpha(alphaInputEvent)
-    expect(ColorPicker.methods.updateAlpha).toHaveBeenLastCalledWith(alphaInputEvent)
-    expectedColor = { ...wrapper.vm.colors.hsv, a: alpha / 100 }
-    expect(ColorPicker.methods.setColorValue).toHaveBeenLastCalledWith(expectedColor, 'hsv')
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(2)
+
+    // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
+    emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
+    expect(emittedHsvColor.a).toEqual(expectedAlphaValue)
   })
 
   test.each([
@@ -370,8 +381,6 @@ describe('ColorPicker', () => {
     ['hsl', 's', 'a'],
     ['hwb', 'b', '25.%'],
   ])('updating a %s color input with an invalid value does not update the internal color data', async (format, channel, channelValue) => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
     const wrapper = shallowMount(ColorPicker)
 
     jest.resetAllMocks()
@@ -386,15 +395,14 @@ describe('ColorPicker', () => {
 
     wrapper.vm.updateColorValue(inputEvent, format, channel)
 
-    expect(ColorPicker.methods.setColorValue).not.toHaveBeenCalled()
+    const emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents).toBe(undefined)
   })
 
   test.each([
     ['abc'],
     ['25%'],
   ])('updating a hex color input with an invalid value does not update the internal color data', async (invalidHexColorString) => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
     const wrapper = shallowMount(ColorPicker)
 
     jest.resetAllMocks()
@@ -409,7 +417,8 @@ describe('ColorPicker', () => {
 
     wrapper.vm.updateHexColorValue(inputEvent)
 
-    expect(ColorPicker.methods.setColorValue).not.toHaveBeenCalled()
+    const emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents).toBe(undefined)
   })
 
   test.each([
@@ -417,8 +426,6 @@ describe('ColorPicker', () => {
     ['hsl', 's', '75%'],
     ['hwb', 'b', '25.5%'],
   ])('updating a %s color input with a valid value updates the internal color data', async (format, channel, channelValue) => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
     const wrapper = shallowMount(ColorPicker)
 
     jest.resetAllMocks()
@@ -433,14 +440,13 @@ describe('ColorPicker', () => {
 
     wrapper.vm.updateColorValue(inputEvent, format, channel)
 
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
+    const emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(1)
   })
 
   test.each([
     ['#ff8800cc'],
   ])('updating a %s color input with a valid value updates the internal color data', async (channelValue) => {
-    jest.spyOn(ColorPicker.methods, 'setColorValue')
-
     const wrapper = shallowMount(ColorPicker)
 
     jest.resetAllMocks()
@@ -455,32 +461,26 @@ describe('ColorPicker', () => {
 
     wrapper.vm.updateHexColorValue(inputEvent)
 
-    expect(ColorPicker.methods.setColorValue).toHaveBeenCalledTimes(1)
+    const emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(1)
   })
 
   test('clicking switch format button cycles through active formats correctly', async () => {
-    jest.spyOn(ColorPicker.methods, 'switchFormat')
-
     const wrapper = shallowMount(ColorPicker)
     const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
 
-    expect(ColorPicker.methods.switchFormat).not.toHaveBeenCalled()
-    expect(wrapper.vm.activeFormat).toBe('rgb')
+    expect(wrapper.find('#color-picker-color-rgb-r').exists()).toBe(true)
 
     await formatSwitchButton.trigger('click')
-    expect(ColorPicker.methods.switchFormat).toHaveBeenCalledTimes(1)
-    expect(wrapper.vm.activeFormat).toBe('hex')
+    expect(wrapper.find('#color-picker-color-hex').exists()).toBe(true)
 
     await formatSwitchButton.trigger('click')
-    expect(ColorPicker.methods.switchFormat).toHaveBeenCalledTimes(2)
-    expect(wrapper.vm.activeFormat).toBe('hsl')
+    expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
 
     await formatSwitchButton.trigger('click')
-    expect(ColorPicker.methods.switchFormat).toHaveBeenCalledTimes(3)
-    expect(wrapper.vm.activeFormat).toBe('hwb')
+    expect(wrapper.find('#color-picker-color-hwb-w').exists()).toBe(true)
 
     await formatSwitchButton.trigger('click')
-    expect(ColorPicker.methods.switchFormat).toHaveBeenCalledTimes(4)
-    expect(wrapper.vm.activeFormat).toBe('rgb')
+    expect(wrapper.find('#color-picker-color-rgb-r').exists()).toBe(true)
   })
 })

@@ -1,36 +1,6 @@
 import { CssValues } from './css-values.js'
 
-/**
- * @typedef {Object} HslChannels
- * @property {Channel} h
- * @property {Channel} s
- * @property {Channel} l
- * @property {Channel} a
- */
-
-/**
- * @typedef {Object} HwbChannels
- * @property {Channel} h
- * @property {Channel} w
- * @property {Channel} b
- * @property {Channel} a
- */
-
-/**
- * @typedef {Object} RgbChannels
- * @property {Channel} r
- * @property {Channel} g
- * @property {Channel} b
- * @property {Channel} a
- */
-
-/**
- * @typedef {Object} Channel
- * @property {(value: number) => string} to
- * @property {(value: string) => number} from
- */
-
-/** @type {{ hsl: HslChannels, hwb: HwbChannels, rgb: RgbChannels }} */
+/** @type {any} */
 export const colorChannels = {
   hsl: {
     h: {
