@@ -1,15 +1,16 @@
-describe('index.js', () => {
-  test('default export has “install” function', async () => {
-    const { default: ColorPickerPlugin } = await import('./index.js')
+import plugin from './index.js'
 
-    expect(typeof ColorPickerPlugin.install).toBe('function')
+describe('index.js', () => {
+  test('default export has “install” function', () => {
+    expect(typeof plugin.install).toBe('function')
   })
 
-  test('install function calls component function on argument', async () => {
-    const { default: ColorPickerPlugin } = await import('./index.js')
+  test('install function calls component function on argument', () => {
     const app = { component: jest.fn() }
 
-    ColorPickerPlugin.install(app)
+    // @ts-ignore
+    plugin.install(app)
+
     expect(app.component).toHaveBeenCalled()
   })
 })
