@@ -21,38 +21,38 @@ import { convertRgbToHex } from './color-conversions/convert-rgb-to-hex.js'
 import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
 
 /**
- * @type {{ [key in ColorFormat]: Array<{ format: ColorFormat, convert: (color: any) => any }> }}
+ * @type {{ [key in ColorFormat]: Array<[ColorFormat, (color: any) => any]> }}
  */
 export const conversions = {
   hex: [
-    { format: 'hsl', convert: convertHexToHsl },
-    { format: 'hsv', convert: convertHexToHsv },
-    { format: 'hwb', convert: convertHexToHwb },
-    { format: 'rgb', convert: convertHexToRgb },
+    ['hsl', convertHexToHsl],
+    ['hsv', convertHexToHsv],
+    ['hwb', convertHexToHwb],
+    ['rgb', convertHexToRgb],
   ],
   hsl: [
-    { format: 'hex', convert: convertHslToHex },
-    { format: 'hsv', convert: convertHslToHsv },
-    { format: 'hwb', convert: convertHslToHwb },
-    { format: 'rgb', convert: convertHslToRgb },
+    ['hex', convertHslToHex],
+    ['hsv', convertHslToHsv],
+    ['hwb', convertHslToHwb],
+    ['rgb', convertHslToRgb],
   ],
   hsv: [
-    { format: 'hex', convert: convertHsvToHex },
-    { format: 'hsl', convert: convertHsvToHsl },
-    { format: 'hwb', convert: convertHsvToHwb },
-    { format: 'rgb', convert: convertHsvToRgb },
+    ['hex', convertHsvToHex],
+    ['hsl', convertHsvToHsl],
+    ['hwb', convertHsvToHwb],
+    ['rgb', convertHsvToRgb],
   ],
   hwb: [
-    { format: 'hex', convert: convertHwbToHex },
-    { format: 'hsl', convert: convertHwbToHsl },
-    { format: 'hsv', convert: convertHwbToHsv },
-    { format: 'rgb', convert: convertHwbToRgb },
+    ['hex', convertHwbToHex],
+    ['hsl', convertHwbToHsl],
+    ['hsv', convertHwbToHsv],
+    ['rgb', convertHwbToRgb],
   ],
   rgb: [
-    { format: 'hex', convert: convertRgbToHex },
-    { format: 'hsl', convert: convertRgbToHsl },
-    { format: 'hsv', convert: convertRgbToHsv },
-    { format: 'hwb', convert: convertRgbToHwb },
+    ['hex', convertRgbToHex],
+    ['hsl', convertRgbToHsl],
+    ['hsv', convertRgbToHsv],
+    ['hwb', convertRgbToHwb],
   ],
 }
 

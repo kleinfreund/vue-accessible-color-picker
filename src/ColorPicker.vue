@@ -405,11 +405,11 @@ export default {
     }
 
     /**
-     * @param {ColorFormat} format
+     * @param {ColorFormat} sourceFormat
      */
-    function applyColorUpdates (format) {
-      for (const conversion of conversions[format]) {
-        colors[conversion.format] = conversion.convert(colors[format])
+    function applyColorUpdates (sourceFormat) {
+      for (const [format, convert] of conversions[sourceFormat]) {
+        colors[format] = convert(colors[sourceFormat])
       }
 
       if (
