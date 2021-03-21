@@ -21,6 +21,7 @@ Links:
   - [Props](#props)
     - [`color`](#color)
     - [`visibleFormats`](#visibleformats)
+    - [`defaultFormat`](#defaultformat)
     - [`id`](#id)
   - [Events](#events)
     - [`color-change`](#color-change)
@@ -95,27 +96,27 @@ app.component('ColorPicker', ColorPicker)
 
 #### `color`
 
-- **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HWB, or RGB color.
-- **Type**: `string` or `object`
+- **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HSV, HWB, or RGB color.
+- **Type**: `string`, `ColorHsl`, `ColorHsv`, `ColorHwb`, or `ColorRgb`
 - **Required**: `false`
 - **Default**: `null`
 - **Usage**:
 
   ```html
-  <color-picker color="hsl(270 100% 50% / 0.8)" />
+  <ColorPicker color="hsl(270 100% 50% / 0.8)" />
   ```
 
   ```html
-  <color-picker color="#f80b" />
+  <ColorPicker color="#f80b" />
   ```
 
   ```html
-  <color-picker :color="{ h: 0.75, s: 1, l: 0.5, a: 0.8 }" />
+  <ColorPicker :color="{ h: 0.75, s: 1, l: 0.5, a: 0.8 }" />
   ```
 
   ```html
   <template>
-    <color-picker :color="color" @color-change="updateColor" />
+    <ColorPicker :color="color" @color-change="updateColor" />
   </template>
 
   <script>
@@ -138,15 +139,26 @@ app.component('ColorPicker', ColorPicker)
 #### `visibleFormats`
 
 - **Description**: A list of visible color formats. Controls for which formats the color `input` elements are shown and in which order the formats will be cycled through when activating the format switch button.
-- **Type**: `array`
+- **Type**: `VisibleColorFormat[]`
 - **Required**: `false`
 - **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
 - **Usage**:
 
   ```html
-  <color-picker :visible-formats="['hsl', 'hwb']" />
+  <ColorPicker :visible-formats="['hsl', 'hwb']" />
   ```
 
+#### `defaultFormat`
+
+- **Description**: The color format to show by default when rendering the color picker. Must be one of the formats specified in `visibleFormats`.
+- **Type**: `VisibleColorFormat`
+- **Required**: `false`
+- **Default**: `'rgb'`
+- **Usage**:
+
+  ```html
+  <ColorPicker default-format="hwb" />
+  ```
 
 #### `id`
 
@@ -157,7 +169,7 @@ app.component('ColorPicker', ColorPicker)
 - **Usage**:
 
   ```html
-  <color-picker id="color-picker-1" />
+  <ColorPicker id="color-picker-1" />
   ```
 
 ### Events
@@ -167,16 +179,16 @@ app.component('ColorPicker', ColorPicker)
 - **Description**: An `input` event is emitted each time the internal colors object is updated.
 - **Data**: The event emits an object containing both the internal colors object and a CSS color value as a string based on the currently active format.
 
-  ```js
+  ```ts
   {
     colors: {
-      hex: string,
-      hsl: object,
-      hsv: object,
-      hwb: object,
-      rgb: object,
-    },
-    cssColor: string,
+      hex: string
+      hsl: ColorHsl
+      hsv: ColorHsv
+      hwb: ColorHwb
+      rgb: ColorRgb
+    }
+    cssColor: string
   }
   ```
 
@@ -184,7 +196,7 @@ app.component('ColorPicker', ColorPicker)
 
   ```html
   <template>
-    <color-picker color="hsl(270 100% 50% / 0.8)" @color-change="updateColor" />
+    <ColorPicker color="hsl(270 100% 50% / 0.8)" @color-change="updateColor" />
   </template>
 
   <script>
