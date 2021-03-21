@@ -64,7 +64,7 @@ describe('ColorPicker', () => {
   })
 
   test.each([
-    [undefined, 'rgb'],
+    [undefined, 'hsl'],
     ['hex', 'hex'],
     ['hsl', 'hsl'],
     ['hwb', 'hwb'],
@@ -140,18 +140,6 @@ describe('ColorPicker', () => {
     const alphaInput = wrapper.find(`#${id}-alpha-slider`)
     expect(alphaInput.exists()).toBe(true)
 
-    const colorRgbRedInput = wrapper.find(`#${id}-color-rgb-r`)
-    expect(colorRgbRedInput.exists()).toBe(true)
-    const colorRgbGreenInput = wrapper.find(`#${id}-color-rgb-g`)
-    expect(colorRgbGreenInput.exists()).toBe(true)
-    const colorRgbBlueInput = wrapper.find(`#${id}-color-rgb-b`)
-    expect(colorRgbBlueInput.exists()).toBe(true)
-    const colorRgbAlphaInput = wrapper.find(`#${id}-color-rgb-a`)
-    expect(colorRgbAlphaInput.exists()).toBe(true)
-
-    wrapper.vm.activeFormat = 'hsl'
-    await flushPromises()
-
     const colorHslHueInput = wrapper.find(`#${id}-color-hsl-h`)
     expect(colorHslHueInput.exists()).toBe(true)
     const colorHslSaturationInput = wrapper.find(`#${id}-color-hsl-s`)
@@ -160,6 +148,18 @@ describe('ColorPicker', () => {
     expect(colorHslLightnessInput.exists()).toBe(true)
     const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
     expect(colorHslAlphaInput.exists()).toBe(true)
+
+    wrapper.vm.activeFormat = 'rgb'
+    await flushPromises()
+
+    const colorRgbRedInput = wrapper.find(`#${id}-color-rgb-r`)
+    expect(colorRgbRedInput.exists()).toBe(true)
+    const colorRgbGreenInput = wrapper.find(`#${id}-color-rgb-g`)
+    expect(colorRgbGreenInput.exists()).toBe(true)
+    const colorRgbBlueInput = wrapper.find(`#${id}-color-rgb-b`)
+    expect(colorRgbBlueInput.exists()).toBe(true)
+    const colorRgbAlphaInput = wrapper.find(`#${id}-color-rgb-a`)
+    expect(colorRgbAlphaInput.exists()).toBe(true)
   })
 
   test('sets pointer origin when interacting with the color space element', async () => {
@@ -469,12 +469,6 @@ describe('ColorPicker', () => {
     const wrapper = shallowMount(ColorPicker)
     const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
 
-    expect(wrapper.find('#color-picker-color-rgb-r').exists()).toBe(true)
-
-    await formatSwitchButton.trigger('click')
-    expect(wrapper.find('#color-picker-color-hex').exists()).toBe(true)
-
-    await formatSwitchButton.trigger('click')
     expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
 
     await formatSwitchButton.trigger('click')
@@ -482,5 +476,11 @@ describe('ColorPicker', () => {
 
     await formatSwitchButton.trigger('click')
     expect(wrapper.find('#color-picker-color-rgb-r').exists()).toBe(true)
+
+    await formatSwitchButton.trigger('click')
+    expect(wrapper.find('#color-picker-color-hex').exists()).toBe(true)
+
+    await formatSwitchButton.trigger('click')
+    expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
   })
 })

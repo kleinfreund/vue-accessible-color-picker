@@ -192,7 +192,7 @@ export default {
     defaultFormat: {
       type: String,
       required: false,
-      default: 'rgb',
+      default: 'hsl',
       validator: (/** @type {VisibleColorFormat} */ defaultFormat) => {
         return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
       },
