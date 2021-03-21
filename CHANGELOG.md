@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.0.0...v2.1.0) (2021-03-21)
+
+
+### Features
+
+* set different default format via prop ([4291e05](https://github.com/kleinfreund/vue-accessible-color-picker/commit/4291e058e19784d99060ad6354d159831da7628d))
+
 # [2.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.1.2...v2.0.0) (2021-01-17)
 
 
