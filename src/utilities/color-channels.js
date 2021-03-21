@@ -1,70 +1,79 @@
-import { CssValues } from './css-values.js'
+import {
+  from8BitDecimal,
+  fromAlpha,
+  fromHueAngle,
+  fromPercentage,
+  to8BitDecimal,
+  toAlpha,
+  toHueAngle,
+  toPercentage,
+} from './css-values.js'
 
 /** @type {any} */
 export const colorChannels = {
   hsl: {
     h: {
-      to: CssValues.toHueAngle,
-      from: CssValues.fromHueAngle,
+      to: toHueAngle,
+      from: fromHueAngle,
     },
 
     s: {
-      to: CssValues.toPercentage,
-      from: CssValues.fromPercentage,
+      to: toPercentage,
+      from: fromPercentage,
     },
 
     l: {
-      to: CssValues.toPercentage,
-      from: CssValues.fromPercentage,
+      to: toPercentage,
+      from: fromPercentage,
     },
 
     a: {
-      to: CssValues.toAlpha,
-      from: CssValues.fromAlpha,
+      to: toAlpha,
+      from: fromAlpha,
     },
   },
 
   hwb: {
     h: {
-      to: CssValues.toHueAngle,
-      from: CssValues.fromHueAngle,
+      to: toHueAngle,
+      from: fromHueAngle,
     },
 
     w: {
-      to: CssValues.toPercentage,
-      from: CssValues.fromPercentage,
+      to: toPercentage,
+      from: fromPercentage,
     },
 
     b: {
-      to: CssValues.toPercentage,
-      from: CssValues.fromPercentage,
+      to: toPercentage,
+      from: fromPercentage,
     },
 
     a: {
-      to: CssValues.toAlpha,
-      from: CssValues.fromAlpha,
+      to: toAlpha,
+      from: fromAlpha,
     },
   },
 
   rgb: {
     r: {
-      to: CssValues.to8BitDecimal,
-      from: CssValues.from8BitDecimal,
+      to: to8BitDecimal,
+      from: from8BitDecimal,
     },
 
     g: {
-      to: CssValues.to8BitDecimal,
-      from: CssValues.from8BitDecimal,
+      to: to8BitDecimal,
+      from: from8BitDecimal,
     },
 
     b: {
-      to: CssValues.to8BitDecimal,
-      from: CssValues.from8BitDecimal,
+      to: to8BitDecimal,
+      from: from8BitDecimal,
     },
 
     a: {
-      to: CssValues.toAlpha,
-      from: CssValues.fromAlpha,
+      to: toAlpha,
+      from: fromAlpha,
     },
   },
 }

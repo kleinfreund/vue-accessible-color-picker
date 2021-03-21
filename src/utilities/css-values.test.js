@@ -1,4 +1,13 @@
-import { CssValues } from './css-values.js'
+import {
+  from8BitDecimal,
+  fromAlpha,
+  fromHueAngle,
+  fromPercentage,
+  to8BitDecimal,
+  toAlpha,
+  toHueAngle,
+  toPercentage,
+} from './css-values.js'
 
 describe('CssValues', () => {
   describe('hue angle', () => {
@@ -9,7 +18,7 @@ describe('CssValues', () => {
       ['270', 0.75],
       ['270.', NaN],
     ])('fromHueAngle', (value, expected) => {
-      expect(CssValues.fromHueAngle(value)).toEqual(expected)
+      expect(fromHueAngle(value)).toEqual(expected)
     })
 
     test.each([
@@ -20,7 +29,7 @@ describe('CssValues', () => {
       [0.5, '180'],
       [0.75, '270'],
     ])('toHueAngle', (value, expected) => {
-      expect(CssValues.toHueAngle(value)).toEqual(expected)
+      expect(toHueAngle(value)).toEqual(expected)
     })
   })
 
@@ -35,7 +44,7 @@ describe('CssValues', () => {
       ['100%', 1],
       ['1300%', 1],
     ])('fromPercentage', (value, expected) => {
-      expect(CssValues.fromPercentage(value)).toEqual(expected)
+      expect(fromPercentage(value)).toEqual(expected)
     })
 
     test.each([
@@ -43,7 +52,7 @@ describe('CssValues', () => {
       [0.5555, '55.55%'],
       [1, '100%'],
     ])('toPercentage', (value, expected) => {
-      expect(CssValues.toPercentage(value)).toEqual(expected)
+      expect(toPercentage(value)).toEqual(expected)
     })
   })
 
@@ -59,7 +68,7 @@ describe('CssValues', () => {
       ['100%', 1],
       ['50%', 0.5],
     ])('from8BitDecimal', (value, expected) => {
-      expect(CssValues.from8BitDecimal(value)).toEqual(expected)
+      expect(from8BitDecimal(value)).toEqual(expected)
     })
 
     test.each([
@@ -67,7 +76,7 @@ describe('CssValues', () => {
       [0.5555, '141.65'],
       [1, '255'],
     ])('to8BitDecimal', (value, expected) => {
-      expect(CssValues.to8BitDecimal(value)).toEqual(expected)
+      expect(to8BitDecimal(value)).toEqual(expected)
     })
   })
 
@@ -80,7 +89,7 @@ describe('CssValues', () => {
       ['55.55%', 0.5555],
       ['100%', 1],
     ])('fromAlpha', (value, expected) => {
-      expect(CssValues.fromAlpha(value)).toEqual(expected)
+      expect(fromAlpha(value)).toEqual(expected)
     })
 
     test.each([
@@ -88,7 +97,7 @@ describe('CssValues', () => {
       [0.5555, '0.5555'],
       [1, '1'],
     ])('toAlpha', (value, expected) => {
-      expect(CssValues.toAlpha(value)).toEqual(expected)
+      expect(toAlpha(value)).toEqual(expected)
     })
   })
 })

@@ -1,6 +1,6 @@
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
 
-import { CssValues } from './css-values.js'
+import { from8BitDecimal, fromAlpha } from './css-values.js'
 
 /**
  * Parses an RGB color string into an RGB color object.
@@ -22,9 +22,9 @@ export function parseRgbColor (rgbColorString) {
   const functionValues = rawValueString.replace(/[,/]/g, ' ').replace(/\s+/g, ' ').split(' ')
 
   return {
-    r: CssValues.from8BitDecimal(functionValues[0]),
-    g: CssValues.from8BitDecimal(functionValues[1]),
-    b: CssValues.from8BitDecimal(functionValues[2]),
-    a: functionValues.length === 4 ? CssValues.fromAlpha(functionValues[3]) : 1,
+    r: from8BitDecimal(functionValues[0]),
+    g: from8BitDecimal(functionValues[1]),
+    b: from8BitDecimal(functionValues[2]),
+    a: functionValues.length === 4 ? fromAlpha(functionValues[3]) : 1,
   }
 }
