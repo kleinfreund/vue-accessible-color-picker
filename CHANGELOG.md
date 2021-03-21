@@ -1,3 +1,23 @@
+# [3.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.1.0...v3.0.0) (2021-03-21)
+
+
+### chore
+
+* **types:** remove VueAccessibleColorPicker namespace ([696814f](https://github.com/kleinfreund/vue-accessible-color-picker/commit/696814f8d8f119499b535aba17808b0bd185215f))
+* change default format to HSL ([2d746bc](https://github.com/kleinfreund/vue-accessible-color-picker/commit/2d746bc7aa28a9f7cb4c3535999c26bac9741e7e))
+
+
+### Features
+
+* improve color prop parsing ([8b74dbd](https://github.com/kleinfreund/vue-accessible-color-picker/commit/8b74dbd0d3a6bd502d62e1c367c999c8bc8d54d6))
+
+
+### BREAKING CHANGES
+
+* **types:** Removes the `VueAccessibleColorPicker` namespace from types.
+* Changes the default color format from `'rgb'` to `'hsl'`. To upgrade without changing this in your application, you can pass `'rgb'` to the `defaultFormat` prop.
+* Updates browser support on account of using `Object.fromEntries`. Most notably, Edge using the EdgeHTML engine and Safari versions before 12.2 are no longer supported. Please refer to the README.md file for the complete list.
+
 # [2.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.0.0...v2.1.0) (2021-03-21)
 
 
