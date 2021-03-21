@@ -6,8 +6,8 @@
 /**
  * Checks whether two objects are value equal.
  *
- * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} colorA
- * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} colorB
+ * @param {string | { [key: string]: number }} colorA
+ * @param {string | { [key: string]: number }} colorB
  * @returns {boolean}
  */
 export function colorsAreValueEqual (colorA, colorB) {
