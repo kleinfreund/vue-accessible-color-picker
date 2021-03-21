@@ -9,7 +9,7 @@
       @mousedown="startMovingThumb"
       @touchstart="startMovingThumb"
     >
-      <!-- Accessibility remark: I don’t know of a semantic HTML that would be adequate for the job of a planar range thumb. -->
+      <!-- Accessibility remark: I don’t know of a better, semantic HTML element that would be adequate for the job of a planar range thumb. -->
       <div
         ref="thumb"
         class="vacp-color-space-thumb"

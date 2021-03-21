@@ -196,7 +196,10 @@ app.component('ColorPicker', ColorPicker)
 
   ```html
   <template>
-    <ColorPicker color="hsl(270 100% 50% / 0.8)" @color-change="updateColor" />
+    <ColorPicker
+      color="hsl(270 100% 50% / 0.8)"
+      @color-change="updateColor"
+    />
   </template>
 
   <script>
@@ -217,42 +220,34 @@ app.component('ColorPicker', ColorPicker)
 - **Description**: Overrides the content of the hue range input’s `label` element. The slot content is placed inside a `span` element.
 - **Default content**:
 
-  ```html
-  Hue
-  ```
+  > Hue
 
 #### alpha-range-input-label
 
 - **Description**: Overrides the content of the alpha range input’s `label` element. The slot content is placed inside a `span` element.
 - **Default content**:
 
-  ```html
-  Alpha
-  ```
+  > Alpha
 
 #### copy-button
 
 - **Description**: Overrides the content of the copy button element.
 - **Default content**:
 
-  ```html
-  Copy color
-  ```
+  > Copy color
 
 #### format-switch-button
 
 - **Description**: Overrides the content of the format switch button element.
 - **Default content**:
 
-  ```html
-  Switch format
-  ```
+  > Switch format
 
 ## Browser support
 
-| IE | Edge | Edge (Chromium) | Firefox | Chrome | Safari |
-|:--:|:----:|:---------------:|:-------:|:------:|:------:|
-| no | 79   | 79              | 63      | 73     | 12.2   |
+| IE | Edge (Chromium) | Firefox | Chrome | Safari |
+|:--:|:---------------:|:-------:|:------:|:------:|
+| no | 79              | 63      | 73     | 12.2   |
 
 The component’s browser support is due to the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*), and [spread syntax in object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
 
@@ -264,7 +259,7 @@ The color picker consists of the following main elements:
 
   For fine-tuning the saturation and lightness/value, a slice of the HSV cylinder for the currently selected hue is shown.
 
-  The HSV cylinder is more convenient for this task as it shows a color at 100% saturation and 100% value in the top right corner (i.e. one can drag the color space thumb into the corner as a quasi shortcut). The HSL cylinder’s slice has the this colors at the halfway point of the Y axis (i.e. at 50% lightness) which isn’t easy to hit.
+  The HSV cylinder is more convenient for this task as it shows a color at 100% saturation and 100% value in the top right corner (i.e. one can drag the color space thumb into the corner as a quasi shortcut). The HSL cylinder’s slice has this color at the halfway point of the Y axis (i.e. at 50% lightness) which isn’t easy to select.
 
 - **Hue slider**:
 
