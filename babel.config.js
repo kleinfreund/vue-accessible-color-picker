@@ -1,16 +1,7 @@
 module.exports = {
-  env: {
-    test: {
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            targets: {
-              node: 'current',
-            },
-          },
-        ],
-      ],
-    },
-  },
+  presets: ['@babel/preset-env'],
+
+  // Prevents the “ReferenceError: regeneratorRuntime is not defined” error.
+  // See https://github.com/facebook/jest/issues/3126.
+  targets: { node: 'current' },
 }
