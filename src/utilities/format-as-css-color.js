@@ -1,4 +1,3 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
@@ -8,7 +7,7 @@ import { round } from './round.js'
 
 /**
  * @typedef {Object} Formatters
- * @property {(color: ColorHex) => string} hex
+ * @property {(color: string) => string} hex
  * @property {(color: ColorHsl) => string} hsl
  * @property {(color: ColorHwb) => string} hwb
  * @property {(color: ColorRgb) => string} rgb
@@ -17,7 +16,7 @@ import { round } from './round.js'
 /** @type {Formatters} */
 const formatters = {
   /**
-   * @param {ColorHex} hex
+   * @param {string} hex
    * @returns {string}
    */
   hex (hex) {
@@ -67,7 +66,7 @@ const formatters = {
 /**
  * Formats a given color object as a CSS color string.
  *
- * @param {ColorHex | ColorHsl | ColorHwb | ColorRgb} color
+ * @param {string | ColorHsl | ColorHwb | ColorRgb} color
  * @param {VisibleColorFormat} format
   * @returns {string}
  */

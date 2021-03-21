@@ -1,4 +1,3 @@
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
 
 /**
@@ -6,7 +5,7 @@
  *
  * Supports HEX color strings with length 3, 4, 6, and 8.
  *
- * @param {ColorHex} hex
+ * @param {string} hex
  * @returns {ColorRgb}
  */
 export function convertHexToRgb (hex) {

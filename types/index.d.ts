@@ -3,8 +3,6 @@ export namespace VueAccessibleColorPicker {
 
   export type ColorFormat = 'hex' | 'hsl' | 'hsv' | 'hwb' | 'rgb'
 
-  export type ColorHex = string
-
   export type ColorHsl = {
     h: number
     s: number

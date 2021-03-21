@@ -1,11 +1,10 @@
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
 
 /**
  * Converts an RGB color object to an HEX color string.
  *
  * @param {ColorRgb} rgb
- * @returns {ColorHex}
+ * @returns {string}
  */
 export function convertRgbToHex (rgb) {
   const hexChannels = Object.values(rgb).map(channel => {

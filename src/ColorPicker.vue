@@ -143,7 +143,6 @@
  * @typedef {import('vue').UnwrapRef<T>} UnwrapRef<T>
  */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorFormat} ColorFormat */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
@@ -396,7 +395,7 @@ export default {
 
     /**
      * @param {ColorFormat} format
-     * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
+     * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
      */
     function setColor (format, color) {
       if (!colorsAreValueEqual(colors[format], color)) {

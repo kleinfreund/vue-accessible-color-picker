@@ -1,4 +1,3 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
@@ -58,7 +57,7 @@ export const conversions = {
 }
 
 /**
- * @param {ColorHex} hex
+ * @param {string} hex
  * @returns {ColorHsl}
  */
 function convertHexToHsl (hex) {
@@ -67,7 +66,7 @@ function convertHexToHsl (hex) {
 }
 
 /**
- * @param {ColorHex} hex
+ * @param {string} hex
  * @returns {ColorHsv}
  */
 function convertHexToHsv (hex) {
@@ -76,7 +75,7 @@ function convertHexToHsv (hex) {
 }
 
 /**
- * @param {ColorHex} hex
+ * @param {string} hex
  * @returns {ColorHwb}
  */
 function convertHexToHwb (hex) {
@@ -130,10 +129,6 @@ function convertHwbToRgb (hwb) {
 }
 
 /**
- * Note: This is not moved into its dedicated `convert-hsv-to-hex.js` file
- * because its implementation is completely covered by the composition
- * of `convertRgbToHex` and `convertHsvToRgb`.
- *
  * @param {ColorHsv} hsv
  * @returns {string}
  */

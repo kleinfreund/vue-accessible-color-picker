@@ -1,4 +1,3 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
@@ -7,7 +6,7 @@
 import { formatAsCssColor } from './format-as-css-color.js'
 
 describe('formatAsCssColor', () => {
-  test.each(/** @type {[ColorHex, VisibleColorFormat, string][]} */ ([
+  test.each(/** @type {[string, VisibleColorFormat, string][]} */ ([
     ['#fff', 'hex', '#fff'],
     ['#FFF', 'hex', '#FFF'],
     ['#000', 'hex', '#000'],

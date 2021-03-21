@@ -1,4 +1,3 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHex} ColorHex */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
 /** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
@@ -7,8 +6,8 @@
 /**
  * Checks whether two objects are value equal.
  *
- * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} colorA
- * @param {ColorHex | ColorHsl | ColorHsv | ColorHwb | ColorRgb} colorB
+ * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} colorA
+ * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} colorB
  * @returns {boolean}
  */
 export function colorsAreValueEqual (colorA, colorB) {
