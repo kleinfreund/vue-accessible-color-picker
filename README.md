@@ -252,9 +252,9 @@ app.component('ColorPicker', ColorPicker)
 
 | IE | Edge | Edge (Chromium) | Firefox | Chrome | Safari |
 |:--:|:----:|:---------------:|:-------:|:------:|:------:|
-| no | 16   | 79              | 55      | 49     | 9.1    |
+| no | 79   | 79              | 63      | 73     | 12.2   |
 
-The component’s browser support is due to the use of [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) and [spread syntax in object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+The component’s browser support is due to the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*), and [spread syntax in object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
 
 ## Design
 

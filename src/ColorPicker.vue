@@ -151,15 +151,13 @@
 import { onMounted, onBeforeUnmount, reactive, ref, watch } from 'vue'
 
 import { clamp } from './utilities/clamp.js'
-import { colorsAreValueEqual } from './utilities/colors-are-value-equal.js'
 import { colorChannels } from './utilities/color-channels.js'
+import { colorsAreValueEqual } from './utilities/colors-are-value-equal.js'
 import { conversions } from './utilities/convert-color.js'
 import { copyToClipboard } from './utilities/copy-to-clipboard.js'
-import { detectFormat } from './utilities/detect-format.js'
 import { formatAsCssColor } from './utilities/format-as-css-color.js'
-import { getCssColorAsRgbString } from './utilities/get-css-color-as-rgb-string.js'
 import { isValidHexColor } from './utilities/is-valid-hex-color.js'
-import { parseRgbColor } from './utilities/parse-rgb-color.js'
+import { parsePropsColor } from './utilities/parse-props-color.js'
 
 const STEP_FACTOR = 10
 /** @type {VisibleColorFormat[]} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
@@ -324,16 +322,9 @@ export default {
         return
       }
 
-      if (typeof propsColor !== 'string') {
-        const format = detectFormat(propsColor)
-        setColor(format, propsColor)
-      } else if (isValidHexColor(propsColor)) {
-        setColor('hex', propsColor)
-      } else {
-        const rgbString = getCssColorAsRgbString(propsColor)
-        if (rgbString !== '') {
-          setColor('rgb', parseRgbColor(rgbString))
-        }
+      const result = parsePropsColor(propsColor)
+      if (result !== null) {
+        setColor(result.format, result.color)
       }
     }
 
