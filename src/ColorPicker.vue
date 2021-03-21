@@ -141,12 +141,12 @@
  * @template T
  * @typedef {import('vue').UnwrapRef<T>} UnwrapRef<T>
  */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorFormat} ColorFormat */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-/** @typedef {import('../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
+/** @typedef {import('../types/index').ColorFormat} ColorFormat */
+/** @typedef {import('../types/index').ColorHsl} ColorHsl */
+/** @typedef {import('../types/index').ColorHsv} ColorHsv */
+/** @typedef {import('../types/index').ColorHwb} ColorHwb */
+/** @typedef {import('../types/index').ColorRgb} ColorRgb */
+/** @typedef {import('../types/index').VisibleColorFormat} VisibleColorFormat */
 
 import { onMounted, onBeforeUnmount, reactive, ref, watch } from 'vue'
 

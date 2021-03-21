@@ -1,5 +1,5 @@
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
-/** @typedef {import('../../../types/index').VueAccessibleColorPicker.ColorHsv} ColorHsv */
+/** @typedef {import('../../../types/index').ColorHsl} ColorHsl */
+/** @typedef {import('../../../types/index').ColorHsv} ColorHsv */
 
 /**
  * Converts an HSL color object to an HSV color object.

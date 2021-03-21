@@ -1,7 +1,7 @@
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHsl} ColorHsl */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorHwb} ColorHwb */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.ColorRgb} ColorRgb */
-/** @typedef {import('../../types/index').VueAccessibleColorPicker.VisibleColorFormat} VisibleColorFormat */
+/** @typedef {import('../../types/index').ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index').ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index').ColorRgb} ColorRgb */
+/** @typedef {import('../../types/index').VisibleColorFormat} VisibleColorFormat */
 
 import { round } from './round.js'
 
