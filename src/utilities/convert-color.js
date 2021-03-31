@@ -16,7 +16,6 @@ import { convertHsvToRgb } from './color-conversions/convert-hsv-to-rgb.js'
 import { convertHwbToHsv } from './color-conversions/convert-hwb-to-hsv.js'
 
 import { convertRgbToHsl } from './color-conversions/convert-rgb-to-hsl.js'
-import { convertRgbToHsv } from './color-conversions/convert-rgb-to-hsv.js'
 import { convertRgbToHex } from './color-conversions/convert-rgb-to-hex.js'
 import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
 
@@ -135,4 +134,13 @@ function convertHwbToRgb (hwb) {
 function convertHsvToHex (hsv) {
   const rgb = convertHsvToRgb(hsv)
   return convertRgbToHex(rgb)
+}
+
+/**
+ * @param {ColorRgb} rgb
+ * @returns {ColorHsv}
+ */
+export function convertRgbToHsv (rgb) {
+  const hwb = convertRgbToHwb(rgb)
+  return convertHwbToHsv(hwb)
 }

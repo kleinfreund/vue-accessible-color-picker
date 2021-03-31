@@ -1,6 +1,8 @@
 /** @typedef {import('../../../types/index').ColorHsl} ColorHsl */
 /** @typedef {import('../../../types/index').ColorRgb} ColorRgb */
 
+import { convertRgbToHwb } from './convert-rgb-to-hwb.js'
+
 /**
  * Converts an RGB color object to an HSL color object.
  *
@@ -10,23 +12,9 @@
  * @returns {ColorHsl}
  */
 export function convertRgbToHsl (rgb) {
-  const min = Math.min(rgb.r, rgb.g, rgb.b)
-  const max = Math.max(rgb.r, rgb.g, rgb.b)
-
-  let h
-  if (max === min) {
-    h = 0
-  } else if (max === rgb.r) {
-    h = (0 + (rgb.g - rgb.b) / (max - min)) / 6
-  } else if (max === rgb.g) {
-    h = (2 + (rgb.b - rgb.r) / (max - min)) / 6
-  } else {
-    h = (4 + (rgb.r - rgb.g) / (max - min)) / 6
-  }
-
-  if (h < 0) {
-    h += 1
-  }
+  const hwb = convertRgbToHwb(rgb)
+  const min = hwb.w
+  const max = 1 - hwb.b
 
   const l = (max + min) / 2
 
@@ -38,7 +26,7 @@ export function convertRgbToHsl (rgb) {
   }
 
   return {
-    h,
+    h: hwb.h,
     s,
     l,
     a: rgb.a,
