@@ -5,7 +5,7 @@
 /** @typedef {import('../../types/index').ColorRgb} ColorRgb */
 
 /**
- * Lazy functions that returns the format of a given color object.
+ * Lazy function that returns the format of a given color object.
  *
  * Doesn’t handle invalid formats.
  *
