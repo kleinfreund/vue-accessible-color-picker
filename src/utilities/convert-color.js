@@ -60,8 +60,7 @@ export const conversions = {
  * @returns {ColorHsl}
  */
 function convertHexToHsl (hex) {
-  const rgb = convertHexToRgb(hex)
-  return convertRgbToHsl(rgb)
+  return convertRgbToHsl(convertHexToRgb(hex))
 }
 
 /**
@@ -69,8 +68,7 @@ function convertHexToHsl (hex) {
  * @returns {ColorHsv}
  */
 function convertHexToHsv (hex) {
-  const rgb = convertHexToRgb(hex)
-  return convertRgbToHsv(rgb)
+  return convertRgbToHsv(convertHexToRgb(hex))
 }
 
 /**
@@ -78,8 +76,7 @@ function convertHexToHsv (hex) {
  * @returns {ColorHwb}
  */
 function convertHexToHwb (hex) {
-  const rgb = convertHexToRgb(hex)
-  return convertRgbToHwb(rgb)
+  return convertRgbToHwb(convertHexToRgb(hex))
 }
 
 /**
@@ -87,8 +84,7 @@ function convertHexToHwb (hex) {
  * @returns {string}
  */
 function convertHslToHex (hsl) {
-  const rgb = convertHslToRgb(hsl)
-  return convertRgbToHex(rgb)
+  return convertRgbToHex(convertHslToRgb(hsl))
 }
 
 /**
@@ -96,8 +92,7 @@ function convertHslToHex (hsl) {
  * @returns {ColorHwb}
  */
 function convertHslToHwb (hsl) {
-  const rgb = convertHslToRgb(hsl)
-  return convertRgbToHwb(rgb)
+  return convertRgbToHwb(convertHslToRgb(hsl))
 }
 
 /**
@@ -105,8 +100,7 @@ function convertHslToHwb (hsl) {
  * @returns {string}
  */
 function convertHwbToHex (hwb) {
-  const rgb = convertHwbToRgb(hwb)
-  return convertRgbToHex(rgb)
+  return convertRgbToHex(convertHwbToRgb(hwb))
 }
 
 /**
@@ -114,8 +108,7 @@ function convertHwbToHex (hwb) {
  * @returns {ColorHsl}
  */
 function convertHwbToHsl (hwb) {
-  const rgb = convertHwbToRgb(hwb)
-  return convertRgbToHsl(rgb)
+  return convertRgbToHsl(convertHwbToRgb(hwb))
 }
 
 /**
@@ -123,8 +116,7 @@ function convertHwbToHsl (hwb) {
  * @returns {ColorRgb}
  */
 function convertHwbToRgb (hwb) {
-  const hsv = convertHwbToHsv(hwb)
-  return convertHsvToRgb(hsv)
+  return convertHsvToRgb(convertHwbToHsv(hwb))
 }
 
 /**
@@ -132,8 +124,7 @@ function convertHwbToRgb (hwb) {
  * @returns {string}
  */
 function convertHsvToHex (hsv) {
-  const rgb = convertHsvToRgb(hsv)
-  return convertRgbToHex(rgb)
+  return convertRgbToHex(convertHsvToRgb(hsv))
 }
 
 /**
@@ -141,6 +132,5 @@ function convertHsvToHex (hsv) {
  * @returns {ColorHsv}
  */
 export function convertRgbToHsv (rgb) {
-  const hwb = convertRgbToHwb(rgb)
-  return convertHwbToHsv(hwb)
+  return convertHwbToHsv(convertRgbToHwb(rgb))
 }
