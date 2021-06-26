@@ -17,7 +17,7 @@ jobs:
         # https://github.com/actions/setup-node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '15'
 
       - name: Cache node_modules and dist
         # https://github.com/actions/cache
