@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.0.0...v3.0.1) (2021-11-04)
+
+
+### Bug Fixes
+
+* clicking color space not emitting color ([c68ea8a](https://github.com/kleinfreund/vue-accessible-color-picker/commit/c68ea8a0bc838c0578b7dba4fe58f5a63025b21b)), closes [#13](https://github.com/kleinfreund/vue-accessible-color-picker/issues/13)
+
 # [3.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.1.0...v3.0.0) (2021-03-21)
 
 
