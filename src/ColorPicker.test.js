@@ -174,7 +174,10 @@ describe('ColorPicker', () => {
     document.dispatchEvent(new Event('mouseup'))
     expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(false)
 
-    await colorSpace.trigger('touchstart')
+    await colorSpace.trigger('touchstart', {
+      preventDefault: jest.fn(),
+      touches: [{ clientX: 0, clientY: 0 }],
+    })
     expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(true)
 
     document.dispatchEvent(new Event('touchend'))
@@ -208,30 +211,35 @@ describe('ColorPicker', () => {
   })
 
   test('can initiate moving the color space thumb with a touch-based device', async () => {
-    const clientX = 0
-    const clientY = 0
-    const touchMoveEvent = {
-      preventDefault: jest.fn(),
-      touches: [{ clientX, clientY }],
-    }
-
     const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
 
     let emittedColorChangeEvents = wrapper.emitted()['color-change']
     expect(emittedColorChangeEvents.length).toBe(1)
 
     const colorSpace = wrapper.find('.vacp-color-space')
-    await colorSpace.trigger('touchstart')
-    await colorSpace.trigger('touchmove', touchMoveEvent)
-
-    emittedColorChangeEvents = wrapper.emitted()['color-change']
-    expect(emittedColorChangeEvents.length).toBe(2)
-
-    await colorSpace.trigger('touchstart')
-    await colorSpace.trigger('touchmove', touchMoveEvent)
+    await colorSpace.trigger('touchstart', {
+      preventDefault: jest.fn(),
+      touches: [{ clientX: 0, clientY: 0 }],
+    })
+    await colorSpace.trigger('touchmove', {
+      preventDefault: jest.fn(),
+      touches: [{ clientX: 0, clientY: 0 }],
+    })
 
     emittedColorChangeEvents = wrapper.emitted()['color-change']
     expect(emittedColorChangeEvents.length).toBe(3)
+
+    await colorSpace.trigger('touchstart', {
+      preventDefault: jest.fn(),
+      touches: [{ clientX: 0, clientY: 0 }],
+    })
+    await colorSpace.trigger('touchmove', {
+      preventDefault: jest.fn(),
+      touches: [{ clientX: 0, clientY: 0 }],
+    })
+
+    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    expect(emittedColorChangeEvents.length).toBe(5)
 
     // Remove test HTML injected via the `attachTo` option during mount.
     wrapper.unmount()

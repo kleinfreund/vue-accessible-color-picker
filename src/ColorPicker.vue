@@ -6,8 +6,8 @@
     <div
       ref="colorSpace"
       class="vacp-color-space"
-      @mousedown="startMovingThumb"
-      @touchstart="startMovingThumb"
+      @mousedown="startMovingThumbWithMouse"
+      @touchstart="startMovingThumbWithTouch"
     >
       <!-- Accessibility remark: I don’t know of a better, semantic HTML element that would be adequate for the job of a planar range thumb. -->
       <div
@@ -242,8 +242,20 @@ export default {
       activeFormat.value = props.visibleFormats[newFormatIndex]
     }
 
-    function startMovingThumb () {
+    /**
+     * @param {MouseEvent} event
+     */
+    function startMovingThumbWithMouse (event) {
       pointerOriginatedInColorSpace.value = true
+      moveThumbWithMouse(event)
+    }
+
+    /**
+     * @param {TouchEvent} event
+     */
+    function startMovingThumbWithTouch (event) {
+      pointerOriginatedInColorSpace.value = true
+      moveThumbWithTouch(event)
     }
 
     function stopMovingThumb () {
@@ -450,7 +462,8 @@ export default {
       supportedFormats,
 
       // methods
-      startMovingThumb,
+      startMovingThumbWithMouse,
+      startMovingThumbWithTouch,
       moveThumbWithArrows,
       changeInputValue,
       copyColor,
