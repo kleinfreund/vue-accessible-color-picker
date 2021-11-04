@@ -31,8 +31,8 @@ Links:
     - [copy-button](#copy-button)
     - [format-switch-button](#format-switch-button)
 - [Browser support](#browser-support)
+- [Versioning](#versioning)
 - [Design](#design)
-- [Roadmap](#roadmap)
 
 ## Installation
 
@@ -245,11 +245,15 @@ app.component('ColorPicker', ColorPicker)
 
 ## Browser support
 
-| IE | Edge (Chromium) | Firefox | Chrome | Safari |
-|:--:|:---------------:|:-------:|:------:|:------:|
-| no | 79              | 63      | 73     | 12.2   |
+| Edge (Chromium) | Firefox | Chrome | Safari |
+|:---------------:|:-------:|:------:|:------:|
+| 79              | 63      | 73     | 12.2   |
 
-The component’s browser support is due to the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*), and [spread syntax in object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+The browser support is derived from the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*), and [spread syntax in object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+
+## Versioning
+
+This package uses [semantic versioning](https://semver.org).
 
 ## Design
 
