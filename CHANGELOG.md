@@ -5,7 +5,7 @@
 
 * clicking color space not emitting color ([c68ea8a](https://github.com/kleinfreund/vue-accessible-color-picker/commit/c68ea8a0bc838c0578b7dba4fe58f5a63025b21b)), closes [#13](https://github.com/kleinfreund/vue-accessible-color-picker/issues/13)
 
-# [3.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.1.0...v3.0.0) (2021-03-21)
+## [3.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.1.0...v3.0.0) (2021-03-21)
 
 
 ### chore
@@ -25,14 +25,14 @@
 * Changes the default color format from `'rgb'` to `'hsl'`. To upgrade without changing this in your application, you can pass `'rgb'` to the `defaultFormat` prop.
 * Updates browser support on account of using `Object.fromEntries`. Most notably, Edge using the EdgeHTML engine and Safari versions before 12.2 are no longer supported. Please refer to the README.md file for the complete list.
 
-# [2.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.0.0...v2.1.0) (2021-03-21)
+## [2.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v2.0.0...v2.1.0) (2021-03-21)
 
 
 ### Features
 
 * set different default format via prop ([4291e05](https://github.com/kleinfreund/vue-accessible-color-picker/commit/4291e058e19784d99060ad6354d159831da7628d))
 
-# [2.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.1.2...v2.0.0) (2021-01-17)
+## [2.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v1.1.2...v2.0.0) (2021-01-17)
 
 
 ### Features
