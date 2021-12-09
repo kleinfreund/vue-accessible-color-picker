@@ -128,7 +128,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 /**
  * @template T
  * @typedef {import('vue').PropType<T>} PropType<T>
@@ -158,323 +158,290 @@ import { copyToClipboard } from './utilities/copy-to-clipboard.js'
 import { formatAsCssColor } from './utilities/format-as-css-color.js'
 import { isValidHexColor } from './utilities/is-valid-hex-color.js'
 import { parsePropsColor } from './utilities/parse-props-color.js'
+import { ALLOWED_VISIBLE_FORMATS } from './constants.js'
 
 const STEP_FACTOR = 10
-/** @type {VisibleColorFormat[]} */ const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
 
-export default {
-  name: 'ColorPicker',
+const props = defineProps({
+  color: {
+    /** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
+    type: [String, Object],
+    required: false,
+    default: null,
+  },
 
-  props: {
-    color: {
-      /** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
-      type: [String, Object],
-      required: false,
-      default: null,
-    },
+  id: {
+    type: String,
+    required: false,
+    default: 'color-picker',
+  },
 
-    id: {
-      type: String,
-      required: false,
-      default: 'color-picker',
-    },
-
-    visibleFormats: {
-      /** @type {PropType<VisibleColorFormat[]>} */
-      type: Array,
-      required: false,
-      default: () => ALLOWED_VISIBLE_FORMATS,
-      validator: (/** @type {any[]} */ visibleFormats) => {
-        return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
-      },
-    },
-
-    defaultFormat: {
-      type: String,
-      required: false,
-      default: 'hsl',
-      validator: (/** @type {VisibleColorFormat} */ defaultFormat) => {
-        return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
-      },
+  visibleFormats: {
+    /** @type {PropType<VisibleColorFormat[]>} */
+    type: Array,
+    required: false,
+    default: () => ALLOWED_VISIBLE_FORMATS,
+    validator: (/** @type {any[]} */ visibleFormats) => {
+      return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
     },
   },
 
-  emits: ['color-change'],
-
-  setup (props, context) {
-    const colorPicker = /** @type {Ref<HTMLElement | null>} */ (ref(null))
-    const colorSpace = /** @type {Ref<HTMLElement | null>} */ (ref(null))
-    const thumb = /** @type {Ref<HTMLElement | null>} */ (ref(null))
-
-    const pointerOriginatedInColorSpace = ref(false)
-    const activeFormat = /** @type {Ref<VisibleColorFormat>} */ (ref(props.defaultFormat))
-    const supportedFormats = /** @type {ColorFormat[]} */ (['hex', 'hsl', 'hsv', 'hwb', 'rgb'])
-    const colors = /** @type {UnwrapRef<any>} */ (reactive({
-      hex: '#ffffffff',
-      hsl: { h: 0, s: 0, l: 1, a: 1 },
-      hsv: { h: 0, s: 0, v: 1, a: 1 },
-      hwb: { h: 0, w: 1, b: 0, a: 1 },
-      rgb: { r: 1, g: 1, b: 1, a: 1 },
-    }))
-
-    watch(() => props.color, (propsColor) => {
-      setColorFromProp(propsColor)
-    })
-
-    onMounted(() => {
-      document.addEventListener('mousemove', moveThumbWithMouse, { passive: false })
-      document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
-      document.addEventListener('mouseup', stopMovingThumb)
-      document.addEventListener('touchend', stopMovingThumb)
-      setColorFromProp(props.color)
-    })
-
-    onBeforeUnmount(() => {
-      document.removeEventListener('mousemove', moveThumbWithMouse)
-      document.removeEventListener('touchmove', moveThumbWithTouch)
-      document.removeEventListener('mouseup', stopMovingThumb)
-      document.removeEventListener('touchend', stopMovingThumb)
-    })
-
-    function switchFormat () {
-      const activeFormatIndex = props.visibleFormats.findIndex((/** @type {VisibleColorFormat} */ format) => format === activeFormat.value)
-      const newFormatIndex = activeFormatIndex === props.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
-      activeFormat.value = props.visibleFormats[newFormatIndex]
-    }
-
-    /**
-     * @param {MouseEvent} event
-     */
-    function startMovingThumbWithMouse (event) {
-      pointerOriginatedInColorSpace.value = true
-      moveThumbWithMouse(event)
-    }
-
-    /**
-     * @param {TouchEvent} event
-     */
-    function startMovingThumbWithTouch (event) {
-      pointerOriginatedInColorSpace.value = true
-      moveThumbWithTouch(event)
-    }
-
-    function stopMovingThumb () {
-      pointerOriginatedInColorSpace.value = false
-    }
-
-    /**
-     * @param {MouseEvent} event
-     */
-    function moveThumbWithMouse (event) {
-      if (
-        event.buttons !== 1 ||
-        pointerOriginatedInColorSpace.value === false ||
-        !(colorSpace.value instanceof HTMLElement)
-      ) {
-        return
-      }
-
-      moveThumb(colorSpace.value, event.clientX, event.clientY)
-    }
-
-    /**
-     * @param {TouchEvent} event
-     */
-    function moveThumbWithTouch (event) {
-      if (
-        pointerOriginatedInColorSpace.value === false ||
-        !(colorSpace.value instanceof HTMLElement)
-      ) {
-        return
-      }
-
-      // Prevent touch events from dragging the page.
-      event.preventDefault()
-      moveThumb(colorSpace.value, event.touches[0].clientX, event.touches[0].clientY)
-    }
-
-    /**
-     * @param {HTMLElement} colorSpace
-     * @param {number} clientX
-     * @param {number} clientY
-     */
-    function moveThumb (colorSpace, clientX, clientY) {
-      const newThumbPosition = getNewThumbPosition(colorSpace, clientX, clientY)
-      const color = { ...colors.hsv }
-      color.s = newThumbPosition.x
-      color.v = newThumbPosition.y
-
-      setColor('hsv', color)
-    }
-
-    /**
-     * @param {KeyboardEvent} event
-     */
-    function moveThumbWithArrows (event) {
-      if (!['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key)) {
-        return
-      }
-
-      event.preventDefault()
-      const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
-      const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
-      const step = event.shiftKey ? 10 : 1
-      const newColorValue = colors.hsv[channel] + direction * step * 0.01
-      const color = { ...colors.hsv }
-      color[channel] = clamp(newColorValue, 0, 1)
-
-      setColor('hsv', color)
-    }
-
-    /**
-     * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} propsColor
-     */
-    function setColorFromProp (propsColor) {
-      if (propsColor === null) {
-        return
-      }
-
-      const result = parsePropsColor(propsColor)
-      if (result !== null) {
-        setColor(result.format, result.color)
-      }
-    }
-
-    /**
-     * @param {Event} event
-     */
-    function updateHue (event) {
-      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      const color = { ...colors.hsv }
-      color.h = parseInt(input.value) / 360
-
-      setColor('hsv', color)
-    }
-
-    /**
-     * @param {Event} event
-     */
-    function updateAlpha (event) {
-      const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-      const color = { ...colors.hsv }
-      color.a = parseInt(input.value) / 100
-
-      setColor('hsv', color)
-    }
-
-    /**
-     * @param {Event} event
-     */
-    function updateHexColorValue (event) {
-      const input = /** @type {HTMLInputElement} */ (event.target)
-
-      if (isValidHexColor(input.value)) {
-        setColor('hex', input.value)
-      }
-    }
-
-    /**
-     * @param {Event} event
-     * @param {'hsl' | 'hwb' | 'rgb'} format
-     * @param {string} channel
-     */
-    function updateColorValue (event, format, channel) {
-      const input = /** @type {HTMLInputElement} */ (event.target)
-
-      // Make a shallow copy of the colors object to avoid writing to it before we know that the new color is valid.
-      const color = { ...colors[format] }
-      const value = colorChannels[format][channel].from(input.value)
-
-      if (Number.isNaN(value) || value === undefined) {
-        // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
-        return
-      }
-
-      color[channel] = value
-
-      setColor(format, color)
-    }
-
-    /**
-     * @param {ColorFormat} format
-     * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
-     */
-    function setColor (format, color) {
-      if (!colorsAreValueEqual(colors[format], color)) {
-        colors[format] = color
-        const eventData = applyColorUpdates(format)
-        context.emit('color-change', eventData)
-      }
-    }
-
-    /**
-     * @param {ColorFormat} sourceFormat
-     */
-    function applyColorUpdates (sourceFormat) {
-      for (const [format, convert] of conversions[sourceFormat]) {
-        colors[format] = convert(colors[sourceFormat])
-      }
-
-      if (
-        colorPicker.value instanceof HTMLElement &&
-        colorSpace.value instanceof HTMLElement &&
-        thumb.value instanceof HTMLElement
-      ) {
-        setCssProps(colorPicker.value, colorSpace.value, thumb.value, colors)
-      }
-
-      return getEventData(colors, activeFormat.value)
-    }
-
-    /**
-     * Copies the current color (determined by the active color format).
-     *
-     * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
-     */
-    function copyColor () {
-      const activeColor = colors[activeFormat.value]
-      const cssColor = formatAsCssColor(activeColor, activeFormat.value)
-
-      copyToClipboard(cssColor)
-    }
-
-    /**
-     * Wrapper function. Converts a color channel’s value into its CSS value representation.
-     *
-     * @param {'hsl' | 'hwb' | 'rgb'} format
-     * @param {string} channel
-     * @returns {string}
-     */
-    function getChannelAsCssValue (format, channel) {
-      return colorChannels[format][channel].to(colors[format][channel])
-    }
-
-    return {
-      // template refs
-      colorPicker,
-      colorSpace,
-      thumb,
-
-      // data props
-      activeFormat,
-      colors,
-      pointerOriginatedInColorSpace,
-      supportedFormats,
-
-      // methods
-      startMovingThumbWithMouse,
-      startMovingThumbWithTouch,
-      moveThumbWithArrows,
-      changeInputValue,
-      copyColor,
-      updateHue,
-      updateAlpha,
-      updateColorValue,
-      updateHexColorValue,
-      switchFormat,
-      getChannelAsCssValue,
-    }
+  defaultFormat: {
+    type: String,
+    required: false,
+    default: 'hsl',
+    validator: (/** @type {VisibleColorFormat} */ defaultFormat) => {
+      return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
+    },
   },
+})
+
+const emit = defineEmits(['color-change'])
+
+const colorPicker = /** @type {Ref<HTMLElement | null>} */ (ref(null))
+const colorSpace = /** @type {Ref<HTMLElement | null>} */ (ref(null))
+const thumb = /** @type {Ref<HTMLElement | null>} */ (ref(null))
+
+const pointerOriginatedInColorSpace = ref(false)
+const activeFormat = /** @type {Ref<VisibleColorFormat>} */ (ref(props.defaultFormat))
+const colors = /** @type {UnwrapRef<any>} */ (reactive({
+  hex: '#ffffffff',
+  hsl: { h: 0, s: 0, l: 1, a: 1 },
+  hsv: { h: 0, s: 0, v: 1, a: 1 },
+  hwb: { h: 0, w: 1, b: 0, a: 1 },
+  rgb: { r: 1, g: 1, b: 1, a: 1 },
+}))
+
+watch(() => props.color, (propsColor) => {
+  setColorFromProp(propsColor)
+})
+
+onMounted(() => {
+  document.addEventListener('mousemove', moveThumbWithMouse, { passive: false })
+  document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
+  document.addEventListener('mouseup', stopMovingThumb)
+  document.addEventListener('touchend', stopMovingThumb)
+  setColorFromProp(props.color)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('mousemove', moveThumbWithMouse)
+  document.removeEventListener('touchmove', moveThumbWithTouch)
+  document.removeEventListener('mouseup', stopMovingThumb)
+  document.removeEventListener('touchend', stopMovingThumb)
+})
+
+function switchFormat () {
+  const activeFormatIndex = props.visibleFormats.findIndex((/** @type {VisibleColorFormat} */ format) => format === activeFormat.value)
+  const newFormatIndex = activeFormatIndex === props.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
+  activeFormat.value = props.visibleFormats[newFormatIndex]
+}
+
+/**
+ * @param {MouseEvent} event
+ */
+function startMovingThumbWithMouse (event) {
+  pointerOriginatedInColorSpace.value = true
+  moveThumbWithMouse(event)
+}
+
+/**
+ * @param {TouchEvent} event
+ */
+function startMovingThumbWithTouch (event) {
+  pointerOriginatedInColorSpace.value = true
+  moveThumbWithTouch(event)
+}
+
+function stopMovingThumb () {
+  pointerOriginatedInColorSpace.value = false
+}
+
+/**
+ * @param {MouseEvent} event
+ */
+function moveThumbWithMouse (event) {
+  if (
+    event.buttons !== 1 ||
+    pointerOriginatedInColorSpace.value === false ||
+    !(colorSpace.value instanceof HTMLElement)
+  ) {
+    return
+  }
+
+  moveThumb(colorSpace.value, event.clientX, event.clientY)
+}
+
+/**
+ * @param {TouchEvent} event
+ */
+function moveThumbWithTouch (event) {
+  if (
+    pointerOriginatedInColorSpace.value === false ||
+    !(colorSpace.value instanceof HTMLElement)
+  ) {
+    return
+  }
+
+  // Prevent touch events from dragging the page.
+  event.preventDefault()
+  moveThumb(colorSpace.value, event.touches[0].clientX, event.touches[0].clientY)
+}
+
+/**
+ * @param {HTMLElement} colorSpace
+ * @param {number} clientX
+ * @param {number} clientY
+ */
+function moveThumb (colorSpace, clientX, clientY) {
+  const newThumbPosition = getNewThumbPosition(colorSpace, clientX, clientY)
+  const color = { ...colors.hsv }
+  color.s = newThumbPosition.x
+  color.v = newThumbPosition.y
+
+  setColor('hsv', color)
+}
+
+/**
+ * @param {KeyboardEvent} event
+ */
+function moveThumbWithArrows (event) {
+  if (!['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key)) {
+    return
+  }
+
+  event.preventDefault()
+  const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
+  const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
+  const step = event.shiftKey ? 10 : 1
+  const newColorValue = colors.hsv[channel] + direction * step * 0.01
+  const color = { ...colors.hsv }
+  color[channel] = clamp(newColorValue, 0, 1)
+
+  setColor('hsv', color)
+}
+
+/**
+  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} propsColor
+  */
+function setColorFromProp (propsColor) {
+  if (propsColor === null) {
+    return
+  }
+
+  const result = parsePropsColor(propsColor)
+  if (result !== null) {
+    setColor(result.format, result.color)
+  }
+}
+
+/**
+  * @param {Event} event
+  */
+function updateHue (event) {
+  const input = /** @type {HTMLInputElement} */ (event.currentTarget)
+  const color = { ...colors.hsv }
+  color.h = parseInt(input.value) / 360
+
+  setColor('hsv', color)
+}
+
+/**
+  * @param {Event} event
+  */
+function updateAlpha (event) {
+  const input = /** @type {HTMLInputElement} */ (event.currentTarget)
+  const color = { ...colors.hsv }
+  color.a = parseInt(input.value) / 100
+
+  setColor('hsv', color)
+}
+
+/**
+  * @param {Event} event
+  */
+function updateHexColorValue (event) {
+  const input = /** @type {HTMLInputElement} */ (event.target)
+
+  if (isValidHexColor(input.value)) {
+    setColor('hex', input.value)
+  }
+}
+
+/**
+  * @param {Event} event
+  * @param {'hsl' | 'hwb' | 'rgb'} format
+  * @param {string} channel
+  */
+function updateColorValue (event, format, channel) {
+  const input = /** @type {HTMLInputElement} */ (event.target)
+
+  // Make a shallow copy of the colors object to avoid writing to it before we know that the new color is valid.
+  const color = { ...colors[format] }
+  const value = colorChannels[format][channel].from(input.value)
+
+  if (Number.isNaN(value) || value === undefined) {
+    // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
+    return
+  }
+
+  color[channel] = value
+
+  setColor(format, color)
+}
+
+/**
+  * @param {ColorFormat} format
+  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
+  */
+function setColor (format, color) {
+  if (!colorsAreValueEqual(colors[format], color)) {
+    colors[format] = color
+    const eventData = applyColorUpdates(format)
+    emit('color-change', eventData)
+  }
+}
+
+/**
+  * @param {ColorFormat} sourceFormat
+  */
+function applyColorUpdates (sourceFormat) {
+  for (const [format, convert] of conversions[sourceFormat]) {
+    colors[format] = convert(colors[sourceFormat])
+  }
+
+  if (
+    colorPicker.value instanceof HTMLElement &&
+    colorSpace.value instanceof HTMLElement &&
+    thumb.value instanceof HTMLElement
+  ) {
+    setCssProps(colorPicker.value, colorSpace.value, thumb.value, colors)
+  }
+
+  return getEventData(colors, activeFormat.value)
+}
+
+/**
+  * Copies the current color (determined by the active color format).
+  *
+  * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
+  */
+function copyColor () {
+  const activeColor = colors[activeFormat.value]
+  const cssColor = formatAsCssColor(activeColor, activeFormat.value)
+
+  copyToClipboard(cssColor)
+}
+
+/**
+  * Wrapper function. Converts a color channel’s value into its CSS value representation.
+  *
+  * @param {'hsl' | 'hwb' | 'rgb'} format
+  * @param {string} channel
+  * @returns {string}
+  */
+function getChannelAsCssValue (format, channel) {
+  return colorChannels[format][channel].to(colors[format][channel])
 }
 
 /**
