@@ -3,7 +3,9 @@ import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 import vue from 'rollup-plugin-vue'
 
-import discardCss from './rollup-plugin-discard-css.js'
+import { discardCss } from './rollup-plugin-discard-css.js'
+
+/** @typedef {import('rollup').RollupOptions} RollupOptions */
 
 /*
 vue options:
@@ -33,7 +35,7 @@ const unstyledComponentPlugins = [
   terser(),
 ]
 
-export default [
+/** @type {RollupOptions[]} */ const options = [
   {
     input: 'src/index.js',
     output: {
@@ -62,3 +64,5 @@ export default [
     plugins: unstyledComponentPlugins,
   },
 ]
+
+export default options
