@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.0.1...v3.1.0) (2021-12-10)
+
+
+### Features
+
+* convert to script setup syntax ([70c59a5](https://github.com/kleinfreund/vue-accessible-color-picker/commit/70c59a5a1881e4899779dd46c7ae9cd4991a460b))
+
 ## [3.0.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.0.0...v3.0.1) (2021-11-04)
 
 
