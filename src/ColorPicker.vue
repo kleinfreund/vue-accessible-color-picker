@@ -130,16 +130,16 @@
 
 <script setup>
 /**
- * @template T
  * @typedef {import('vue').PropType<T>} PropType<T>
+ * @template T
  */
 /**
- * @template T
  * @typedef {import('vue').Ref<T>} Ref<T>
+ * @template T
  */
 /**
- * @template T
  * @typedef {import('vue').UnwrapRef<T>} UnwrapRef<T>
+ * @template T
  */
 /** @typedef {import('../types/index').ColorFormat} ColorFormat */
 /** @typedef {import('../types/index').ColorHsl} ColorHsl */
@@ -322,8 +322,8 @@ function moveThumbWithArrows (event) {
 }
 
 /**
-  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} propsColor
-  */
+ * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} propsColor
+ */
 function setColorFromProp (propsColor) {
   if (propsColor === null) {
     return
@@ -336,8 +336,8 @@ function setColorFromProp (propsColor) {
 }
 
 /**
-  * @param {Event} event
-  */
+ * @param {Event} event
+ */
 function updateHue (event) {
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
   const color = { ...colors.hsv }
@@ -347,8 +347,8 @@ function updateHue (event) {
 }
 
 /**
-  * @param {Event} event
-  */
+ * @param {Event} event
+ */
 function updateAlpha (event) {
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
   const color = { ...colors.hsv }
@@ -358,8 +358,8 @@ function updateAlpha (event) {
 }
 
 /**
-  * @param {Event} event
-  */
+ * @param {Event} event
+ */
 function updateHexColorValue (event) {
   const input = /** @type {HTMLInputElement} */ (event.target)
 
@@ -369,10 +369,10 @@ function updateHexColorValue (event) {
 }
 
 /**
-  * @param {Event} event
-  * @param {'hsl' | 'hwb' | 'rgb'} format
-  * @param {string} channel
-  */
+ * @param {Event} event
+ * @param {'hsl' | 'hwb' | 'rgb'} format
+ * @param {string} channel
+ */
 function updateColorValue (event, format, channel) {
   const input = /** @type {HTMLInputElement} */ (event.target)
 
@@ -391,9 +391,9 @@ function updateColorValue (event, format, channel) {
 }
 
 /**
-  * @param {ColorFormat} format
-  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
-  */
+ * @param {ColorFormat} format
+ * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
+ */
 function setColor (format, color) {
   if (!colorsAreValueEqual(colors[format], color)) {
     colors[format] = color
@@ -403,8 +403,8 @@ function setColor (format, color) {
 }
 
 /**
-  * @param {ColorFormat} sourceFormat
-  */
+ * @param {ColorFormat} sourceFormat
+ */
 function applyColorUpdates (sourceFormat) {
   for (const [format, convert] of conversions[sourceFormat]) {
     colors[format] = convert(colors[sourceFormat])
@@ -422,24 +422,25 @@ function applyColorUpdates (sourceFormat) {
 }
 
 /**
-  * Copies the current color (determined by the active color format).
-  *
-  * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
-  */
+ * Copies the current color (determined by the active color format).
+ *
+ * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
+ */
 function copyColor () {
   const activeColor = colors[activeFormat.value]
-  const cssColor = formatAsCssColor(activeColor, activeFormat.value)
+  const excludeAlphaChannel = props.alphaChannel === 'hide'
+  const cssColor = formatAsCssColor(activeColor, activeFormat.value, excludeAlphaChannel)
 
   copyToClipboard(cssColor)
 }
 
 /**
-  * Wrapper function. Converts a color channel’s value into its CSS value representation.
-  *
-  * @param {'hsl' | 'hwb' | 'rgb'} format
-  * @param {string} channel
-  * @returns {string}
-  */
+ * Wrapper function. Converts a color channel’s value into its CSS value representation.
+ *
+ * @param {'hsl' | 'hwb' | 'rgb'} format
+ * @param {string} channel
+ * @returns {string}
+ */
 function getChannelAsCssValue (format, channel) {
   return colorChannels[format][channel].to(colors[format][channel])
 }
