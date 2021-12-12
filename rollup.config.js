@@ -47,6 +47,7 @@ const unstyledComponentPlugins = [
         vue: 'vue',
       },
     },
+    external: ['vue'],
     plugins: styledComponentPlugins,
   },
 
@@ -61,6 +62,7 @@ const unstyledComponentPlugins = [
         vue: 'vue',
       },
     },
+    external: ['vue'],
     plugins: unstyledComponentPlugins,
   },
 ]
