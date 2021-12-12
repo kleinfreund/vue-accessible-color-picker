@@ -13,6 +13,8 @@ describe('getCssColorAsRgbString', () => {
     ['#123456', { format: 'hex', color: '#123456' }],
     ['#12345678', { format: 'hex', color: '#12345678' }],
     ['#123456789', null],
+    // Doesn’t work because `getComputedStyle(el).color` returns `'red'` instead of `'rgb(255, 0, 0).
+    // ['red', { format: 'rgb', color: { r: 1, g: 0, b: 0, a: 1 } }],
   ])('works', (cssColor, rgbColorString) => {
     expect(parsePropsColor(cssColor)).toEqual(rgbColorString)
   })
