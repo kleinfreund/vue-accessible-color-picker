@@ -158,9 +158,7 @@ import { copyToClipboard } from './utilities/copy-to-clipboard.js'
 import { formatAsCssColor } from './utilities/format-as-css-color.js'
 import { isValidHexColor } from './utilities/is-valid-hex-color.js'
 import { parsePropsColor } from './utilities/parse-props-color.js'
-import { ALLOWED_VISIBLE_FORMATS } from './constants.js'
-
-const STEP_FACTOR = 10
+import { ALLOWED_VISIBLE_FORMATS, RANGE_INPUT_STEP_FACTOR } from './constants.js'
 
 const props = defineProps({
   color: {
@@ -523,7 +521,7 @@ function changeInputValue (event) {
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
   const step = parseFloat(input.step)
   const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
-  const value = parseFloat(input.value) + direction * step * STEP_FACTOR
+  const value = parseFloat(input.value) + direction * step * RANGE_INPUT_STEP_FACTOR
   const newValue = clamp(value, parseInt(input.min), parseInt(input.max))
   // Remove one step because the default action needs to be able to set a new value for it to fire events, too.
   input.value = String(newValue - direction * step)
