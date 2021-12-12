@@ -154,6 +154,7 @@ import { clamp } from './utilities/clamp.js'
 import { colorChannels } from './utilities/color-channels.js'
 import { colorsAreValueEqual } from './utilities/colors-are-value-equal.js'
 import { conversions } from './utilities/convert-color.js'
+import { copyColorObject } from './utilities/copy-color-object.js'
 import { copyToClipboard } from './utilities/copy-to-clipboard.js'
 import { formatAsCssColor } from './utilities/format-as-css-color.js'
 import { isValidHexColor } from './utilities/is-valid-hex-color.js'
@@ -293,11 +294,11 @@ function moveThumbWithTouch (event) {
  */
 function moveThumb (colorSpace, clientX, clientY) {
   const newThumbPosition = getNewThumbPosition(colorSpace, clientX, clientY)
-  const color = { ...colors.hsv }
-  color.s = newThumbPosition.x
-  color.v = newThumbPosition.y
+  const hsvColor = copyColorObject(colors.hsv)
+  hsvColor.s = newThumbPosition.x
+  hsvColor.v = newThumbPosition.y
 
-  setColor('hsv', color)
+  setColor('hsv', hsvColor)
 }
 
 /**
@@ -313,10 +314,10 @@ function moveThumbWithArrows (event) {
   const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
   const step = event.shiftKey ? 10 : 1
   const newColorValue = colors.hsv[channel] + direction * step * 0.01
-  const color = { ...colors.hsv }
-  color[channel] = clamp(newColorValue, 0, 1)
+  const hsvColor = copyColorObject(colors.hsv)
+  hsvColor[channel] = clamp(newColorValue, 0, 1)
 
-  setColor('hsv', color)
+  setColor('hsv', hsvColor)
 }
 
 /**
@@ -338,10 +339,10 @@ function setColorFromProp (propsColor) {
  */
 function updateHue (event) {
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-  const color = { ...colors.hsv }
-  color.h = parseInt(input.value) / 360
+  const hsvColor = copyColorObject(colors.hsv)
+  hsvColor.h = parseInt(input.value) / 360
 
-  setColor('hsv', color)
+  setColor('hsv', hsvColor)
 }
 
 /**
@@ -349,10 +350,10 @@ function updateHue (event) {
  */
 function updateAlpha (event) {
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-  const color = { ...colors.hsv }
-  color.a = parseInt(input.value) / 100
+  const hsvColor = copyColorObject(colors.hsv)
+  hsvColor.a = parseInt(input.value) / 100
 
-  setColor('hsv', color)
+  setColor('hsv', hsvColor)
 }
 
 /**
@@ -374,8 +375,7 @@ function updateHexColorValue (event) {
 function updateColorValue (event, format, channel) {
   const input = /** @type {HTMLInputElement} */ (event.target)
 
-  // Make a shallow copy of the colors object to avoid writing to it before we know that the new color is valid.
-  const color = { ...colors[format] }
+  const color = copyColorObject(colors[format])
   const value = colorChannels[format][channel].from(input.value)
 
   if (Number.isNaN(value) || value === undefined) {
@@ -487,7 +487,7 @@ function setCssProps (colorPicker, colorSpace, thumb, colors) {
  */
 function getEventData (colors, activeFormat) {
   return {
-    colors: { ...colors },
+    colors,
     cssColor: formatAsCssColor(colors[activeFormat], activeFormat),
   }
 }
