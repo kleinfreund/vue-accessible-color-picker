@@ -40,7 +40,6 @@
     "lint:fix": "npm run lint -- --fix",
     "semantic-release": "semantic-release",
     "prepare": "husky install",
-    "prebuild": "npm run lint && npm run test",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
