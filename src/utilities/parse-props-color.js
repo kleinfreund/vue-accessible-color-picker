@@ -26,35 +26,39 @@ export function parsePropsColor (propsColor) {
     return { format: 'hex', color: propsColor }
   }
 
-  // Attempt to parse CSS colors like named CSS color (e.g. “tomato”, “rebeccapurple”, etc.).
   if (!propsColor.includes('(')) {
-    const tempElement = document.createElement('span')
-    tempElement.style.display = 'none'
-    tempElement.style.color = propsColor
+    const context = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'))
+    context.fillStyle = propsColor
+    const color = context.fillStyle
 
-    // `colorString` is not a valid CSS color value
-    if (tempElement.style.color === '') {
+    // Invalid color names yield `'#000000'` which we only know to have come from an invalid color name if it was *not* `'black'`
+    if (color === '#000000' && propsColor !== 'black') {
       return null
     }
 
-    document.body.appendChild(tempElement)
-    propsColor = getComputedStyle(tempElement).color
-    tempElement.remove()
+    return { format: 'hex', color }
   }
 
+  // Split a color string like `rgba(255 255 128 / .5)` into `rgba` and `255 255 128 / .5)`.
   const [cssFormat, rest] = propsColor.split('(')
   const format = /** @type {ColorFormat} */ (cssFormat.substring(0, 3))
-  const parameters = rest.replace(/[,/)]/g, ' ').replace(/\s+/g, ' ').trim().split(' ')
+  const parameters = rest
+    // Replace all characters that aren’t needed any more, leaving a string like `255 255 128 .5`.
+    .replace(/[,/)]/g, ' ')
+    // Replace consecutive spaces with one space.
+    .replace(/\s+/g, ' ')
+    .trim().split(' ')
+
+  // Normalize color to always have an alpha channel in its internal representation.
   if (parameters.length === 3) {
     parameters.push('1')
   }
 
   const channels = format.split('').concat('a')
-  const color = Object.fromEntries(channels.map((channel, index) => {
-    return [
-      channel,
-      colorChannels[format][channel].from(parameters[index]),
-    ]
-  }))
+  const color = Object.fromEntries(channels.map((channel, index) => [
+    channel,
+    colorChannels[format][channel].from(parameters[index]),
+  ]))
+
   return { format, color }
 }

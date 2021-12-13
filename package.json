@@ -61,6 +61,7 @@
     "@vue/test-utils": "^2.0.0-rc.17",
     "@vue/vue3-jest": "^27.0.0-alpha.4",
     "babel-jest": "^27.4.2",
+    "canvas": "^2.8.0",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-vue": "^7.20.0",
