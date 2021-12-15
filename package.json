@@ -23,7 +23,10 @@
     "hsl",
     "hwb"
   ],
-  "exports": "./dist/vue-accessible-color-picker.js",
+  "exports": {
+    ".": "./dist/vue-accessible-color-picker.js",
+    "./dist/vue-accessible-color-picker-unstyled.js": "./dist/vue-accessible-color-picker-unstyled.js"
+  },
   "main": "./dist/vue-accessible-color-picker.js",
   "module": "./dist/vue-accessible-color-picker.js",
   "types": "./types/index.d.ts",
