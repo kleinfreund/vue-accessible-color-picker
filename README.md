@@ -22,6 +22,7 @@ Links:
     - [`color`](#color)
     - [`visibleFormats`](#visibleformats)
     - [`defaultFormat`](#defaultformat)
+    - [`alphaChannel`](#alphachannel)
     - [`id`](#id)
   - [Events](#events)
     - [`color-change`](#color-change)
@@ -160,6 +161,18 @@ app.component('ColorPicker', ColorPicker)
   <ColorPicker default-format="hwb" />
   ```
 
+#### `alphaChannel`
+
+- **Description**: Whether to show input controls for a color’s alpha channel. If set to `'hide'`, the alpha range input and the alpha channel input are hidden, the “Copy color” button will copy a CSS color value without alpha channel, and the object emitted in a `color-change` event will have a `cssColor` property value without alpha channel.
+- **Type**: `'show'` or `'hide'`
+- **Required**: `false`
+- **Default**: `'show'`
+- **Usage**:
+
+  ```html
+  <ColorPicker alpha-channel="hide" />
+  ```
+
 #### `id`
 
 - **Description**: The ID value will be used to prefix all `input` elements’ `id` and `label` elements’ `for` attribute values. Set this prop if you use multiple instances of the `color-picker` component on one page.
@@ -177,7 +190,7 @@ app.component('ColorPicker', ColorPicker)
 #### `color-change`
 
 - **Description**: An `input` event is emitted each time the internal colors object is updated.
-- **Data**: The event emits an object containing both the internal colors object and a CSS color value as a string based on the currently active format.
+- **Data**: The event emits an object containing both the internal colors object and a CSS color value as a string based on the currently active format. The `cssColor` property will respect `alphaChannel`.
 
   ```ts
   {
@@ -249,7 +262,7 @@ app.component('ColorPicker', ColorPicker)
 |:---------------:|:-------:|:------:|:------:|
 | 79              | 63      | 73     | 12.2   |
 
-The browser support is derived from the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*), and [spread syntax in object literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+The browser support is derived from the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries) and [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
 
 ## Versioning
 

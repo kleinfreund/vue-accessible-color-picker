@@ -29,3 +29,5 @@ export type ColorRgb = {
   b: number
   a: number
 }
+
+export type AlphaChannelProp = 'show' | 'hide'

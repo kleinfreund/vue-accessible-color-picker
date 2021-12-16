@@ -19,47 +19,50 @@
       />
     </div>
 
-    <label
-      class="vacp-range-input-label vacp-range-input-label--hue"
-      :for="`${id}-hue-slider`"
-    >
-      <span class="vacp-range-input-label-text vacp-range-input-label-text--hue">
-        <slot name="hue-range-input-label">Hue</slot>
-      </span>
-
-      <input
-        :id="`${id}-hue-slider`"
-        class="vacp-range-input vacp-range-input--hue"
-        :value="colors.hsv.h * 360"
-        type="range"
-        min="0"
-        max="360"
-        step="1"
-        @keydown.passive="changeInputValue"
-        @input="updateHue"
+    <div class="vacp-range-input-group">
+      <label
+        class="vacp-range-input-label vacp-range-input-label--hue"
+        :for="`${id}-hue-slider`"
       >
-    </label>
+        <span class="vacp-range-input-label-text vacp-range-input-label-text--hue">
+          <slot name="hue-range-input-label">Hue</slot>
+        </span>
 
-    <label
-      class="vacp-range-input-label vacp-range-input-label--alpha"
-      :for="`${id}-alpha-slider`"
-    >
-      <span class="vacp-range-input-label-text vacp-range-input-label-text--alpha">
-        <slot name="alpha-range-input-label">Alpha</slot>
-      </span>
+        <input
+          :id="`${id}-hue-slider`"
+          class="vacp-range-input vacp-range-input--hue"
+          :value="colors.hsv.h * 360"
+          type="range"
+          min="0"
+          max="360"
+          step="1"
+          @keydown.passive="changeInputValue"
+          @input="updateHue"
+        >
+      </label>
 
-      <input
-        :id="`${id}-alpha-slider`"
-        class="vacp-range-input vacp-range-input--alpha"
-        :value="colors.hsv.a * 100"
-        type="range"
-        min="0"
-        max="100"
-        step="1"
-        @keydown.passive="changeInputValue"
-        @input="updateAlpha"
+      <label
+        v-if="alphaChannel === 'show'"
+        class="vacp-range-input-label vacp-range-input-label--alpha"
+        :for="`${id}-alpha-slider`"
       >
-    </label>
+        <span class="vacp-range-input-label-text vacp-range-input-label-text--alpha">
+          <slot name="alpha-range-input-label">Alpha</slot>
+        </span>
+
+        <input
+          :id="`${id}-alpha-slider`"
+          class="vacp-range-input vacp-range-input--alpha"
+          :value="colors.hsv.a * 100"
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          @keydown.passive="changeInputValue"
+          @input="updateAlpha"
+        >
+      </label>
+    </div>
 
     <button
       class="vacp-copy-button"
@@ -86,13 +89,13 @@
             :id="`${id}-color-hex`"
             class="vacp-color-input"
             type="text"
-            :value="colors.hex"
+            :value="hexInputValue"
             @input="updateHexColorValue($event)"
           >
         </label>
 
         <label
-          v-for="channel in Object.keys(colors[activeFormat])"
+          v-for="channel in visibleChannels"
           v-else
           :id="`${id}-color-${activeFormat}-${channel}`"
           :key="`${id}-color-${activeFormat}-${channel}`"
@@ -130,6 +133,10 @@
 
 <script setup>
 /**
+ * @typedef {import('vue').ComputedRef<T>} ComputedRef<T>
+ * @template T
+ */
+/**
  * @typedef {import('vue').PropType<T>} PropType<T>
  * @template T
  */
@@ -141,6 +148,7 @@
  * @typedef {import('vue').UnwrapRef<T>} UnwrapRef<T>
  * @template T
  */
+/** @typedef {import('../types/index').AlphaChannelProp} AlphaChannelProp */
 /** @typedef {import('../types/index').ColorFormat} ColorFormat */
 /** @typedef {import('../types/index').ColorHsl} ColorHsl */
 /** @typedef {import('../types/index').ColorHsv} ColorHsv */
@@ -148,7 +156,14 @@
 /** @typedef {import('../types/index').ColorRgb} ColorRgb */
 /** @typedef {import('../types/index').VisibleColorFormat} VisibleColorFormat */
 
-import { onMounted, onBeforeUnmount, reactive, ref, watch } from 'vue'
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
 
 import { clamp } from './utilities/clamp.js'
 import { colorChannels } from './utilities/color-channels.js'
@@ -159,7 +174,7 @@ import { copyToClipboard } from './utilities/copy-to-clipboard.js'
 import { formatAsCssColor } from './utilities/format-as-css-color.js'
 import { isValidHexColor } from './utilities/is-valid-hex-color.js'
 import { parsePropsColor } from './utilities/parse-props-color.js'
-import { ALLOWED_VISIBLE_FORMATS, RANGE_INPUT_STEP_FACTOR } from './constants.js'
+import { ALLOWED_VISIBLE_FORMATS, ALPHA_CHANNEL_PROP_VALUES, RANGE_INPUT_STEP_FACTOR } from './constants.js'
 
 const props = defineProps({
   color: {
@@ -193,6 +208,23 @@ const props = defineProps({
       return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
     },
   },
+
+  /**
+   * Controls whether the control related to a color’s alpha channel are rendered in the color picker.
+   *
+   * The following settings are available:
+   *
+   * - **show**: Default. The alpha channel range input and the alpha channel value input are rendered.
+   * - **hide**: The alpha channel range input and the alpha channel value input are not rendered. The `color-change` event emits a `cssColor` property without the alpha channel part.
+   */
+  alphaChannel: {
+    type: String,
+    required: false,
+    default: 'show',
+    validator: (/** @type {string} */ alphaChannel) => {
+      return ALPHA_CHANNEL_PROP_VALUES.includes(alphaChannel)
+    },
+  },
 })
 
 const emit = defineEmits(['color-change'])
@@ -210,6 +242,27 @@ const colors = /** @type {UnwrapRef<any>} */ (reactive({
   hwb: { h: 0, w: 1, b: 0, a: 1 },
   rgb: { r: 1, g: 1, b: 1, a: 1 },
 }))
+
+/**
+ * A list of color channels rendered as part of the color picker.
+ */
+const visibleChannels = computed(() => {
+  const allChannels = Object.keys(colors[activeFormat.value])
+  return activeFormat.value !== 'hex' && props.alphaChannel === 'hide'
+    ? allChannels.slice(0, 3)
+    : allChannels
+})
+
+/**
+ * Input value of the color `input` element for the hexadecimal representation of the current color.
+ *
+ * @type {ComputedRef<string>}
+ */
+const hexInputValue = computed(() => {
+  return props.alphaChannel === 'hide' && [5, 7].includes(colors.hex.length)
+    ? colors.hex.substring(0, colors.hex.length - (colors.hex.length - 1) / 4)
+    : colors.hex
+})
 
 watch(() => props.color, (propsColor) => {
   setColorFromProp(propsColor)
@@ -393,8 +446,19 @@ function updateColorValue (event, format, channel) {
  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
  */
 function setColor (format, color) {
-  if (!colorsAreValueEqual(colors[format], color)) {
-    colors[format] = color
+  let normalizedColor = color
+  if (props.alphaChannel === 'hide') {
+    if (typeof color !== 'string') {
+      color.a = 1
+      normalizedColor = color
+    } else if ([5, 9].includes(color.length)) {
+      const alphaChannelLength = (color.length - 1) / 4
+      normalizedColor = color.substring(0, color.length - alphaChannelLength) + 'f'.repeat(alphaChannelLength)
+    }
+  }
+
+  if (!colorsAreValueEqual(colors[format], normalizedColor)) {
+    colors[format] = normalizedColor
     const eventData = applyColorUpdates(format)
     emit('color-change', eventData)
   }
@@ -486,9 +550,11 @@ function setCssProps (colorPicker, colorSpace, thumb, colors) {
  * @returns {{ colors: any, cssColor: string }}
  */
 function getEventData (colors, activeFormat) {
+  const excludeAlphaChannel = props.alphaChannel === 'hide'
+
   return {
     colors,
-    cssColor: formatAsCssColor(colors[activeFormat], activeFormat),
+    cssColor: formatAsCssColor(colors[activeFormat], activeFormat, excludeAlphaChannel),
   }
 }
 
@@ -571,8 +637,7 @@ The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specifc
   grid-template-columns: 1fr min-content;
   grid-template-areas:
     "color-space  color-space"
-    "hue-input    copy-button"
-    "alpha-input  copy-button"
+    "range-inputs copy-button"
     "color-inputs color-inputs"
   ;
   font-size: 0.8em;
@@ -630,12 +695,15 @@ The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specifc
   display: block;
 }
 
-.vacp-range-input-label--hue {
-  grid-area: hue-input;
+.vacp-range-input-group {
+  grid-area: range-inputs;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.vacp-range-input-label--alpha {
-  grid-area: alpha-input;
+.vacp-range-input-group > :not(:first-child) {
+  margin-top: var(--vacp-spacing);
 }
 
 .vacp-range-input,
