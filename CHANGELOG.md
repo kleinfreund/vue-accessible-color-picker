@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.1.0...v3.2.0) (2021-12-16)
+
+
+### Features
+
+* add prop for hiding alpha channel ([cdfce86](https://github.com/kleinfreund/vue-accessible-color-picker/commit/cdfce862dcee843ae8b07531f1bfe271c5107dbb))
+
 # [3.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.0.1...v3.1.0) (2021-12-10)
 
 
