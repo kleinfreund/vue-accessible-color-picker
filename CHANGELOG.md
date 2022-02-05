@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.2.0...v3.3.0) (2022-02-05)
+
+
+### Features
+
+* provide untranspiled ES module bundles ([ce1dc59](https://github.com/kleinfreund/vue-accessible-color-picker/commit/ce1dc59ab364329fd41db33127762dbacf4bce21))
+
 # [3.2.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.1.0...v3.2.0) (2021-12-16)
 
 
