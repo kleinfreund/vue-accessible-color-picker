@@ -1,6 +1,6 @@
 import ColorPicker from './ColorPicker.vue'
 
-export default {
+/** @type {import('vue').Plugin} */ const plugin = {
   /**
    * @param {import('vue').App} app
    */
@@ -10,3 +10,5 @@ export default {
 }
 
 export { ColorPicker }
+
+export default plugin

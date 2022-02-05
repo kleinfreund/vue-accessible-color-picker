@@ -1,3 +1,5 @@
+import { Component, Plugin } from 'vue'
+
 export type VisibleColorFormat = 'hex' | 'hsl' | 'hwb' | 'rgb'
 
 export type ColorFormat = 'hex' | 'hsl' | 'hsv' | 'hwb' | 'rgb'
@@ -31,3 +33,9 @@ export type ColorRgb = {
 }
 
 export type AlphaChannelProp = 'show' | 'hide'
+
+const ColorPicker: Component
+
+export { ColorPicker }
+
+export default Plugin
