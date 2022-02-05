@@ -25,6 +25,9 @@
   ],
   "exports": {
     ".": "./dist/vue-accessible-color-picker.js",
+    "./unstyled": "./dist/vue-accessible-color-picker-unstyled.js",
+    "./esm": "./dist/vue-accessible-color-picker.esm.js",
+    "./esm/unstyled": "./dist/vue-accessible-color-picker-unstyled.esm.js",
     "./dist/vue-accessible-color-picker-unstyled.js": "./dist/vue-accessible-color-picker-unstyled.js"
   },
   "main": "./dist/vue-accessible-color-picker.js",

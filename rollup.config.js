@@ -5,8 +5,6 @@ import vue from 'rollup-plugin-vue'
 
 import { discardCss } from './rollup-plugin-discard-css.js'
 
-/** @typedef {import('rollup').RollupOptions} RollupOptions */
-
 /*
 vue options:
 https://rollup-plugin-vue.vuejs.org/options.html
@@ -21,21 +19,7 @@ terser options:
 https://github.com/TrySound/rollup-plugin-terser#options
 */
 
-const styledComponentPlugins = [
-  vue({ preprocessStyles: true }),
-  postcss(),
-  babel({ babelHelpers: 'bundled' }),
-  terser(),
-]
-
-const unstyledComponentPlugins = [
-  vue(),
-  discardCss(),
-  babel({ babelHelpers: 'bundled' }),
-  terser(),
-]
-
-/** @type {RollupOptions[]} */ const options = [
+/** @type {import('rollup').RollupOptions[]} */ const options = [
   {
     input: 'src/index.js',
     output: {
@@ -47,8 +31,14 @@ const unstyledComponentPlugins = [
         vue: 'vue',
       },
     },
+    // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
     external: ['vue'],
-    plugins: styledComponentPlugins,
+    plugins: [
+      vue({ preprocessStyles: true }),
+      postcss(),
+      babel({ babelHelpers: 'bundled' }),
+      terser(),
+    ],
   },
 
   {
@@ -62,8 +52,42 @@ const unstyledComponentPlugins = [
         vue: 'vue',
       },
     },
+    // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
     external: ['vue'],
-    plugins: unstyledComponentPlugins,
+    plugins: [
+      vue(),
+      discardCss(),
+      babel({ babelHelpers: 'bundled' }),
+      terser(),
+    ],
+  },
+
+  {
+    input: 'src/index.js',
+    output: {
+      file: 'dist/vue-accessible-color-picker.esm.js',
+    },
+    // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
+    external: ['vue'],
+    plugins: [
+      vue({ preprocessStyles: true }),
+      postcss(),
+      terser(),
+    ],
+  },
+
+  {
+    input: 'src/index.js',
+    output: {
+      file: 'dist/vue-accessible-color-picker-unstyled.esm.js',
+    },
+    // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
+    external: ['vue'],
+    plugins: [
+      vue(),
+      discardCss(),
+      terser(),
+    ],
   },
 ]
 

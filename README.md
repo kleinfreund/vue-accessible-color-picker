@@ -68,7 +68,7 @@ export default {
 If you want to use the unstyled variant of the component, you need to adjust the import statement slightly:
 
 ```js
-import { ColorPicker } from 'vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled';
+import { ColorPicker } from 'vue-accessible-color-picker/unstyled';
 ```
 
 ### Register component globally
@@ -86,7 +86,25 @@ app.component('ColorPicker', ColorPicker)
 **Unstyled component**:
 
 ```js
-import { ColorPicker } from 'vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled';
+import { ColorPicker } from 'vue-accessible-color-picker/unstyled';
+
+app.component('ColorPicker', ColorPicker)
+```
+
+### Use untranspiled ES modules
+
+The component is also available as an untranspiled ES module. Import them using the module specifier subpath “esm” as shown below.
+
+```js
+import { ColorPicker } from 'vue-accessible-color-picker/esm';
+
+app.component('ColorPicker', ColorPicker)
+```
+
+**Unstyled component**:
+
+```js
+import { ColorPicker } from 'vue-accessible-color-picker/esm/unstyled';
 
 app.component('ColorPicker', ColorPicker)
 ```
