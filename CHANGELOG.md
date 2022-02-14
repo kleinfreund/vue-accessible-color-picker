@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.3.0...v3.3.1) (2022-02-14)
+
+
+### Bug Fixes
+
+* **types:** declare ColorPicker type in type definitions ([dfe11f3](https://github.com/kleinfreund/vue-accessible-color-picker/commit/dfe11f3569dd945953a66196be0a5a6fc4d63532)), closes [#14](https://github.com/kleinfreund/vue-accessible-color-picker/issues/14)
+
 # [3.3.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.2.0...v3.3.0) (2022-02-05)
 
 
