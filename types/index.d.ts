@@ -34,7 +34,7 @@ export type ColorRgb = {
 
 export type AlphaChannelProp = 'show' | 'hide'
 
-const ColorPicker: Component
+declare const ColorPicker: Component
 
 export { ColorPicker }
 
