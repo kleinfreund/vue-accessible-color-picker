@@ -600,7 +600,7 @@ This style block is unscoped intentionally.
 
 This is done to have a lower specificity for its selectors which in turn makes it easier to override their styles.
 
-The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specifcitity for `.vacp-color-space` is 10.
+The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specificity for `.vacp-color-space` is 10.
 */
 .vacp-color-picker {
   --vacp-color: hsl(
