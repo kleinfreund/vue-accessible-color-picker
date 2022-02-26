@@ -10,6 +10,6 @@ module.exports = {
     defineEmits: 'readonly',
     defineProps: 'readonly',
   },
-  extends: ['plugin:vue/recommended', 'standard'],
   plugins: ['vue'],
+  extends: ['plugin:vue/recommended'],
 }
