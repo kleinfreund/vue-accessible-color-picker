@@ -4,6 +4,8 @@
 
 An accessible Vue.js color picker component.
 
+This package’s files are distributed in the ES module format and have not been transpiled.
+
 Links:
 
 - [demo](https://vue-accessible-color-picker.netlify.app)
@@ -43,17 +45,29 @@ npm install vue-accessible-color-picker
 
 ## Usage
 
-### Register component locally
+In a Vue single file component, import the `ColorPicker` component.
 
-In a Vue single file component (SFC), import the `ColorPicker` plugin and register the component via the `components` property on the Vue instance. You can then use it in the file’s `template` section.
+When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use it in the file’s `template` section.
 
-```html
+```vue
+<template>
+  <ColorPicker />
+</template>
+
+<script setup>
+import { ColorPicker } from 'vue-accessible-color-picker'
+</script>
+```
+
+When using Vue’s options API, the component must also be registered using the `components` property on the Vue instance.
+
+```vue
 <template>
   <ColorPicker />
 </template>
 
 <script>
-import { ColorPicker } from 'vue-accessible-color-picker';
+import { ColorPicker } from 'vue-accessible-color-picker'
 
 export default {
   components: {
@@ -65,48 +79,10 @@ export default {
 
 **Unstyled component**:
 
-If you want to use the unstyled variant of the component, you need to adjust the import statement slightly:
+If you want to use the unstyled variant of the component, you need to adjust the import statement to use the module specifier “vue-accessible-color-picker/unstyled”:
 
 ```js
-import { ColorPicker } from 'vue-accessible-color-picker/unstyled';
-```
-
-### Register component globally
-
-Registering a component globally allows you to use it in all Vue templates without the need to register it via an SFC’s `components` property first.
-
-In your Vue project’s `main.js` file (i.e. where you call `app.mount`), import the `ColorPicker` plugin and register the component using `app.component`.
-
-```js
-import { ColorPicker } from 'vue-accessible-color-picker';
-
-app.component('ColorPicker', ColorPicker)
-```
-
-**Unstyled component**:
-
-```js
-import { ColorPicker } from 'vue-accessible-color-picker/unstyled';
-
-app.component('ColorPicker', ColorPicker)
-```
-
-### Use untranspiled ES modules
-
-The component is also available as an untranspiled ES module. Import them using the module specifier subpath “esm” as shown below.
-
-```js
-import { ColorPicker } from 'vue-accessible-color-picker/esm';
-
-app.component('ColorPicker', ColorPicker)
-```
-
-**Unstyled component**:
-
-```js
-import { ColorPicker } from 'vue-accessible-color-picker/esm/unstyled';
-
-app.component('ColorPicker', ColorPicker)
+import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 ```
 
 ## Documentation
@@ -121,19 +97,19 @@ app.component('ColorPicker', ColorPicker)
 - **Default**: `null`
 - **Usage**:
 
-  ```html
+  ```vue
   <ColorPicker color="hsl(270 100% 50% / 0.8)" />
   ```
 
-  ```html
+  ```vue
   <ColorPicker color="#f80b" />
   ```
 
-  ```html
+  ```vue
   <ColorPicker :color="{ h: 0.75, s: 1, l: 0.5, a: 0.8 }" />
   ```
 
-  ```html
+  ```vue
   <template>
     <ColorPicker :color="color" @color-change="updateColor" />
   </template>
@@ -163,7 +139,7 @@ app.component('ColorPicker', ColorPicker)
 - **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
 - **Usage**:
 
-  ```html
+  ```vue
   <ColorPicker :visible-formats="['hsl', 'hwb']" />
   ```
 
@@ -175,7 +151,7 @@ app.component('ColorPicker', ColorPicker)
 - **Default**: `'rgb'`
 - **Usage**:
 
-  ```html
+  ```vue
   <ColorPicker default-format="hwb" />
   ```
 
@@ -187,7 +163,7 @@ app.component('ColorPicker', ColorPicker)
 - **Default**: `'show'`
 - **Usage**:
 
-  ```html
+  ```vue
   <ColorPicker alpha-channel="hide" />
   ```
 
@@ -199,7 +175,7 @@ app.component('ColorPicker', ColorPicker)
 - **Default**: `'color-picker'`
 - **Usage**:
 
-  ```html
+  ```vue
   <ColorPicker id="color-picker-1" />
   ```
 
@@ -225,7 +201,7 @@ app.component('ColorPicker', ColorPicker)
 
 - **Usage**:
 
-  ```html
+  ```vue
   <template>
     <ColorPicker
       color="hsl(270 100% 50% / 0.8)"
