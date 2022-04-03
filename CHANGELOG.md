@@ -1,3 +1,19 @@
+# [4.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.3.1...v4.0.0) (2022-04-03)
+
+
+### Code Refactoring
+
+* **dist:** make package ES module only ([3ab745b](https://github.com/kleinfreund/vue-accessible-color-picker/commit/3ab745b2d5d2e1c3f406ec0959a62743f2001e36))
+
+
+### BREAKING CHANGES
+
+* **dist:** Adds `"type": "package"` to the package.json file which indicates that this package is now distributed primarily (and solely) in the ES module format. Previously, the package was distributed in both ES and UMD module formats. Below is a list of the individual breaking changes regarding the package’s exposed module specifiers. If you want to know what module specifiers are, you can read up on the matter in the article “Publishing and consuming ECMAScript modules via packages – the big picture” by Dr. Axel Rauschmayer (https://2ality.com/2022/01/esm-specifiers.html#referring-to-ecmascript-modules-via-specifiers).
+* **dist:** Changes the bare module specifiers “vue-accessible-color-picker” and “vue-accessible-color-picker/unstyled” to refer to ES modules instead of UMD modules.
+* **dist:** Removes the bare module specifier “vue-accessible-color-picker/esm”. The same module is now referred to as “vue-accessible-color-picker”.
+* **dist:** Removes the bare module specifier “vue-accessible-color-picker/esm/unstyled”. The same module is now referred to as “vue-accessible-color-picker/unstyled”.
+* **dist:** Removes the bare module specifier “vue-accessible-color-picker/dist/vue-accessible-color-picker-unstyled.js”. Use “vue-accessible-color-picker/unstyled” instead.
+
 ## [3.3.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.3.0...v3.3.1) (2022-02-14)
 
 
