@@ -1,4 +1,4 @@
-# [4.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.3.1...v4.0.0) (2022-04-03)
+## [4.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.3.1...v4.0.0) (2022-04-03)
 
 
 ### Code Refactoring
@@ -21,21 +21,21 @@
 
 * **types:** declare ColorPicker type in type definitions ([dfe11f3](https://github.com/kleinfreund/vue-accessible-color-picker/commit/dfe11f3569dd945953a66196be0a5a6fc4d63532)), closes [#14](https://github.com/kleinfreund/vue-accessible-color-picker/issues/14)
 
-# [3.3.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.2.0...v3.3.0) (2022-02-05)
+## [3.3.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.2.0...v3.3.0) (2022-02-05)
 
 
 ### Features
 
 * provide untranspiled ES module bundles ([ce1dc59](https://github.com/kleinfreund/vue-accessible-color-picker/commit/ce1dc59ab364329fd41db33127762dbacf4bce21))
 
-# [3.2.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.1.0...v3.2.0) (2021-12-16)
+## [3.2.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.1.0...v3.2.0) (2021-12-16)
 
 
 ### Features
 
 * add prop for hiding alpha channel ([cdfce86](https://github.com/kleinfreund/vue-accessible-color-picker/commit/cdfce862dcee843ae8b07531f1bfe271c5107dbb))
 
-# [3.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.0.1...v3.1.0) (2021-12-10)
+## [3.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v3.0.1...v3.1.0) (2021-12-10)
 
 
 ### Features
