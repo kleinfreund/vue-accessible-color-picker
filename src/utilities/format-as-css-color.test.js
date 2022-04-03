@@ -3,6 +3,8 @@
 /** @typedef {import('../../types/index').ColorRgb} ColorRgb */
 /** @typedef {import('../../types/index').VisibleColorFormat} VisibleColorFormat */
 
+import { describe, test, expect } from 'vitest'
+
 import { formatAsCssColor } from './format-as-css-color.js'
 
 describe('formatAsCssColor', () => {

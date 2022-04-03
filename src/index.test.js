@@ -1,3 +1,5 @@
+import { describe, test, expect, vi } from 'vitest'
+
 import plugin from './index.js'
 
 describe('index.js', () => {
@@ -6,7 +8,7 @@ describe('index.js', () => {
   })
 
   test('install function calls component function on argument', () => {
-    const app = { component: jest.fn() }
+    const app = { component: vi.fn() }
 
     // @ts-ignore
     plugin.install(app)

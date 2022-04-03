@@ -1,7 +1,9 @@
+import { describe, test, expect } from 'vitest'
+
 import { isValidHexColor } from './is-valid-hex-color.js'
 
 describe('isValidHexColor', () => {
-  test.each([
+  test.each(/** @type {[string, boolean][]} */ ([
     ['#f', false],
     ['#ff', false],
     ['#fff', true],
@@ -15,7 +17,7 @@ describe('isValidHexColor', () => {
     ['#aaa', true],
     ['#ggg', false],
     ['#01234567', true],
-  ])('of “%s” returns %s', (hex, expectedResult) => {
+  ]))('of “%s” returns %s', (hex, expectedResult) => {
     expect(isValidHexColor(hex)).toBe(expectedResult)
   })
 })

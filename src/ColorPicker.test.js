@@ -1,12 +1,13 @@
+import { beforeEach, describe, test, expect, vi } from 'vitest'
 import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import ColorPicker from './ColorPicker.vue'
 import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
 
 /**
- * These tests make use of [Jest][1] and [Vue Test Utils][2].
+ * These tests make use of [Vitest][1] and [Vue Test Utils][2].
  *
- * [1]: https://jestjs.io/
+ * [1]: https://vitest.dev/
  * [2]: https://vue-test-utils.vuejs.org/
  */
 
@@ -28,7 +29,7 @@ function injectTestDiv () {
 
 describe('ColorPicker', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   test('can be mounted', () => {
@@ -61,13 +62,13 @@ describe('ColorPicker', () => {
   })
 
   describe('props & attributes', () => {
-    test.each([
+    test.each(/** @type {[string, any][]} */ ([
       ['hex', '#f00'],
       ['rgb', { r: 1, g: 0.5, b: 0, a: 0.5 }],
       ['hsl', { h: 0, s: 1, l: 0.5, a: 1 }],
       ['hwb', { h: 0.5, w: 0.33, b: 0.5, a: 1 }],
       ['hsv', { h: 0.5, s: 0.33, v: 0.5, a: 1 }],
-    ])('mounts correctly with a valid color prop', (format, colorProp) => {
+    ]))('mounts correctly with a valid color prop', (format, colorProp) => {
       const wrapper = shallowMount(ColorPicker, {
         props: {
           color: colorProp,
@@ -103,7 +104,7 @@ describe('ColorPicker', () => {
       expect(wrapper.vm.activeFormat).toBe(expectedActiveFormat)
     })
 
-    test.each([
+    test.each(/** @type {[any, any][]} */([
       [
         '#f80c',
         { r: 1, g: 0.5333333333333333, b: 0, a: 0.8 },
@@ -112,7 +113,7 @@ describe('ColorPicker', () => {
         { h: 0.5, s: 0.33, v: 0.5, a: 1 },
         { r: 0.33499999999999996, g: 0.5, b: 0.5, a: 1 },
       ],
-    ])('recomputes colors when color prop changes', async (colorProp, expectedColorChangePayload) => {
+    ]))('recomputes colors when color prop changes', async (colorProp, expectedColorChangePayload) => {
       const wrapper = shallowMount(ColorPicker)
 
       await wrapper.setProps({ color: colorProp })
@@ -208,16 +209,16 @@ describe('ColorPicker', () => {
       await colorSpace.trigger('mousedown')
       expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(true)
 
-      document.dispatchEvent(new Event('mouseup'))
+      document.dispatchEvent(new MouseEvent('mouseup'))
       expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(false)
 
       await colorSpace.trigger('touchstart', {
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
         touches: [{ clientX: 0, clientY: 0 }],
       })
       expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(true)
 
-      document.dispatchEvent(new Event('touchend'))
+      document.dispatchEvent(new TouchEvent('touchend'))
       expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(false)
     })
 
@@ -226,7 +227,7 @@ describe('ColorPicker', () => {
       const clientY = 0
       const mouseMoveEvent = {
         buttons: 1,
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
         clientX,
         clientY,
       }
@@ -255,11 +256,11 @@ describe('ColorPicker', () => {
 
       const colorSpace = wrapper.find('.vacp-color-space')
       await colorSpace.trigger('touchstart', {
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
         touches: [{ clientX: 0, clientY: 0 }],
       })
       await colorSpace.trigger('touchmove', {
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
         touches: [{ clientX: 0, clientY: 0 }],
       })
 
@@ -267,11 +268,11 @@ describe('ColorPicker', () => {
       expect(emittedColorChangeEvents.length).toBe(3)
 
       await colorSpace.trigger('touchstart', {
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
         touches: [{ clientX: 0, clientY: 0 }],
       })
       await colorSpace.trigger('touchmove', {
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
         touches: [{ clientX: 0, clientY: 0 }],
       })
 
@@ -285,7 +286,7 @@ describe('ColorPicker', () => {
     test('can not move the color space thumb with the wrong key', () => {
       const keydownEvent = {
         key: 'a',
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
       }
 
       const wrapper = shallowMount(ColorPicker)
@@ -308,7 +309,7 @@ describe('ColorPicker', () => {
       const keydownEvent = {
         key,
         shiftKey,
-        preventDefault: jest.fn(),
+        preventDefault: vi.fn(),
       }
 
       const wrapper = shallowMount(ColorPicker, {
@@ -345,14 +346,14 @@ describe('ColorPicker', () => {
       expect(hueRangeInputElement.value).toBe(originalInputValue)
     })
 
-    test.each([
+    test.each(/** @type {['increment' | 'decrement', number, string, string][]} */ ([
       ['decrement', 1, 'ArrowDown', '1'],
       ['decrement', 3, 'ArrowDown', '1'],
       ['decrement', 1, 'ArrowLeft', '1'],
       ['increment', 1, 'ArrowUp', '9'],
       ['increment', 1, 'ArrowRight', '9'],
       ['increment', 3, 'ArrowRight', '27'],
-    ])('can %s range inputs %dx in big steps with %s', (_, numberOfPresses, key, expectedValue) => {
+    ]))('can %s range inputs %dx in big steps with %s', (_, numberOfPresses, key, expectedValue) => {
       const wrapper = shallowMount(ColorPicker)
       const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
       const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
@@ -416,7 +417,7 @@ describe('ColorPicker', () => {
       ['hwb', 'hwb(0 100% 0% / 1)'],
       ['hex', '#ffffffff'],
     ])('copy button copies %s format as %s', (format, cssColor) => {
-      jest.spyOn(copyToClipboardModule, 'copyToClipboard').mockImplementation(jest.fn())
+      vi.spyOn(copyToClipboardModule, 'copyToClipboard').mockImplementation(vi.fn())
 
       const wrapper = shallowMount(ColorPicker)
 
@@ -455,7 +456,7 @@ describe('ColorPicker', () => {
     ])('updating a %s color input with an invalid value does not update the internal color data', async (format, channel, channelValue) => {
       const wrapper = shallowMount(ColorPicker)
 
-      jest.resetAllMocks()
+      vi.resetAllMocks()
 
       wrapper.vm.activeFormat = format
       await flushPromises()
@@ -477,7 +478,7 @@ describe('ColorPicker', () => {
     ])('updating a hex color input with an invalid value does not update the internal color data', async (invalidHexColorString) => {
       const wrapper = shallowMount(ColorPicker)
 
-      jest.resetAllMocks()
+      vi.resetAllMocks()
 
       wrapper.vm.activeFormat = 'hex'
       await flushPromises()
@@ -500,7 +501,7 @@ describe('ColorPicker', () => {
     ])('updating a %s color input with a valid value updates the internal color data', async (format, channel, channelValue) => {
       const wrapper = shallowMount(ColorPicker)
 
-      jest.resetAllMocks()
+      vi.resetAllMocks()
 
       wrapper.vm.activeFormat = format
       await flushPromises()
@@ -521,7 +522,7 @@ describe('ColorPicker', () => {
     ])('updating a %s color input with a valid value updates the internal color data', async (channelValue) => {
       const wrapper = shallowMount(ColorPicker)
 
-      jest.resetAllMocks()
+      vi.resetAllMocks()
 
       wrapper.vm.activeFormat = 'hex'
       await flushPromises()

@@ -1,14 +1,16 @@
+import { beforeEach, describe, test, expect, vi } from 'vitest'
+
 import { copyToClipboard } from './copy-to-clipboard.js'
 
 describe('copyToClipboard', () => {
   beforeEach(() => {
-    jest.restoreAllMocks()
-    document.execCommand = jest.fn()
-    document.queryCommandSupported = jest.fn()
+    vi.restoreAllMocks()
+    document.execCommand = vi.fn()
+    document.queryCommandSupported = vi.fn()
   })
 
   test('fails if document.queryCommandSupported returns false', () => {
-    jest.spyOn(document, 'queryCommandSupported').mockImplementation(() => false)
+    vi.spyOn(document, 'queryCommandSupported').mockImplementation(() => false)
 
     const result = copyToClipboard('test')
 
@@ -18,8 +20,8 @@ describe('copyToClipboard', () => {
   })
 
   test('fails if document.execCommand returns false', () => {
-    jest.spyOn(document, 'queryCommandSupported').mockImplementation(() => true)
-    jest.spyOn(document, 'execCommand').mockImplementation(() => false)
+    vi.spyOn(document, 'queryCommandSupported').mockImplementation(() => true)
+    vi.spyOn(document, 'execCommand').mockImplementation(() => false)
 
     const result = copyToClipboard('test')
 
@@ -29,8 +31,8 @@ describe('copyToClipboard', () => {
   })
 
   test('fails if document.execCommand throws', () => {
-    jest.spyOn(document, 'queryCommandSupported').mockImplementation(() => true)
-    jest.spyOn(document, 'execCommand').mockImplementation(() => {
+    vi.spyOn(document, 'queryCommandSupported').mockImplementation(() => true)
+    vi.spyOn(document, 'execCommand').mockImplementation(() => {
       throw new Error('fail')
     })
 
@@ -42,8 +44,8 @@ describe('copyToClipboard', () => {
   })
 
   test('works', () => {
-    jest.spyOn(document, 'queryCommandSupported').mockImplementation(() => true)
-    jest.spyOn(document, 'execCommand').mockImplementation(() => true)
+    vi.spyOn(document, 'queryCommandSupported').mockImplementation(() => true)
+    vi.spyOn(document, 'execCommand').mockImplementation(() => true)
 
     const result = copyToClipboard('test')
 
