@@ -37,6 +37,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "NODE_ENV=production rollup --config",
     "start": "NODE_ENV=development rollup --config --watch",
     "test": "vitest run --coverage",
@@ -67,6 +68,7 @@
     "husky": "^7.0.4",
     "jsdom": "^19.0.0",
     "postcss": "^8.4.12",
+    "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
