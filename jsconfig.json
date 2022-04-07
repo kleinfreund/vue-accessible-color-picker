@@ -12,6 +12,7 @@
     "moduleResolution": "node"
   },
   "include": [
-    "./src/**/*"
+    "./src",
+    "./types"
   ]
 }

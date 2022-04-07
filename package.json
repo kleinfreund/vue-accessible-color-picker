@@ -32,8 +32,9 @@
   "module": "./dist/vue-accessible-color-picker.js",
   "types": "./types/index.d.ts",
   "files": [
-    "dist/*.js",
-    "types/*.d.ts"
+    "dist/vue-accessible-color-picker.js",
+    "dist/vue-accessible-color-picker-unstyled.js",
+    "types/index.d.ts"
   ],
   "sideEffects": false,
   "scripts": {
