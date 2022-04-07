@@ -40,7 +40,7 @@ export function parsePropsColor (propsColor) {
   }
 
   // Split a color string like `rgba(255 255 128 / .5)` into `rgba` and `255 255 128 / .5)`.
-  const [cssFormat, rest] = propsColor.split('(')
+  const [cssFormat, rest] = /** @type {[string, string]} */ (propsColor.split('('))
   const format = /** @type {ColorFormat} */ (cssFormat.substring(0, 3))
   const parameters = rest
     // Replace all characters that aren’t needed any more, leaving a string like `255 255 128 .5`.
@@ -55,10 +55,10 @@ export function parsePropsColor (propsColor) {
   }
 
   const channels = format.split('').concat('a')
-  const color = Object.fromEntries(channels.map((channel, index) => [
+  const color = /** @type {ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ (Object.fromEntries(channels.map((channel, index) => [
     channel,
     colorChannels[format][channel].from(parameters[index]),
-  ]))
+  ])))
 
   return { format, color }
 }

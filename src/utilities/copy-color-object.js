@@ -4,7 +4,8 @@
  * @template T
  */
 export function copyColorObject (color) {
-  const newColor = {}
+  // @ts-expect-error because whatever TypeScript
+  /** @type {T} */ const newColor = {}
 
   for (const prop in color) {
     newColor[prop] = color[prop]

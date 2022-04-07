@@ -26,7 +26,8 @@ export function convertHexToRgb (hex) {
     channels.push('ff')
   }
 
-  const rgbChannels = channels.map(channel => parseInt(channel, 16) / 255)
+  // Okay, TypeScript, let’s agree that we got four elements in that array, alright?
+  const rgbChannels = /** @type {[number, number, number, number]} */(channels.map(channel => parseInt(channel, 16) / 255))
 
   return {
     r: rgbChannels[0],

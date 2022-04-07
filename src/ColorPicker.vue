@@ -286,7 +286,7 @@ onBeforeUnmount(() => {
 function switchFormat () {
   const activeFormatIndex = props.visibleFormats.findIndex((/** @type {VisibleColorFormat} */ format) => format === activeFormat.value)
   const newFormatIndex = activeFormatIndex === props.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
-  activeFormat.value = props.visibleFormats[newFormatIndex]
+  activeFormat.value = /** @type {VisibleColorFormat} */ (props.visibleFormats[newFormatIndex])
 }
 
 /**
@@ -337,7 +337,9 @@ function moveThumbWithTouch (event) {
 
   // Prevent touch events from dragging the page.
   event.preventDefault()
-  moveThumb(colorSpace.value, event.touches[0].clientX, event.touches[0].clientY)
+
+  const touchPoint = /** @type {Touch} */ (event.touches[0])
+  moveThumb(colorSpace.value, touchPoint.clientX, touchPoint.clientY)
 }
 
 /**
