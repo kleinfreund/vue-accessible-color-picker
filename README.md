@@ -294,4 +294,4 @@ The color picker consists of the following main elements:
 
 ## To do
 
-- Updating eslint/eslint-plugin-vue to ^v8.x depends on the release of eslint-config-standard (see: https://github.com/standard/eslint-config-standard/issues/208) so for now standard and eslint-config-standard have been remove. Add them again once it’s possible.
+- Updating eslint/eslint-plugin-vue to ^v8.x depends on the release of eslint-config-standard (see: https://github.com/standard/eslint-config-standard/issues/208) so for now standard and eslint-config-standard have been removed. Add them again once it’s possible.
