@@ -42,32 +42,6 @@ jobs:
         env:
           CI: true
 
-  test-release:
-    # Uses the inverted condition of the “release” job.
-    if: "!( github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' )"
-    needs: test-unit
-    name: Release (test run)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        # https://github.com/actions/checkout
-        uses: actions/checkout@v2
-
-      - name: Cache node_modules and dist
-        # https://github.com/actions/cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-            dist
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Release package (test run)
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release --dry-run
-
   release:
     # The release job runs only on pushes to or merges into the main or next branches.
     if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next'"
