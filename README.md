@@ -47,7 +47,7 @@ npm install vue-accessible-color-picker
 
 In a Vue single file component, import the `ColorPicker` component.
 
-When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use it in the file’s `template` section.
+When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use the component in the file’s `template` section.
 
 ```vue
 <template>
@@ -59,7 +59,7 @@ import { ColorPicker } from 'vue-accessible-color-picker'
 </script>
 ```
 
-When using Vue’s options API, the component must also be registered using the `components` property on the Vue instance.
+When using Vue’s options API, the component must first be registered using the `components` property on the Vue instance.
 
 ```vue
 <template>
@@ -111,22 +111,20 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 
   ```vue
   <template>
-    <ColorPicker :color="color" @color-change="updateColor" />
+    <ColorPicker
+      :color="color"
+      @color-change="updateColor"
+    />
   </template>
 
-  <script>
-  export default {
-    data() {
-      return {
-        color: 'hsl(270 100% 50% / 0.8)',
-      }
-    },
+  <script setup>
+  import { ref } from 'vue'
+  import { ColorPicker } from 'vue-accessible-color-picker'
 
-    methods: {
-      updateColor (eventData) {
-        this.color = eventData.cssColor
-      }
-    },
+  const color = ref('hsl(270 100% 50% / 0.8)')
+
+  function updateColor (eventData) {
+    color.value = eventData.cssColor
   }
   </script>
   ```
@@ -209,13 +207,11 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
     />
   </template>
 
-  <script>
-  export default {
-    methods: {
-      updateColor (eventData) {
-        console.log(eventData)
-      }
-    },
+  <script setup>
+  import { ColorPicker } from 'vue-accessible-color-picker'
+
+  function updateColor (eventData) {
+    console.log(eventData)
   }
   </script>
   ```
