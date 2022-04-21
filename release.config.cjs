@@ -1,5 +1,12 @@
-module.exports = {
-  branches: ['main', 'next'],
+/** @type {import('semantic-release').Options} */ const options = {
+  branches: [
+    '+([0-9])?(.{+([0-9]),x}).x',
+    'main',
+    'next',
+    'next-major',
+    { name: 'beta', prerelease: true },
+    { name: 'alpha', prerelease: true },
+  ],
   plugins: [
     // This analyzes all new commits and determines whether to release a new version.
     // https://github.com/semantic-release/commit-analyzer
@@ -32,3 +39,5 @@ module.exports = {
     '@semantic-release/git',
   ],
 }
+
+module.exports = options
