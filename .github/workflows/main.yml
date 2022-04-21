@@ -43,8 +43,8 @@ jobs:
           CI: true
 
   release:
-    # The release job runs only on pushes to or merges into the main or next branches.
-    if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next'"
+    # The release job runs only on pushes to or merges into the release branches configured in the semantic-release configuration.
+    if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/next-major' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha'"
     needs: test-unit
     name: Release
     runs-on: ubuntu-latest
