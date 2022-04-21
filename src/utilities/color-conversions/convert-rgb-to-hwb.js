@@ -27,7 +27,7 @@ export function convertRgbToHwb (rgb) {
   }
 
   return {
-    h: h,
+    h,
     w: min,
     b: 1 - max,
     a: rgb.a,

@@ -8,5 +8,5 @@ module.exports = {
     defineProps: 'readonly',
   },
   plugins: ['vue'],
-  extends: ['plugin:vue/recommended'],
+  extends: ['standard', 'plugin:vue/vue3-recommended'],
 }
