@@ -1,8 +1,3 @@
-/** @typedef {import('../../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../../types/index').ColorHsv} ColorHsv */
-/** @typedef {import('../../types/index').ColorHwb} ColorHwb */
-/** @typedef {import('../../types/index').ColorRgb} ColorRgb */
-
 /**
  * Checks whether two objects are value equal.
  *
