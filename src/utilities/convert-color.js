@@ -131,6 +131,6 @@ function convertHsvToHex (hsv) {
  * @param {ColorRgb} rgb
  * @returns {ColorHsv}
  */
-export function convertRgbToHsv (rgb) {
+function convertRgbToHsv (rgb) {
   return convertHwbToHsv(convertRgbToHwb(rgb))
 }
