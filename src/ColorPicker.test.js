@@ -46,19 +46,19 @@ describe('ColorPicker', () => {
     const mouseMoveEvent = new MouseEvent('mousemove', { buttons: 1 })
 
     document.dispatchEvent(mouseMoveEvent)
-    let emittedColorChangeEvents = wrapper.emitted()['color-change']
-    expect(emittedColorChangeEvents.length).toBe(1)
+    let emittedColorChangeEvents = wrapper.emitted('color-change')
+    expect(emittedColorChangeEvents?.length).toBe(1)
 
     document.dispatchEvent(mouseMoveEvent)
-    emittedColorChangeEvents = wrapper.emitted()['color-change']
-    expect(emittedColorChangeEvents.length).toBe(2)
+    emittedColorChangeEvents = wrapper.emitted('color-change')
+    expect(emittedColorChangeEvents?.length).toBe(2)
 
     wrapper.unmount()
 
     document.dispatchEvent(mouseMoveEvent)
-    emittedColorChangeEvents = wrapper.emitted()['color-change']
+    emittedColorChangeEvents = wrapper.emitted('color-change')
     // Note that we assert here that the method hasn’t been called *again*.
-    expect(emittedColorChangeEvents.length).toBe(2)
+    expect(emittedColorChangeEvents?.length).toBe(2)
   })
 
   describe('props & attributes', () => {
@@ -117,13 +117,13 @@ describe('ColorPicker', () => {
       const wrapper = shallowMount(ColorPicker)
 
       await wrapper.setProps({ color: colorProp })
-      let emittedColorChangeEvents = wrapper.emitted()['color-change']
+      let emittedColorChangeEvents = wrapper.emitted('color-change')
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       let emittedRgbColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.rgb
       expect(emittedRgbColor).toEqual(expectedColorChangePayload)
 
       await wrapper.setProps({ color: '#fffc' })
-      emittedColorChangeEvents = wrapper.emitted()['color-change']
+      emittedColorChangeEvents = wrapper.emitted('color-change')
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       emittedRgbColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.rgb
       expect(emittedRgbColor).toEqual({ r: 1, g: 1, b: 1, a: 0.8 })
@@ -192,7 +192,7 @@ describe('ColorPicker', () => {
 
       wrapper.vm.updateColorValue(inputEvent, format, channel)
 
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       const emittedCssColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].cssColor
       expect(emittedCssColor).toEqual(expectedCssColor)
@@ -234,15 +234,15 @@ describe('ColorPicker', () => {
 
       const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
 
-      let emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(1)
+      let emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(1)
 
       const colorSpace = wrapper.find('.vacp-color-space')
       await colorSpace.trigger('mousedown')
       await colorSpace.trigger('mousemove', mouseMoveEvent)
 
-      emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(2)
+      emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(2)
 
       // Remove test HTML injected via the `attachTo` option during mount.
       wrapper.unmount()
@@ -251,8 +251,8 @@ describe('ColorPicker', () => {
     test('can initiate moving the color space thumb with a touch-based device', async () => {
       const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
 
-      let emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(1)
+      let emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(1)
 
       const colorSpace = wrapper.find('.vacp-color-space')
       await colorSpace.trigger('touchstart', {
@@ -264,8 +264,8 @@ describe('ColorPicker', () => {
         touches: [{ clientX: 0, clientY: 0 }],
       })
 
-      emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(3)
+      emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(3)
 
       await colorSpace.trigger('touchstart', {
         preventDefault: vi.fn(),
@@ -276,8 +276,8 @@ describe('ColorPicker', () => {
         touches: [{ clientX: 0, clientY: 0 }],
       })
 
-      emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(5)
+      emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(5)
 
       // Remove test HTML injected via the `attachTo` option during mount.
       wrapper.unmount()
@@ -322,7 +322,7 @@ describe('ColorPicker', () => {
       wrapper.vm.moveThumbWithArrows(keydownEvent)
 
       expect(keydownEvent.preventDefault).toHaveBeenCalled()
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       const emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
       expect(emittedHsvColor[channel]).toEqual(expectedColorValue)
@@ -384,8 +384,8 @@ describe('ColorPicker', () => {
 
       await hueRangeInput.trigger('input', hueInputEvent)
 
-      let emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(1)
+      let emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(1)
 
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       let emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
@@ -401,8 +401,8 @@ describe('ColorPicker', () => {
 
       await alphaRangeInput.trigger('input', alphaInputEvent)
 
-      emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(2)
+      emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(2)
 
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
@@ -417,7 +417,7 @@ describe('ColorPicker', () => {
       ['hwb', 'hwb(0 100% 0% / 1)'],
       ['hex', '#ffffffff'],
     ])('copy button copies %s format as %s', (format, cssColor) => {
-      vi.spyOn(copyToClipboardModule, 'copyToClipboard').mockImplementation(vi.fn())
+      vi.spyOn(copyToClipboardModule, 'copyToClipboard').mockImplementation(vi.fn(() => true))
 
       const wrapper = shallowMount(ColorPicker)
 
@@ -468,7 +468,7 @@ describe('ColorPicker', () => {
 
       wrapper.vm.updateColorValue(inputEvent, format, channel)
 
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents).toBe(undefined)
     })
 
@@ -490,7 +490,7 @@ describe('ColorPicker', () => {
 
       wrapper.vm.updateHexColorValue(inputEvent)
 
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents).toBe(undefined)
     })
 
@@ -513,8 +513,8 @@ describe('ColorPicker', () => {
 
       wrapper.vm.updateColorValue(inputEvent, format, channel)
 
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(1)
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(1)
     })
 
     test.each([
@@ -534,8 +534,8 @@ describe('ColorPicker', () => {
 
       wrapper.vm.updateHexColorValue(inputEvent)
 
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
-      expect(emittedColorChangeEvents.length).toBe(1)
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
+      expect(emittedColorChangeEvents?.length).toBe(1)
     })
   })
 
@@ -650,7 +650,7 @@ describe('ColorPicker', () => {
 
       await wrapper.setProps({ color: props.color })
 
-      const emittedColorChangeEvents = wrapper.emitted()['color-change']
+      const emittedColorChangeEvents = wrapper.emitted('color-change')
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
       const colorChangeData = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0]
       expect(colorChangeData).toEqual(expectedData)
