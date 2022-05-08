@@ -24,113 +24,46 @@ import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
  */
 export const conversions = {
   hex: [
-    ['hsl', convertHexToHsl],
-    ['hsv', convertHexToHsv],
-    ['hwb', convertHexToHwb],
+    ['hsl', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHsl])],
+    ['hsv', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHwb, convertHwbToHsv])],
+    ['hwb', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHwb])],
     ['rgb', convertHexToRgb],
   ],
   hsl: [
-    ['hex', convertHslToHex],
+    ['hex', (hsl) => chainConvert(hsl, [convertHslToRgb, convertRgbToHex])],
     ['hsv', convertHslToHsv],
-    ['hwb', convertHslToHwb],
+    ['hwb', (hsl) => chainConvert(hsl, [convertHslToRgb, convertRgbToHwb])],
     ['rgb', convertHslToRgb],
   ],
   hsv: [
-    ['hex', convertHsvToHex],
+    ['hex', (hsv) => chainConvert(hsv, [convertHsvToRgb, convertRgbToHex])],
     ['hsl', convertHsvToHsl],
     ['hwb', convertHsvToHwb],
     ['rgb', convertHsvToRgb],
   ],
   hwb: [
-    ['hex', convertHwbToHex],
-    ['hsl', convertHwbToHsl],
+    ['hex', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb, convertRgbToHex])],
+    ['hsl', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb, convertRgbToHsl])],
     ['hsv', convertHwbToHsv],
-    ['rgb', convertHwbToRgb],
+    ['rgb', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb])],
   ],
   rgb: [
     ['hex', convertRgbToHex],
     ['hsl', convertRgbToHsl],
-    ['hsv', convertRgbToHsv],
+    ['hsv', (rgb) => chainConvert(rgb, [convertRgbToHwb, convertHwbToHsv])],
     ['hwb', convertRgbToHwb],
   ],
 }
 
 /**
- * @param {string} hex
- * @returns {ColorHsl}
+ * Takes a `color` and passes it through a list of conversion functions.
+ *
+ * This process is necessary when a direct conversion algorithm isn’t known/available for the conversion between two color formats. Then, several conversion functions are chained to get to the result in an indirect manner (e.g. to convert from RGB to HSV, we first convert from RGB to HWB and then from HWB to HSV).
+ *
+ * @param {any} sourceColor
+ * @param {Function[]} convertFunctions
+ * @returns {any}
  */
-function convertHexToHsl (hex) {
-  return convertRgbToHsl(convertHexToRgb(hex))
-}
-
-/**
- * @param {string} hex
- * @returns {ColorHsv}
- */
-function convertHexToHsv (hex) {
-  return convertRgbToHsv(convertHexToRgb(hex))
-}
-
-/**
- * @param {string} hex
- * @returns {ColorHwb}
- */
-function convertHexToHwb (hex) {
-  return convertRgbToHwb(convertHexToRgb(hex))
-}
-
-/**
- * @param {ColorHsl} hsl
- * @returns {string}
- */
-function convertHslToHex (hsl) {
-  return convertRgbToHex(convertHslToRgb(hsl))
-}
-
-/**
- * @param {ColorHsl} hsl
- * @returns {ColorHwb}
- */
-function convertHslToHwb (hsl) {
-  return convertRgbToHwb(convertHslToRgb(hsl))
-}
-
-/**
- * @param {ColorHwb} hwb
- * @returns {string}
- */
-function convertHwbToHex (hwb) {
-  return convertRgbToHex(convertHwbToRgb(hwb))
-}
-
-/**
- * @param {ColorHwb} hwb
- * @returns {ColorHsl}
- */
-function convertHwbToHsl (hwb) {
-  return convertRgbToHsl(convertHwbToRgb(hwb))
-}
-
-/**
- * @param {ColorHwb} hwb
- * @returns {ColorRgb}
- */
-function convertHwbToRgb (hwb) {
-  return convertHsvToRgb(convertHwbToHsv(hwb))
-}
-
-/**
- * @param {ColorHsv} hsv
- * @returns {string}
- */
-function convertHsvToHex (hsv) {
-  return convertRgbToHex(convertHsvToRgb(hsv))
-}
-
-/**
- * @param {ColorRgb} rgb
- * @returns {ColorHsv}
- */
-function convertRgbToHsv (rgb) {
-  return convertHwbToHsv(convertRgbToHwb(rgb))
+function chainConvert (sourceColor, convertFunctions) {
+  return convertFunctions.reduce((color, convert) => convert(color), sourceColor)
 }
