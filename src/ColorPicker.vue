@@ -259,7 +259,7 @@ const visibleChannels = computed(() => {
  * @type {ComputedRef<string>}
  */
 const hexInputValue = computed(() => {
-  return props.alphaChannel === 'hide' && [5, 7].includes(colors.hex.length)
+  return props.alphaChannel === 'hide' && [5, 9].includes(colors.hex.length)
     ? colors.hex.substring(0, colors.hex.length - (colors.hex.length - 1) / 4)
     : colors.hex
 })

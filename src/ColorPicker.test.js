@@ -656,4 +656,24 @@ describe('ColorPicker', () => {
       expect(colorChangeData).toEqual(expectedData)
     })
   })
+
+  describe('color inputs', () => {
+    test.each([
+      [{ color: '#12345678', defaultFormat: 'hex', alphaChannel: 'show' }, '#12345678'],
+      [{ color: '#12345678', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123456'],
+      [{ color: '#123456', defaultFormat: 'hex', alphaChannel: 'show' }, '#123456'],
+      [{ color: '#123456', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123456'],
+      [{ color: '#123a', defaultFormat: 'hex', alphaChannel: 'show' }, '#123a'],
+      [{ color: '#123a', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123'],
+      [{ color: '#123', defaultFormat: 'hex', alphaChannel: 'show' }, '#123'],
+      [{ color: '#123', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123'],
+    ])('shows expected color for hex colors', async (props, expectedHexColor) => {
+      const wrapper = shallowMount(ColorPicker, { props })
+
+      await wrapper.setProps({ color: props.color })
+
+      const input = wrapper.find('#color-picker-color-hex')
+      expect(input.element.value).toBe(expectedHexColor)
+    })
+  })
 })
