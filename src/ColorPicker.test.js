@@ -58,7 +58,7 @@ describe('ColorPicker', () => {
     document.dispatchEvent(mouseMoveEvent)
     emittedColorChangeEvents = wrapper.emitted('color-change')
     // Note that we assert here that the method hasn’t been called *again*.
-    expect(emittedColorChangeEvents?.length).toBe(2)
+    expect(emittedColorChangeEvents).toBe(undefined)
   })
 
   describe('props & attributes', () => {
