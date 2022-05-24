@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.1...v4.0.2) (2022-05-24)
+
+
+### Bug Fixes
+
+* incorrectly formatting hex colors with hidden alpha channel ([a849207](https://github.com/kleinfreund/vue-accessible-color-picker/commit/a8492073afe0f84f04f056ca1ea76bc27d94ec99)), closes [#112233](https://github.com/kleinfreund/vue-accessible-color-picker/issues/112233) [#1122](https://github.com/kleinfreund/vue-accessible-color-picker/issues/1122)
+
 ## [4.0.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.0...v4.0.1) (2022-05-23)
 
 
