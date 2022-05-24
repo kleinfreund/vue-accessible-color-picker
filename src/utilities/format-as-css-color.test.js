@@ -15,6 +15,9 @@ describe('formatAsCssColor', () => {
     ['#000000', 'hex', false, '#000000'],
     ['#000000aa', 'hex', false, '#000000aa'],
     ['#000000aa', 'hex', true, '#000000'],
+    ['#112233', 'hex', true, '#112233'],
+    ['#123a', 'hex', true, '#123'],
+    ['#123', 'hex', true, '#123'],
   ]))('works for HEX colors', (color, format, excludeAlphaChannel, cssColorString) => {
     expect(formatAsCssColor(color, format, excludeAlphaChannel)).toEqual(cssColorString)
   })

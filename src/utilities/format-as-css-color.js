@@ -21,7 +21,7 @@ const formatters = {
    * @returns {string}
    */
   hex (hex, excludeAlphaChannel) {
-    return excludeAlphaChannel ? hex.substring(0, hex.length - (hex.length - 1) / 4) : hex
+    return excludeAlphaChannel && [5, 9].includes(hex.length) ? hex.substring(0, hex.length - (hex.length - 1) / 4) : hex
   },
 
   /**
