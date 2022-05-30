@@ -456,6 +456,8 @@ function setColor (format, color) {
     } else if ([5, 9].includes(color.length)) {
       const alphaChannelLength = (color.length - 1) / 4
       normalizedColor = color.substring(0, color.length - alphaChannelLength) + 'f'.repeat(alphaChannelLength)
+    } else if ([4, 7].includes(color.length)) {
+      normalizedColor = color + 'f'.repeat((color.length - 1) / 3)
     }
   }
 

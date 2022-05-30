@@ -645,6 +645,19 @@ describe('ColorPicker', () => {
           },
         },
       ],
+      [
+        { color: '#23a96a', defaultFormat: 'hex', alphaChannel: 'hide' },
+        {
+          cssColor: '#23a96a',
+          colors: {
+            hex: '#23a96aff',
+            hsl: { h: 0.4216417910447761, s: 0.6568627450980391, l: 0.4, a: 1 },
+            hsv: { h: 0.4216417910447761, s: 0.7928994082840236, v: 0.6627450980392157, a: 1 },
+            hwb: { h: 0.4216417910447761, w: 0.13725490196078433, b: 0.33725490196078434, a: 1 },
+            rgb: { r: 0.13725490196078433, g: 0.6627450980392157, b: 0.41568627450980394, a: 1 },
+          },
+        },
+      ],
     ])('emits correct data', async (props, expectedData) => {
       const wrapper = shallowMount(ColorPicker, { props })
 
