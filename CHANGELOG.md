@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.2...v4.0.3) (2022-05-30)
+
+
+### Bug Fixes
+
+* incorrectly reading hex color from prop ([9f31c3e](https://github.com/kleinfreund/vue-accessible-color-picker/commit/9f31c3eb39d4960b66fb097d083cc8c79c4b3e12))
+
 ## [4.0.2](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.1...v4.0.2) (2022-05-24)
 
 
