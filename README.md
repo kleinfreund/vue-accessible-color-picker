@@ -2,7 +2,7 @@
 
 [![Tests passing](https://github.com/kleinfreund/vue-accessible-color-picker/workflows/tests/badge.svg)](https://github.com/kleinfreund/vue-accessible-color-picker/actions)
 
-An accessible Vue.js color picker component.
+A color picker component for Vue.js 3.
 
 This package’s files are distributed in the ES module format and have not been transpiled.
 
