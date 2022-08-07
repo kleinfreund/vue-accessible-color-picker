@@ -38,6 +38,67 @@ describe('ColorPicker', () => {
     expect(wrapper.html()).toBeTruthy()
   })
 
+  test.each([
+    {
+      color: '#ffffffff',
+      alphaChannel: 'show',
+    },
+    {
+      color: '#ffffffff',
+      alphaChannel: 'hide',
+    },
+    {
+      color: '#ffffff',
+      alphaChannel: 'show',
+    },
+    {
+      color: '#ffffff',
+      alphaChannel: 'hide',
+    },
+    {
+      color: '#fff',
+      alphaChannel: 'show',
+    },
+    {
+      color: '#fff',
+      alphaChannel: 'hide',
+    },
+    {
+      color: 'white',
+      alphaChannel: 'show',
+    },
+    {
+      color: 'white',
+      alphaChannel: 'hide',
+    },
+    {
+      color: 'hsl(0, 0%, 100%, 1)',
+      alphaChannel: 'show',
+    },
+    {
+      color: 'hsl(0, 0%, 100%, 1)',
+      alphaChannel: 'hide',
+    },
+  ])('initializes color space and thumb correctly with default color value', ({ color, alphaChannel }) => {
+    const wrapper = shallowMount(ColorPicker, {
+      props: {
+        color,
+        defaultFormat: 'hex',
+        alphaChannel,
+      },
+    })
+
+    const colorPicker = /** @type {HTMLElement} */ (wrapper.find('.vacp-color-picker').element)
+    expect(colorPicker.style.getPropertyValue('--vacp-hsl-h')).toBe('0')
+    expect(colorPicker.style.getPropertyValue('--vacp-hsl-s')).toBe('0')
+    expect(colorPicker.style.getPropertyValue('--vacp-hsl-l')).toBe('1')
+    expect(colorPicker.style.getPropertyValue('--vacp-hsl-a')).toBe('1')
+
+    const thumb = /** @type {HTMLElement} */ (wrapper.find('.vacp-color-space-thumb').element)
+    expect(thumb.style.left).toBe('0%')
+    expect(thumb.style.bottom).toBe('100%')
+  })
+
   test('removes event listeners on unmount', async () => {
     const wrapper = shallowMount(ColorPicker)
 

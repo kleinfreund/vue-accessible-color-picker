@@ -466,6 +466,14 @@ function setColor (format, color) {
     const eventData = applyColorUpdates(format)
     emit('color-change', eventData)
   }
+
+  if (
+    colorPicker.value instanceof HTMLElement &&
+    colorSpace.value instanceof HTMLElement &&
+    thumb.value instanceof HTMLElement
+  ) {
+    setCssProps(colorPicker.value, colorSpace.value, thumb.value, colors)
+  }
 }
 
 /**
@@ -474,14 +482,6 @@ function setColor (format, color) {
 function applyColorUpdates (sourceFormat) {
   for (const [format, convert] of conversions[sourceFormat]) {
     colors[format] = convert(colors[sourceFormat])
-  }
-
-  if (
-    colorPicker.value instanceof HTMLElement &&
-    colorSpace.value instanceof HTMLElement &&
-    thumb.value instanceof HTMLElement
-  ) {
-    setCssProps(colorPicker.value, colorSpace.value, thumb.value, colors)
   }
 
   return getEventData(colors, activeFormat.value)
