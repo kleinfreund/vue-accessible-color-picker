@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.3...v4.0.4) (2022-08-07)
+
+
+### Bug Fixes
+
+* not always initially setting custom properties ([9ec0b64](https://github.com/kleinfreund/vue-accessible-color-picker/commit/9ec0b6442344a1553974f9a05594765bc69dc40a))
+
 ## [4.0.3](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.2...v4.0.3) (2022-05-30)
 
 
