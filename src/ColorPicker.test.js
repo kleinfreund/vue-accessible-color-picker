@@ -197,6 +197,7 @@ describe('ColorPicker', () => {
       const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
       expect(colorHslAlphaInput.exists()).toBe(true)
 
+      // Note: It’s not possible to use `wrapper.setData` here (see https://test-utils.vuejs.org/api/#setdata).
       wrapper.vm.activeFormat = 'rgb'
       await flushPromises()
 
@@ -213,7 +214,7 @@ describe('ColorPicker', () => {
     test.each([
       ['show', true, 'hsl(180 0% 100% / 1)'],
       ['hide', false, 'hsl(180 0% 100%)'],
-    ])('shows/hides correct elements when setting alphaChannel', (alphaChannel, isElementVisible, expectedCssColor) => {
+    ])('shows/hides correct elements when setting alphaChannel', async (alphaChannel, isElementVisible, expectedCssColor) => {
       const id = 'test-color-picker'
       const wrapper = shallowMount(ColorPicker, {
         attachTo: document.body,
@@ -229,14 +230,11 @@ describe('ColorPicker', () => {
       const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
       expect(colorHslAlphaInput.exists()).toBe(isElementVisible)
 
-      const format = 'hsl'
-      const channel = 'h'
-      const inputSelector = `#${wrapper.vm.id}-color-${format}-${channel}`
-      const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+      const input = wrapper.find(`#${id}-color-hsl-h`)
+      const inputElement = /** @type {HTMLInputElement} */ (input.element)
       inputElement.value = '180'
-      const inputEvent = { target: inputElement }
 
-      wrapper.vm.updateColorValue(inputEvent, format, channel)
+      await input.trigger('input')
 
       const emittedColorChangeEvents = wrapper.emitted('color-change')
       // @ts-ignore because `unknown` is clearly not a correct type for emitted records.
@@ -339,7 +337,7 @@ describe('ColorPicker', () => {
       wrapper.unmount()
     })
 
-    test('can not move the color space thumb with the wrong key', () => {
+    test('can not move the color space thumb with the wrong key', async () => {
       const keydownEvent = {
         key: 'a',
         preventDefault: vi.fn(),
@@ -347,7 +345,8 @@ describe('ColorPicker', () => {
 
       const wrapper = shallowMount(ColorPicker)
 
-      wrapper.vm.moveThumbWithArrows(keydownEvent)
+      const thumb = wrapper.find('.vacp-color-space-thumb')
+      await thumb.trigger('keydown', keydownEvent)
 
       expect(keydownEvent.preventDefault).not.toHaveBeenCalled()
     })
@@ -361,7 +360,7 @@ describe('ColorPicker', () => {
       ['ArrowRight', true, 's', 1],
       ['ArrowLeft', false, 's', 0.99],
       ['ArrowLeft', true, 's', 0.9],
-    ])('can move the color space thumb with the %s key (holding shift: %s)', (key, shiftKey, channel, expectedColorValue) => {
+    ])('can move the color space thumb with the %s key (holding shift: %s)', async (key, shiftKey, channel, expectedColorValue) => {
       const keydownEvent = {
         key,
         shiftKey,
@@ -375,7 +374,8 @@ describe('ColorPicker', () => {
       })
       expect(keydownEvent.preventDefault).not.toHaveBeenCalled()
 
-      wrapper.vm.moveThumbWithArrows(keydownEvent)
+      const thumb = wrapper.find('.vacp-color-space-thumb')
+      await thumb.trigger('keydown', keydownEvent)
 
       expect(keydownEvent.preventDefault).toHaveBeenCalled()
       const emittedColorChangeEvents = wrapper.emitted('color-change')
@@ -386,18 +386,22 @@ describe('ColorPicker', () => {
   })
 
   describe('hue & alpha range inputs', () => {
-    test('can not increment/decrement in big steps without holding down shift', () => {
+    test('can not increment/decrement in big steps without holding down shift', async () => {
       const keydownEvent = {
         key: 'ArrowRight',
         shiftKey: false,
       }
 
-      const wrapper = shallowMount(ColorPicker)
-      const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
+      const wrapper = shallowMount(ColorPicker, {
+        props: {
+          id: 'color-picker',
+        },
+      })
+      const hueRangeInput = wrapper.find('#color-picker-hue-slider')
       const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
       const originalInputValue = hueRangeInputElement.value
 
-      wrapper.vm.changeInputValue(keydownEvent)
+      await hueRangeInput.trigger('keydown', keydownEvent)
 
       expect(hueRangeInputElement.value).toBe(originalInputValue)
     })
@@ -409,20 +413,23 @@ describe('ColorPicker', () => {
       ['increment', 1, 'ArrowUp', '9'],
       ['increment', 1, 'ArrowRight', '9'],
       ['increment', 3, 'ArrowRight', '27'],
-    ]))('can %s range inputs %dx in big steps with %s', (_, numberOfPresses, key, expectedValue) => {
-      const wrapper = shallowMount(ColorPicker)
-      const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
+    ]))('can %s range inputs %dx in big steps with %s', async (_, numberOfPresses, key, expectedValue) => {
+      const wrapper = shallowMount(ColorPicker, {
+        props: {
+          id: 'color-picker',
+        },
+      })
+      const hueRangeInput = wrapper.find('#color-picker-hue-slider')
       const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
       const keydownEvent = {
         key,
         shiftKey: true,
-        currentTarget: hueRangeInputElement,
       }
 
       expect(hueRangeInput.exists()).toBe(true)
 
       while (numberOfPresses--) {
-        wrapper.vm.changeInputValue(keydownEvent)
+        await hueRangeInput.trigger('keydown', keydownEvent)
       }
 
       expect(hueRangeInputElement.value).toBe(expectedValue)
@@ -432,8 +439,12 @@ describe('ColorPicker', () => {
       const hueAngle = 30
       const expectedHueValue = hueAngle / 360
 
-      const wrapper = shallowMount(ColorPicker)
-      const hueRangeInput = wrapper.find(`#${wrapper.vm.id}-hue-slider`)
+      const wrapper = shallowMount(ColorPicker, {
+        props: {
+          id: 'color-picker',
+        },
+      })
+      const hueRangeInput = wrapper.find('#color-picker-hue-slider')
       const hueRangeInputElement = /** @type {HTMLInputElement} */ (hueRangeInput.element)
       hueRangeInputElement.value = String(hueAngle)
       const hueInputEvent = { currentTarget: hueRangeInputElement }
@@ -450,7 +461,7 @@ describe('ColorPicker', () => {
       const alpha = 90
       const expectedAlphaValue = alpha / 100
 
-      const alphaRangeInput = wrapper.find(`#${wrapper.vm.id}-alpha-slider`)
+      const alphaRangeInput = wrapper.find('#color-picker-alpha-slider')
       const alphaRangeInputElement = /** @type {HTMLInputElement} */ (alphaRangeInput.element)
       alphaRangeInputElement.value = String(alpha)
       const alphaInputEvent = { currentTarget: alphaRangeInputElement }
@@ -468,17 +479,18 @@ describe('ColorPicker', () => {
 
   describe('copy button', () => {
     test.each([
-      ['rgb', 'rgb(255 255 255 / 1)'],
-      ['hsl', 'hsl(0 0% 100% / 1)'],
-      ['hwb', 'hwb(0 100% 0% / 1)'],
-      ['hex', '#ffffffff'],
-    ])('copy button copies %s format as %s', (format, cssColor) => {
+      [{ defaultFormat: 'rgb' }, 'rgb(255 255 255 / 1)'],
+      [{ defaultFormat: 'hsl' }, 'hsl(0 0% 100% / 1)'],
+      [{ defaultFormat: 'hwb' }, 'hwb(0 100% 0% / 1)'],
+      [{ defaultFormat: 'hex' }, '#ffffffff'],
+    ])('copy button copies %s format as %s', async (props, cssColor) => {
       vi.spyOn(copyToClipboardModule, 'copyToClipboard').mockImplementation(vi.fn(() => true))
 
-      const wrapper = shallowMount(ColorPicker)
+      const wrapper = shallowMount(ColorPicker, { props })
 
-      wrapper.vm.activeFormat = format
-      wrapper.vm.copyColor()
+      const copyButton = wrapper.find('.vacp-copy-button')
+      await copyButton.trigger('click')
+
       expect(copyToClipboardModule.copyToClipboard).toHaveBeenCalledWith(cssColor)
     })
   })
@@ -506,23 +518,17 @@ describe('ColorPicker', () => {
 
   describe('color value inputs', () => {
     test.each([
-      ['rgb', 'r', '127.'],
-      ['hsl', 's', 'a'],
-      ['hwb', 'b', '25.%'],
-    ])('updating a %s color input with an invalid value does not update the internal color data', async (format, channel, channelValue) => {
-      const wrapper = shallowMount(ColorPicker)
+      [{ id: 'color-picker', defaultFormat: 'rgb' }, 'r', '127.'],
+      [{ id: 'color-picker', defaultFormat: 'hsl' }, 's', 'a'],
+      [{ id: 'color-picker', defaultFormat: 'hwb' }, 'b', '25.%'],
+    ])('updating a color input with an invalid value does not update the internal color data', async (props, channel, channelValue) => {
+      const wrapper = shallowMount(ColorPicker, { props })
 
-      vi.resetAllMocks()
-
-      wrapper.vm.activeFormat = format
-      await flushPromises()
-
-      const inputSelector = `#${wrapper.vm.id}-color-${format}-${channel}`
-      const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+      const input = wrapper.find(`#${props.id}-color-${props.defaultFormat}-${channel}`)
+      const inputElement = /** @type {HTMLInputElement} */ (input.element)
       inputElement.value = channelValue
-      const inputEvent = { target: inputElement }
 
-      wrapper.vm.updateColorValue(inputEvent, format, channel)
+      await input.trigger('input')
 
       const emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents).toBe(undefined)
@@ -532,42 +538,35 @@ describe('ColorPicker', () => {
       ['abc'],
       ['25%'],
     ])('updating a hex color input with an invalid value does not update the internal color data', async (invalidHexColorString) => {
-      const wrapper = shallowMount(ColorPicker)
+      const wrapper = shallowMount(ColorPicker, {
+        props: {
+          id: 'color-picker',
+          defaultFormat: 'hex',
+        },
+      })
 
-      vi.resetAllMocks()
-
-      wrapper.vm.activeFormat = 'hex'
-      await flushPromises()
-
-      const inputSelector = `#${wrapper.vm.id}-color-hex`
-      const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+      const input = wrapper.find('#color-picker-color-hex')
+      const inputElement = /** @type {HTMLInputElement} */ (input.element)
       inputElement.value = invalidHexColorString
-      const inputEvent = { target: inputElement }
 
-      wrapper.vm.updateHexColorValue(inputEvent)
+      await input.trigger('input')
 
       const emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents).toBe(undefined)
     })
 
     test.each([
-      ['rgb', 'r', '127.5'],
-      ['hsl', 's', '75%'],
-      ['hwb', 'b', '25.5%'],
-    ])('updating a %s color input with a valid value updates the internal color data', async (format, channel, channelValue) => {
-      const wrapper = shallowMount(ColorPicker)
+      [{ id: 'color-picker', defaultFormat: 'rgb' }, 'r', '127.5'],
+      [{ id: 'color-picker', defaultFormat: 'hsl' }, 's', '75%'],
+      [{ id: 'color-picker', defaultFormat: 'hwb' }, 'b', '25.5%'],
+    ])('updating a %s color input with a valid value updates the internal color data', async (props, channel, channelValue) => {
+      const wrapper = shallowMount(ColorPicker, { props })
 
-      vi.resetAllMocks()
-
-      wrapper.vm.activeFormat = format
-      await flushPromises()
-
-      const inputSelector = `#${wrapper.vm.id}-color-${format}-${channel}`
-      const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+      const input = wrapper.find(`#${props.id}-color-${props.defaultFormat}-${channel}`)
+      const inputElement = /** @type {HTMLInputElement} */ (input.element)
       inputElement.value = channelValue
-      const inputEvent = { target: inputElement }
 
-      wrapper.vm.updateColorValue(inputEvent, format, channel)
+      await input.trigger('input')
 
       const emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents?.length).toBe(1)
@@ -576,19 +575,18 @@ describe('ColorPicker', () => {
     test.each([
       ['#ff8800cc'],
     ])('updating a %s color input with a valid value updates the internal color data', async (channelValue) => {
-      const wrapper = shallowMount(ColorPicker)
+      const wrapper = shallowMount(ColorPicker, {
+        props: {
+          id: 'color-picker',
+          defaultFormat: 'hex',
+        },
+      })
 
-      vi.resetAllMocks()
-
-      wrapper.vm.activeFormat = 'hex'
-      await flushPromises()
-
-      const inputSelector = `#${wrapper.vm.id}-color-hex`
-      const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(inputSelector).element)
+      const input = wrapper.find('#color-picker-color-hex')
+      const inputElement = /** @type {HTMLInputElement} */ (input.element)
       inputElement.value = channelValue
-      const inputEvent = { target: inputElement }
 
-      wrapper.vm.updateHexColorValue(inputEvent)
+      await input.trigger('input')
 
       const emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents?.length).toBe(1)
