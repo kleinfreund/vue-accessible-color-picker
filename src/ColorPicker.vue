@@ -181,7 +181,7 @@ const props = defineProps({
     /** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
     type: [String, Object],
     required: false,
-    default: null,
+    default: '#ffffffff',
   },
 
   id: {
@@ -379,10 +379,6 @@ function moveThumbWithArrows (event) {
  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} propsColor
  */
 function setColorFromProp (propsColor) {
-  if (propsColor === null) {
-    return
-  }
-
   const result = parsePropsColor(propsColor)
   if (result !== null) {
     setColor(result.format, result.color)

@@ -39,6 +39,7 @@ describe('ColorPicker', () => {
   })
 
   test.each([
+    {},
     {
       color: '#ffffffff',
       alphaChannel: 'show',
