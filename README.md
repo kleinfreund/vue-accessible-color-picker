@@ -94,7 +94,7 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HSV, HWB, or RGB color.
 - **Type**: `string`, `ColorHsl`, `ColorHsv`, `ColorHwb`, or `ColorRgb`
 - **Required**: `false`
-- **Default**: `null`
+- **Default**: `#ffffffff`
 - **Usage**:
 
   ```vue
