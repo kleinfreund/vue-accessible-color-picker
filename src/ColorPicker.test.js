@@ -11,22 +11,6 @@ import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
  * [2]: https://vue-test-utils.vuejs.org/
  */
 
-/**
- * Helper function for injecting a test element into the DOM
- * This element can then be used as the mount point when using the [`attachTo`][1] option.
- *
- * [1]: https://vue-test-utils.vuejs.org/api/options.html#attachto
- *
- * @returns {string} a CSS selector that should be used as the value for the `attachTo` option
- */
-function injectTestDiv () {
-  const id = 'root'
-  const div = document.createElement('div')
-  div.id = id
-  document.body.appendChild(div)
-  return `#${id}`
-}
-
 describe('ColorPicker', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
@@ -232,7 +216,7 @@ describe('ColorPicker', () => {
     ])('shows/hides correct elements when setting alphaChannel', (alphaChannel, isElementVisible, expectedCssColor) => {
       const id = 'test-color-picker'
       const wrapper = shallowMount(ColorPicker, {
-        attachTo: injectTestDiv(),
+        attachTo: document.body,
         props: {
           id,
           alphaChannel,
@@ -294,7 +278,12 @@ describe('ColorPicker', () => {
         clientY,
       }
 
-      const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
+      const wrapper = shallowMount(ColorPicker, {
+        attachTo: document.body,
+        props: {
+          color: '#f80c',
+        },
+      })
 
       let emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents?.length).toBe(1)
@@ -311,7 +300,12 @@ describe('ColorPicker', () => {
     })
 
     test('can initiate moving the color space thumb with a touch-based device', async () => {
-      const wrapper = shallowMount(ColorPicker, { attachTo: injectTestDiv(), props: { color: '#f80c' } })
+      const wrapper = shallowMount(ColorPicker, {
+        attachTo: document.body,
+        props: {
+          color: '#f80c',
+        },
+      })
 
       let emittedColorChangeEvents = wrapper.emitted('color-change')
       expect(emittedColorChangeEvents?.length).toBe(1)
