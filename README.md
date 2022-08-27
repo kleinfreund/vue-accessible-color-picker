@@ -33,7 +33,6 @@ Links:
     - [alpha-range-input-label](#alpha-range-input-label)
     - [copy-button](#copy-button)
     - [format-switch-button](#format-switch-button)
-- [Browser support](#browser-support)
 - [Versioning](#versioning)
 - [Design](#design)
 
@@ -220,14 +219,14 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 
 #### hue-range-input-label
 
-- **Description**: Overrides the content of the hue range input’s `label` element. The slot content is placed inside a `span` element.
+- **Description**: Overrides the content of the hue range input’s `label` element.
 - **Default content**:
 
   > Hue
 
 #### alpha-range-input-label
 
-- **Description**: Overrides the content of the alpha range input’s `label` element. The slot content is placed inside a `span` element.
+- **Description**: Overrides the content of the alpha range input’s `label` element.
 - **Default content**:
 
   > Alpha
@@ -246,14 +245,6 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 
   > Switch format
 
-## Browser support
-
-| Edge (Chromium) | Firefox | Chrome | Safari |
-|:---------------:|:-------:|:------:|:------:|
-| 79              | 63      | 73     | 12.2   |
-
-The browser support is derived from the use of [Object.fromEntries()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries) and [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*).
-
 ## Versioning
 
 This package uses [semantic versioning](https://semver.org).
@@ -266,7 +257,7 @@ The color picker consists of the following main elements:
 
   For fine-tuning the saturation and lightness/value, a slice of the HSV cylinder for the currently selected hue is shown.
 
-  The HSV cylinder is more convenient for this task as it shows a color at 100% saturation and 100% value in the top right corner (i.e. one can drag the color space thumb into the corner as a quasi shortcut). The HSL cylinder’s slice has this color at the halfway point of the Y axis (i.e. at 50% lightness) which isn’t easy to select.
+  The HSV cylinder is more convenient for this task than the HSL cylinder as it shows a color at 100% saturation and 100% value in the top right corner (i.e. one can drag the color space thumb into the corner as a quasi shortcut). The HSL cylinder’s slice has this color at the halfway point of the Y axis (i.e. at 50% lightness) which isn’t easy to select.
 
 - **Hue slider**:
 
