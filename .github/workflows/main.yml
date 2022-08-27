@@ -6,7 +6,7 @@ jobs:
   test-unit:
     # Skip this job if the head commit’s message contains the string “[skip ci]”.
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    name: Test
+    name: Tests & build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -46,7 +46,7 @@ jobs:
     # The release job runs only on pushes to or merges into the release branches configured in the semantic-release configuration.
     if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/next-major' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha'"
     needs: test-unit
-    name: Release
+    name: Publish package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
