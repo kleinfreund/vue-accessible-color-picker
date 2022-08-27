@@ -33,6 +33,7 @@ const formatters = {
     const h = round(hsl.h * 360)
     const s = round(hsl.s * 100)
     const l = round(hsl.l * 100)
+
     return `hsl(${h} ${s}% ${l}%` + (excludeAlphaChannel ? ')' : ` / ${round(hsl.a)})`)
   },
 
