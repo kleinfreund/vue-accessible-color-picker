@@ -1,3 +1,10 @@
+## [4.0.5](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.4...v4.0.5) (2022-08-27)
+
+
+### Bug Fixes
+
+* color picker initializing incorrectly without color prop ([065b5b1](https://github.com/kleinfreund/vue-accessible-color-picker/commit/065b5b16dc02af0d9740dd2b838f2050f6a3a7d5))
+
 ## [4.0.4](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.3...v4.0.4) (2022-08-07)
 
 
