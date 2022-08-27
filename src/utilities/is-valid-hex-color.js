@@ -5,13 +5,5 @@
  * @returns {boolean}
  */
 export function isValidHexColor (hexColor) {
-  if (!hexColor.startsWith('#')) {
-    return false
-  }
-
-  if (![3, 4, 6, 8].includes(hexColor.length - 1)) {
-    return false
-  }
-
-  return /^#[0-9A-Fa-f]+$/.test(hexColor)
+  return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(hexColor)
 }

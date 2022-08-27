@@ -17,6 +17,7 @@ describe('isValidHexColor', () => {
     ['#aaa', true],
     ['#ggg', false],
     ['#01234567', true],
+    ['#012345678', false],
   ]))('of “%s” returns %s', (hex, expectedResult) => {
     expect(isValidHexColor(hex)).toBe(expectedResult)
   })
