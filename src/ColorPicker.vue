@@ -170,7 +170,6 @@ import { colorChannels } from './utilities/color-channels.js'
 import { colorsAreValueEqual } from './utilities/colors-are-value-equal.js'
 import { conversions } from './utilities/conversions.js'
 import { copyColorObject } from './utilities/copy-color-object.js'
-import { copyToClipboard } from './utilities/copy-to-clipboard.js'
 import { formatAsCssColor } from './utilities/format-as-css-color.js'
 import { isValidHexColor } from './utilities/is-valid-hex-color.js'
 import { parsePropsColor } from './utilities/parse-props-color.js'
@@ -487,13 +486,18 @@ function applyColorUpdates (sourceFormat) {
  * Copies the current color (determined by the active color format).
  *
  * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
+ *
+ * Only works in secure browsing contexts (i.e. HTTPS).
+ *
+ * @returns {Promise<void>}
  */
-function copyColor () {
+async function copyColor () {
   const activeColor = colors[activeFormat.value]
   const excludeAlphaChannel = props.alphaChannel === 'hide'
   const cssColor = formatAsCssColor(activeColor, activeFormat.value, excludeAlphaChannel)
 
-  copyToClipboard(cssColor)
+  // Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
+  await window.navigator.clipboard.writeText(cssColor)
 }
 
 /**

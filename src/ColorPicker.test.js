@@ -1,8 +1,7 @@
-import { beforeEach, describe, test, expect, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import ColorPicker from './ColorPicker.vue'
-import * as copyToClipboardModule from './utilities/copy-to-clipboard.js'
 
 /**
  * These tests make use of [Vitest][1] and [Vue Test Utils][2].
@@ -478,20 +477,29 @@ describe('ColorPicker', () => {
   })
 
   describe('copy button', () => {
+    beforeAll(() => {
+      Object.defineProperty(global.navigator, 'clipboard', {
+        value: {
+          writeText: () => {},
+        },
+      })
+    })
+
     test.each([
-      [{ defaultFormat: 'rgb' }, 'rgb(255 255 255 / 1)'],
-      [{ defaultFormat: 'hsl' }, 'hsl(0 0% 100% / 1)'],
-      [{ defaultFormat: 'hwb' }, 'hwb(0 100% 0% / 1)'],
-      [{ defaultFormat: 'hex' }, '#ffffffff'],
+      [{ defaultFormat: 'rgb', alphaChannel: 'show' }, 'rgb(255 255 255 / 1)'],
+      [{ defaultFormat: 'hsl', alphaChannel: 'show' }, 'hsl(0 0% 100% / 1)'],
+      [{ defaultFormat: 'hwb', alphaChannel: 'show' }, 'hwb(0 100% 0% / 1)'],
+      [{ defaultFormat: 'hex', alphaChannel: 'show' }, '#ffffffff'],
+      [{ defaultFormat: 'hex', alphaChannel: 'hide' }, '#ffffff'],
     ])('copy button copies %s format as %s', async (props, cssColor) => {
-      vi.spyOn(copyToClipboardModule, 'copyToClipboard').mockImplementation(vi.fn(() => true))
+      vi.spyOn(global.navigator.clipboard, 'writeText').mockImplementation(vi.fn(() => Promise.resolve()))
 
       const wrapper = shallowMount(ColorPicker, { props })
 
       const copyButton = wrapper.find('.vacp-copy-button')
       await copyButton.trigger('click')
 
-      expect(copyToClipboardModule.copyToClipboard).toHaveBeenCalledWith(cssColor)
+      expect(global.navigator.clipboard.writeText).toHaveBeenCalledWith(cssColor)
     })
   })
 
