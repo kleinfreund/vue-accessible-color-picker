@@ -272,6 +272,7 @@ onMounted(() => {
   document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
   document.addEventListener('mouseup', stopMovingThumb)
   document.addEventListener('touchend', stopMovingThumb)
+
   setColorFromProp(props.color)
 })
 
@@ -366,7 +367,7 @@ function moveThumbWithArrows (event) {
   event.preventDefault()
   const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
   const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
-  const step = event.shiftKey ? 10 : 1
+  const step = event.shiftKey ? RANGE_INPUT_STEP_FACTOR : 1
   const newColorValue = colors.hsv[channel] + direction * step * 0.01
   const hsvColor = copyColorObject(colors.hsv)
   hsvColor[channel] = clamp(newColorValue, 0, 1)
@@ -572,6 +573,7 @@ function getNewThumbPosition (colorSpace, clientX, clientY) {
   const rect = colorSpace.getBoundingClientRect()
   const x = clientX - rect.left
   const y = clientY - rect.top
+
   return {
     x: clamp(x / rect.width, 0, 1),
     y: clamp(1 - y / rect.height, 0, 1),
@@ -588,12 +590,13 @@ function changeInputValue (event) {
   ) {
     return
   }
+
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
   const step = parseFloat(input.step)
   const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
   const value = parseFloat(input.value) + direction * step * RANGE_INPUT_STEP_FACTOR
   const newValue = clamp(value, parseInt(input.min), parseInt(input.max))
-  // Remove one step because the default action needs to be able to set a new value for it to fire events, too.
+  // Intentionally removes a single step from `newValue` because the default action associated with an `input` element’s `keydown` event will add one itself.
   input.value = String(newValue - direction * step)
 }
 </script>
@@ -604,7 +607,7 @@ This style block is unscoped intentionally.
 
 This is done to have a lower specificity for its selectors which in turn makes it easier to override their styles.
 
-The specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specificity for `.vacp-color-space` is 10.
+Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specificity for `.vacp-color-space` is 10.
 */
 .vacp-color-picker {
   --vacp-color: hsl(
