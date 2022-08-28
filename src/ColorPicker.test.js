@@ -107,46 +107,56 @@ describe('ColorPicker', () => {
   })
 
   describe('props & attributes', () => {
-    test.each(/** @type {[string, any][]} */ ([
-      ['hex', '#f00'],
-      ['rgb', { r: 1, g: 0.5, b: 0, a: 0.5 }],
-      ['hsl', { h: 0, s: 1, l: 0.5, a: 1 }],
-      ['hwb', { h: 0.5, w: 0.33, b: 0.5, a: 1 }],
-      ['hsv', { h: 0.5, s: 0.33, v: 0.5, a: 1 }],
-    ]))('mounts correctly with a valid color prop', (format, colorProp) => {
+    test.each(/** @type {[any, string][]} */ ([
+      ['#f00', '#f00'],
+      [{ r: 1, g: 0.5, b: 0, a: 0.5 }, '#ff800080'],
+      [{ h: 0, s: 1, l: 0.5, a: 1 }, '#ff0000ff'],
+      [{ h: 0.5, w: 0.33, b: 0.5, a: 1 }, '#548080ff'],
+      [{ h: 0.5, s: 0.33, v: 0.5, a: 1 }, '#558080ff'],
+    ]))('mounts correctly with a valid color prop', async (colorProp, expectedHexInputValue) => {
       const wrapper = shallowMount(ColorPicker, {
         props: {
           color: colorProp,
+          defaultFormat: 'hex',
         },
       })
 
-      expect(wrapper.vm.colors[format]).toEqual(colorProp)
+      // We need to wait one tick before Vue will have re-rendered the component.
+      await flushPromises()
+
+      const input = /** @type {HTMLInputElement} */ (wrapper.find('.vacp-color-input').element)
+      expect(input.value).toBe(expectedHexInputValue)
     })
 
     test('mounts correctly with an invalid color prop', () => {
       const wrapper = shallowMount(ColorPicker, {
         props: {
           color: '#ff',
+          defaultFormat: 'hex',
         },
       })
 
-      expect(wrapper.vm.colors.hex).toBe('#ffffffff')
+      const input = /** @type {HTMLInputElement} */ (wrapper.find('.vacp-color-input').element)
+      expect(input.value).toBe('#ffffffff')
     })
 
     test.each([
-      [undefined, 'hsl'],
-      ['hex', 'hex'],
-      ['hsl', 'hsl'],
-      ['hwb', 'hwb'],
-      ['rgb', 'rgb'],
-    ])('sets active color format to “%s” when providing default format prop', (defaultFormat, expectedActiveFormat) => {
+      [undefined, ['H', 'S', 'L']],
+      ['hex', ['Hex']],
+      ['hsl', ['H', 'S', 'L']],
+      ['hwb', ['H', 'W', 'B']],
+      ['rgb', ['R', 'G', 'B']],
+    ])('sets active color format to “%s” when providing default format prop', (defaultFormat, expectedLabels) => {
       const wrapper = shallowMount(ColorPicker, {
-        propsData: {
+        props: {
           defaultFormat,
         },
       })
 
-      expect(wrapper.vm.activeFormat).toBe(expectedActiveFormat)
+      const inputGroupMarkup = wrapper.find('.vacp-color-input-group').html()
+      for (const expectedLabel of expectedLabels) {
+        expect(inputGroupMarkup).toContain(expectedLabel)
+      }
     })
 
     test.each(/** @type {[any, any][]} */([
@@ -196,17 +206,16 @@ describe('ColorPicker', () => {
       const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
       expect(colorHslAlphaInput.exists()).toBe(true)
 
-      // Note: It’s not possible to use `wrapper.setData` here (see https://test-utils.vuejs.org/api/#setdata).
-      wrapper.vm.activeFormat = 'rgb'
-      await flushPromises()
+      const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
+      await formatSwitchButton.trigger('click')
 
-      const colorRgbRedInput = wrapper.find(`#${id}-color-rgb-r`)
+      const colorRgbRedInput = wrapper.find(`#${id}-color-hwb-h`)
       expect(colorRgbRedInput.exists()).toBe(true)
-      const colorRgbGreenInput = wrapper.find(`#${id}-color-rgb-g`)
+      const colorRgbGreenInput = wrapper.find(`#${id}-color-hwb-w`)
       expect(colorRgbGreenInput.exists()).toBe(true)
-      const colorRgbBlueInput = wrapper.find(`#${id}-color-rgb-b`)
+      const colorRgbBlueInput = wrapper.find(`#${id}-color-hwb-b`)
       expect(colorRgbBlueInput.exists()).toBe(true)
-      const colorRgbAlphaInput = wrapper.find(`#${id}-color-rgb-a`)
+      const colorRgbAlphaInput = wrapper.find(`#${id}-color-hwb-a`)
       expect(colorRgbAlphaInput.exists()).toBe(true)
     })
 
@@ -747,8 +756,8 @@ describe('ColorPicker', () => {
 
       await wrapper.setProps({ color: props.color })
 
-      const input = wrapper.find('#color-picker-color-hex')
-      expect(input.element.value).toBe(expectedHexColor)
+      const input = /** @type {HTMLInputElement} */ (wrapper.find('#color-picker-color-hex').element)
+      expect(input.value).toBe(expectedHexColor)
     })
   })
 })
