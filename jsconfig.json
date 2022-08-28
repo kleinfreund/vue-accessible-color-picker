@@ -11,7 +11,8 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true
+    "strict": true,
+    "jsx": "preserve"
   },
   "include": [
     "./src",
