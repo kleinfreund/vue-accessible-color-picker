@@ -101,7 +101,7 @@
           :key="`${id}-color-${activeFormat}-${channel}`"
           class="vacp-color-input-label"
           :for="`${id}-color-${activeFormat}`"
-          @input="updateColorValue($event, activeFormat, channel)"
+          @input="updateColorValue($event, channel)"
         >
           <span class="vacp-color-input-label-text">
             {{ channel.toUpperCase() }}
@@ -112,7 +112,7 @@
             class="vacp-color-input"
             type="text"
             :value="getChannelAsCssValue(activeFormat, channel)"
-            @input="updateColorValue($event, activeFormat, channel)"
+            @input="updateColorValue($event, channel)"
           >
         </label>
       </div>
@@ -420,14 +420,13 @@ function updateHexColorValue (event) {
 
 /**
  * @param {Event} event
- * @param {'hsl' | 'hwb' | 'rgb'} format
  * @param {string} channel
  */
-function updateColorValue (event, format, channel) {
+function updateColorValue (event, channel) {
   const input = /** @type {HTMLInputElement} */ (event.target)
 
-  const color = copyColorObject(colors[format])
-  const value = colorChannels[format][channel].from(input.value)
+  const color = copyColorObject(colors[activeFormat.value])
+  const value = colorChannels[activeFormat.value][channel].from(input.value)
 
   if (Number.isNaN(value) || value === undefined) {
     // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
@@ -436,10 +435,12 @@ function updateColorValue (event, format, channel) {
 
   color[channel] = value
 
-  setColor(format, color)
+  setColor(activeFormat.value, color)
 }
 
 /**
+ * May mutate `color`.
+ *
  * @param {ColorFormat} format
  * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} color
  */
@@ -458,8 +459,8 @@ function setColor (format, color) {
   }
 
   if (!colorsAreValueEqual(colors[format], normalizedColor)) {
-    colors[format] = normalizedColor
-    const eventData = applyColorUpdates(format)
+    applyColorUpdates(format, normalizedColor)
+    const eventData = getEventData(colors, activeFormat.value)
     emit('color-change', eventData)
   }
 
@@ -473,14 +474,17 @@ function setColor (format, color) {
 }
 
 /**
+ * Updates the internal color representation for a given format and recomputes all colors for other formats.
+ *
  * @param {ColorFormat} sourceFormat
+ * @param {string | ColorHsl | ColorHsv | ColorHwb | ColorRgb} newColor
  */
-function applyColorUpdates (sourceFormat) {
+function applyColorUpdates (sourceFormat, newColor) {
+  colors[sourceFormat] = newColor
+
   for (const [format, convert] of conversions[sourceFormat]) {
     colors[format] = convert(colors[sourceFormat])
   }
-
-  return getEventData(colors, activeFormat.value)
 }
 
 /**
