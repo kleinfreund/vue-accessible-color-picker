@@ -176,6 +176,9 @@ import { parsePropsColor } from './utilities/parse-props-color.js'
 import { ALLOWED_VISIBLE_FORMATS, ALPHA_CHANNEL_PROP_VALUES, RANGE_INPUT_STEP_FACTOR } from './constants.js'
 
 const props = defineProps({
+  /**
+   * The initially rendered color.
+   */
   color: {
     /** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
     type: [String, Object],
@@ -183,27 +186,36 @@ const props = defineProps({
     default: '#ffffffff',
   },
 
+  /**
+   * The prefix for all ID attribute values used by the color picker.
+   */
   id: {
     type: String,
     required: false,
     default: 'color-picker',
   },
 
+  /**
+   * The list of visible color formats.
+   */
   visibleFormats: {
     /** @type {PropType<VisibleColorFormat[]>} */
     type: Array,
     required: false,
     default: () => ALLOWED_VISIBLE_FORMATS,
-    validator: (/** @type {any[]} */ visibleFormats) => {
+    validator (/** @type {any[]} */ visibleFormats) {
       return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
     },
   },
 
+  /**
+   * The initially visible color format. Default: `'hsl'`.
+   */
   defaultFormat: {
     type: String,
     required: false,
     default: 'hsl',
-    validator: (/** @type {VisibleColorFormat} */ defaultFormat) => {
+    validator (/** @type {VisibleColorFormat} */ defaultFormat) {
       return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
     },
   },
@@ -220,7 +232,7 @@ const props = defineProps({
     type: String,
     required: false,
     default: 'show',
-    validator: (/** @type {string} */ alphaChannel) => {
+    validator (/** @type {string} */ alphaChannel) {
       return ALPHA_CHANNEL_PROP_VALUES.includes(alphaChannel)
     },
   },
@@ -228,12 +240,36 @@ const props = defineProps({
 
 const emit = defineEmits(['color-change'])
 
+/**
+ * The root element of the color picker.
+ */
 const colorPicker = /** @type {Ref<HTMLElement | null>} */ (ref(null))
+
+/**
+ * The color space. It represents the saturation and lightness or the current color’s hue.
+ */
 const colorSpace = /** @type {Ref<HTMLElement | null>} */ (ref(null))
+
+/**
+ * The color space thumb. Can be dragged around within the color space to change a color’s saturation and lightness.
+ */
 const thumb = /** @type {Ref<HTMLElement | null>} */ (ref(null))
 
+/**
+ * Tracks whether a pointer originated from within the color space.
+ *
+ * Only if it did do we want to run the logic of dragging the color space thumb around.
+ */
 const pointerOriginatedInColorSpace = ref(false)
+
+/**
+ * The currently visible color format (i.e. what’s cycled through using the “Switch format” button).
+ */
 const activeFormat = /** @type {Ref<VisibleColorFormat>} */ (ref(props.defaultFormat))
+
+/**
+ * The current color represented in all supported color formats.
+ */
 const colors = /** @type {UnwrapRef<any>} */ (reactive({
   hex: '#ffffffff',
   hsl: { h: 0, s: 0, l: 1, a: 1 },
@@ -245,7 +281,7 @@ const colors = /** @type {UnwrapRef<any>} */ (reactive({
 /**
  * A list of color channels rendered as part of the color picker.
  */
-const visibleChannels = computed(() => {
+const visibleChannels = computed(function () {
   const allChannels = Object.keys(colors[activeFormat.value])
   return activeFormat.value !== 'hex' && props.alphaChannel === 'hide'
     ? allChannels.slice(0, 3)
@@ -257,17 +293,15 @@ const visibleChannels = computed(() => {
  *
  * @type {ComputedRef<string>}
  */
-const hexInputValue = computed(() => {
+const hexInputValue = computed(function () {
   return props.alphaChannel === 'hide' && [5, 9].includes(colors.hex.length)
     ? colors.hex.substring(0, colors.hex.length - (colors.hex.length - 1) / 4)
     : colors.hex
 })
 
-watch(() => props.color, (propsColor) => {
-  setColorFromProp(propsColor)
-})
+watch(() => props.color, setColorFromProp)
 
-onMounted(() => {
+onMounted(function () {
   document.addEventListener('mousemove', moveThumbWithMouse, { passive: false })
   document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
   document.addEventListener('mouseup', stopMovingThumb)
@@ -276,16 +310,19 @@ onMounted(() => {
   setColorFromProp(props.color)
 })
 
-onBeforeUnmount(() => {
+onBeforeUnmount(function () {
   document.removeEventListener('mousemove', moveThumbWithMouse)
   document.removeEventListener('touchmove', moveThumbWithTouch)
   document.removeEventListener('mouseup', stopMovingThumb)
   document.removeEventListener('touchend', stopMovingThumb)
 })
 
+/**
+ * Sets the next active color format by cycling through the visible color formats.
+ */
 function switchFormat () {
-  const activeFormatIndex = props.visibleFormats.findIndex((/** @type {VisibleColorFormat} */ format) => format === activeFormat.value)
-  const newFormatIndex = activeFormatIndex === props.visibleFormats.length - 1 ? 0 : activeFormatIndex + 1
+  const activeFormatIndex = props.visibleFormats.findIndex((format) => format === activeFormat.value)
+  const newFormatIndex = (activeFormatIndex + 1) % props.visibleFormats.length
   activeFormat.value = /** @type {VisibleColorFormat} */ (props.visibleFormats[newFormatIndex])
 }
 
@@ -335,7 +372,7 @@ function moveThumbWithTouch (event) {
     return
   }
 
-  // Prevent touch events from dragging the page.
+  // Prevents touch events from dragging the page.
   event.preventDefault()
 
   const touchPoint = /** @type {Touch} */ (event.touches[0])
@@ -429,7 +466,7 @@ function updateColorValue (event, channel) {
   const value = colorChannels[activeFormat.value][channel].from(input.value)
 
   if (Number.isNaN(value) || value === undefined) {
-    // This means that the input value does not result in a valid CSS value. We return now because any further work would be futile.
+    // This means that the input value does not result in a valid CSS value.
     return
   }
 
@@ -460,17 +497,11 @@ function setColor (format, color) {
 
   if (!colorsAreValueEqual(colors[format], normalizedColor)) {
     applyColorUpdates(format, normalizedColor)
-    const eventData = getEventData(colors, activeFormat.value)
+    const eventData = getEventData()
     emit('color-change', eventData)
   }
 
-  if (
-    colorPicker.value instanceof HTMLElement &&
-    colorSpace.value instanceof HTMLElement &&
-    thumb.value instanceof HTMLElement
-  ) {
-    setCssProps(colorPicker.value, colorSpace.value, thumb.value, colors)
-  }
+  setCssProps()
 }
 
 /**
@@ -524,19 +555,22 @@ function getChannelAsCssValue (format, channel) {
  * 2. These overlapping gradients together with the underlying background color create a visual representation of a slice through the HSV cylinder. The slice’s angle is determined by the current hue. Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
  *
  * 3. The X and Y coordinates of the color space thumb’s position are expressed in the saturation and value parts of an HSV color. This is because the color space represents the hue slice of the HSV cylinder. This the most convenient option because a fully saturated color at 50% lightness is located in the top right corner of that slice (i.e. at saturation 100% and value 100%). A full red (#f00) can thus be picked by dragging the hue slider all the way to either end and the color space thumb in the most top right corner of the color space. This will set the hue to 0, the saturation to 100%, and the value to 100%.
- *
- * @param {HTMLElement} colorPicker
- * @param {HTMLElement} colorSpace
- * @param {HTMLElement} thumb
- * @param {any} colors
  */
-function setCssProps (colorPicker, colorSpace, thumb, colors) {
-  colorPicker.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
-  colorPicker.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
-  colorPicker.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
-  colorPicker.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
+function setCssProps () {
+  if (
+    !(colorPicker.value instanceof HTMLElement) ||
+    !(colorSpace.value instanceof HTMLElement) ||
+    !(thumb.value instanceof HTMLElement)
+  ) {
+    return
+  }
 
-  colorSpace.setAttribute('style', `
+  colorPicker.value.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
+  colorPicker.value.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
+  colorPicker.value.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
+  colorPicker.value.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
+
+  colorSpace.value.setAttribute('style', `
     position: relative;
     background-color: hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%); /* 1. */
     background-image:
@@ -545,7 +579,7 @@ function setCssProps (colorPicker, colorSpace, thumb, colors) {
     ;
   `)
 
-  thumb.setAttribute('style', `
+  thumb.value.setAttribute('style', `
     box-sizing: border-box;
     position: absolute;
     left: ${colors.hsv.s * 100}%;   /* 3. */
@@ -554,16 +588,15 @@ function setCssProps (colorPicker, colorSpace, thumb, colors) {
 }
 
 /**
- * @param {any} colors
- * @param {VisibleColorFormat} activeFormat
  * @returns {{ colors: any, cssColor: string }}
  */
-function getEventData (colors, activeFormat) {
+function getEventData () {
   const excludeAlphaChannel = props.alphaChannel === 'hide'
+  const cssColor = formatAsCssColor(colors[activeFormat.value], activeFormat.value, excludeAlphaChannel)
 
   return {
     colors,
-    cssColor: formatAsCssColor(colors[activeFormat], activeFormat, excludeAlphaChannel),
+    cssColor,
   }
 }
 
