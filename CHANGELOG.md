@@ -1,3 +1,10 @@
+## [4.0.6](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.5...v4.0.6) (2022-09-02)
+
+
+### Bug Fixes
+
+* css not being minified ([307e46b](https://github.com/kleinfreund/vue-accessible-color-picker/commit/307e46baf660e936c674a62185fb8585d4feb08c))
+
 ## [4.0.5](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.4...v4.0.5) (2022-08-27)
 
 
