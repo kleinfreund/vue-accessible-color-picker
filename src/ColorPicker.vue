@@ -647,32 +647,11 @@ This is done to have a lower specificity for its selectors which in turn makes i
 Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specificity for `.vacp-color-space` is 10.
 */
 .vacp-color-picker {
-  --vacp-color: hsl(
-    calc(var(--vacp-hsl-h) * 360)
-    calc(var(--vacp-hsl-s) * 100%)
-    calc(var(--vacp-hsl-l) * 100%)
-    / var(--vacp-hsl-a)
-  );
+  --vacp-color: hsl(calc(var(--vacp-hsl-h) * 360) calc(var(--vacp-hsl-s) * 100%) calc(var(--vacp-hsl-l) * 100%) / var(--vacp-hsl-a));
   --vacp-focus-color: dodgerblue;
   --vacp-color-space-width: 300px;
   --vacp-spacing: 6px;
-  --vacp-tiled-background-image: linear-gradient(
-      45deg,
-      #eee 25%,
-      transparent 25%,
-      transparent 75%,
-      #eee 75%,
-      #eee
-    ),
-    linear-gradient(
-      45deg,
-      #eee 25%,
-      transparent 25%,
-      transparent 75%,
-      #eee 75%,
-      #eee
-    )
-  ;
+  --vacp-tiled-background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
 
   max-width: var(--vacp-color-space-width);
   padding: var(--vacp-spacing);
@@ -680,7 +659,7 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
   grid-gap: var(--vacp-spacing);
   grid-template-columns: 1fr min-content;
   grid-template-areas:
-    "color-space  color-space"
+    "color-space color-space"
     "range-inputs copy-button"
     "color-inputs color-inputs"
   ;
@@ -835,42 +814,15 @@ Range input: Tracks
 }
 
 .vacp-range-input--hue::-moz-range-track {
-  background-image: linear-gradient(
-    to right,
-    /*   0° */ #f00 calc(100% *   0/360),
-    /*  60° */ #ff0 calc(100% *  60/360),
-    /* 120° */ #0f0 calc(100% * 120/360),
-    /* 180° */ #0ff calc(100% * 180/360),
-    /* 240° */ #00f calc(100% * 240/360),
-    /* 300° */ #f0f calc(100% * 300/360),
-    /* 360° */ #f00 calc(100% * 360/360)
-  );
+  background-image: linear-gradient(to right, #f00 calc(100% * 0/360), #ff0 calc(100% * 60/360), #0f0 calc(100% * 120/360), #0ff calc(100% * 180/360), #00f calc(100% * 240/360), #f0f calc(100% * 300/360), #f00 calc(100% * 360/360));
 }
 
 .vacp-range-input--hue::-webkit-slider-runnable-track {
-  background-image: linear-gradient(
-    to right,
-    /*   0° */ #f00 calc(100% *   0/360),
-    /*  60° */ #ff0 calc(100% *  60/360),
-    /* 120° */ #0f0 calc(100% * 120/360),
-    /* 180° */ #0ff calc(100% * 180/360),
-    /* 240° */ #00f calc(100% * 240/360),
-    /* 300° */ #f0f calc(100% * 300/360),
-    /* 360° */ #f00 calc(100% * 360/360)
-  );
+  background-image: linear-gradient(to right, #f00 calc(100% * 0/360), #ff0 calc(100% * 60/360), #0f0 calc(100% * 120/360), #0ff calc(100% * 180/360), #00f calc(100% * 240/360), #f0f calc(100% * 300/360), #f00 calc(100% * 360/360));
 }
 
 .vacp-range-input--hue::-ms-track {
-  background-image: linear-gradient(
-    to right,
-    /*   0° */ #f00 calc(100% *   0/360),
-    /*  60° */ #ff0 calc(100% *  60/360),
-    /* 120° */ #0f0 calc(100% * 120/360),
-    /* 180° */ #0ff calc(100% * 180/360),
-    /* 240° */ #00f calc(100% * 240/360),
-    /* 300° */ #f0f calc(100% * 300/360),
-    /* 360° */ #f00 calc(100% * 360/360)
-  );
+  background-image: linear-gradient(to right, #f00 calc(100% * 0/360), #ff0 calc(100% * 60/360), #0f0 calc(100% * 120/360), #0ff calc(100% * 180/360), #00f calc(100% * 240/360), #f0f calc(100% * 300/360), #f00 calc(100% * 360/360));
 }
 
 /*
@@ -927,10 +879,7 @@ Range input: thumbs
 
   /* Tiled background */
   background-color: #fff;
-  background-image:
-    linear-gradient(var(--vacp-color), var(--vacp-color)),
-    var(--vacp-tiled-background-image)
-  ;
+  background-image: linear-gradient(var(--vacp-color), var(--vacp-color)), var(--vacp-tiled-background-image);
   background-size: calc(var(--vacp-spacing) * 2) calc(var(--vacp-spacing) * 2);
   background-position: 0 0, var(--vacp-spacing) var(--vacp-spacing);
 }

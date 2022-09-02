@@ -66,6 +66,7 @@
     "@vue/test-utils": "^2.0.2",
     "c8": "^7.12.0",
     "canvas": "^2.9.3",
+    "clean-css": "^5.3.1",
     "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-vue": "^9.4.0",

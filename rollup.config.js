@@ -3,6 +3,7 @@ import { terser } from 'rollup-plugin-terser'
 import vue from 'rollup-plugin-vue'
 
 import { discardCss } from './rollup-plugin-discard-css.js'
+import { cleanCss } from './rollup-plugin-clean-css.js'
 
 /*
 vue options:
@@ -24,7 +25,8 @@ https://github.com/TrySound/rollup-plugin-terser#options
     // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
     external: ['vue'],
     plugins: [
-      vue({ preprocessStyles: true }),
+      vue(),
+      cleanCss(),
       postcss(),
       terser(),
     ],
