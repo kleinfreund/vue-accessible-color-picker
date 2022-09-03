@@ -1,30 +1,54 @@
 import CleanCSS from 'clean-css'
 
-/** @typedef {{ cleanCssOptions?: CleanCSS.OptionsOutput }} CleanCssPluginOptions */
+/** @typedef {import('rollup').Plugin} Plugin */
 
 /**
- * Minifies CSS using [CleanCSS][1].
+ * Minifies CSS using [CleanCSS][1]. Passes CleanCSS options along if provided.
+ *
+ * **Example usage**:
+ *
+ * ```js
+ * plugins: [
+ *   vue(),
+ *   cleanCss({ cleanCssOptions: { sourceMap: true } }),
+ *   postcss(),
+ *   terser(),
+ * ],
+ * ```
  *
  * [1]: https://www.npmjs.com/package/clean-css
  *
- * @type {(options: CleanCssPluginOptions) => import('rollup').Plugin}
+ * @param {{ cleanCssOptions?: CleanCSS.OptionsOutput }} options
+ * @returns {Plugin}
  */
 export function cleanCss (options = {}) {
   return {
     name: 'clean-css',
     transform (code, id) {
-      // Handles only CSS files.
-      if (!id.endsWith('css')) {
+      // Only processes CSS files.
+      if (!id.endsWith('.css')) {
         return null
       }
 
-      const { styles, errors } = new CleanCSS(options.cleanCssOptions).minify(code)
+      const { styles, errors, warnings, sourceMap } = new CleanCSS(options.cleanCssOptions).minify(code)
 
-      if (errors.length > 0) {
-        throw new Error(errors.join('\n'))
+      for (const warning of warnings) {
+        this.warn(warning)
       }
 
-      return { code: styles }
+      if (errors.length > 0) {
+        // Concatenates all errors because calling `this.error` will throw and so looping like it’s done for warnings isn’t feasible.
+        this.error(errors.join('\n'))
+      }
+
+      const transformResult = { code: styles }
+
+      // Note: This is necessary. The current type of sourceMap (`SourceMapGenerator`) is not accurate as the `sourceMap` property isn’t even returned by CleanCSS when not setting `sourceMap: true`.
+      if (sourceMap !== undefined) {
+        transformResult.map = sourceMap.toString()
+      }
+
+      return transformResult
     },
   }
 }

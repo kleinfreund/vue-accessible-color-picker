@@ -1,18 +1,35 @@
+/** @typedef {import('rollup').Plugin} Plugin */
+
 /**
- * Tiny rollup plugin that discards CSS and ignores everything else.
+ * Discards CSS.
+ *
+ * **Example usage**:
+ *
+ * ```js
+ * plugins: [
+ *   vue(),
+ *   discardCss(),
+ *   terser(),
+ * ],
+ * ```
  *
  * **Background**:
  *
  * rollup-plugin-vue wants another plugin to handle bundling the extracted CSS.
  * Since I want to bundle an unstyled version of my component, I want to throw that CSS away.
  *
- * @type {() => import('rollup').Plugin}
+ * @returns {Plugin}
  */
 export function discardCss () {
   return {
     name: 'discard-css',
     transform (_code, id) {
-      return id.endsWith('css') ? { code: '', map: null } : null
+      // Only processes CSS files.
+      if (!id.endsWith('.css')) {
+        return null
+      }
+
+      return { code: '' }
     },
   }
 }
