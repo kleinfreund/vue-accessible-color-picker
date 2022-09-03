@@ -37,7 +37,7 @@
           max="360"
           step="1"
           @keydown.passive="changeInputValue"
-          @input="updateHue"
+          @input="handleSliderInput($event, 'h')"
         >
       </label>
 
@@ -59,7 +59,7 @@
           max="100"
           step="1"
           @keydown.passive="changeInputValue"
-          @input="updateAlpha"
+          @input="handleSliderInput($event, 'a')"
         >
       </label>
     </div>
@@ -424,22 +424,12 @@ function setColorFromProp (propsColor) {
 
 /**
  * @param {Event} event
+ * @param {'h' | 'a'} channel
  */
-function updateHue (event) {
+function handleSliderInput (event, channel) {
   const input = /** @type {HTMLInputElement} */ (event.currentTarget)
   const hsvColor = copyColorObject(colors.hsv)
-  hsvColor.h = parseInt(input.value) / 360
-
-  setColor('hsv', hsvColor)
-}
-
-/**
- * @param {Event} event
- */
-function updateAlpha (event) {
-  const input = /** @type {HTMLInputElement} */ (event.currentTarget)
-  const hsvColor = copyColorObject(colors.hsv)
-  hsvColor.a = parseInt(input.value) / 100
+  hsvColor[channel] = parseInt(input.value) / parseInt(input.max)
 
   setColor('hsv', hsvColor)
 }
