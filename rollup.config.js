@@ -1,3 +1,4 @@
+import { defineConfig } from 'rollup'
 import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 import vue from 'rollup-plugin-vue'
@@ -16,7 +17,7 @@ terser options:
 https://github.com/TrySound/rollup-plugin-terser#options
 */
 
-/** @type {import('rollup').RollupOptions[]} */ const options = [
+export default defineConfig([
   {
     input: 'src/index.js',
     output: {
@@ -45,6 +46,4 @@ https://github.com/TrySound/rollup-plugin-terser#options
       terser(),
     ],
   },
-]
-
-export default options
+])
