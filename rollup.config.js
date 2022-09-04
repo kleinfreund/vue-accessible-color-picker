@@ -4,7 +4,6 @@ import { terser } from 'rollup-plugin-terser'
 import vue from 'rollup-plugin-vue'
 
 import { discardCss } from './rollup-plugin-discard-css.js'
-import { cleanCss } from './rollup-plugin-clean-css.js'
 
 /*
 vue options:
@@ -27,8 +26,7 @@ export default defineConfig([
     external: ['vue'],
     plugins: [
       vue(),
-      cleanCss(),
-      postcss(),
+      postcss({ minimize: true }),
       terser(),
     ],
   },
