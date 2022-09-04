@@ -29,7 +29,7 @@ export function discardCss () {
         return null
       }
 
-      return { code: '' }
+      return ''
     },
   }
 }
