@@ -60,11 +60,11 @@
     "@semantic-release/github": "^8.0.6",
     "@semantic-release/npm": "^9.0.1",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@vitejs/plugin-vue": "^3.0.3",
-    "@vitest/coverage-c8": "^0.22.1",
+    "@vitejs/plugin-vue": "^3.1.0",
+    "@vitest/coverage-c8": "^0.23.1",
     "@vue/test-utils": "^2.0.2",
     "c8": "^7.12.0",
-    "canvas": "^2.9.3",
+    "canvas": "^2.10.1",
     "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-vue": "^9.4.0",
@@ -78,7 +78,7 @@
     "rollup-plugin-vue": "^6.0.0",
     "semantic-release": "^19.0.5",
     "standard": "^17.0.0",
-    "vite": "^3.0.9",
-    "vitest": "^0.22.1"
+    "vite": "^3.1.0",
+    "vitest": "^0.23.1"
   }
 }
