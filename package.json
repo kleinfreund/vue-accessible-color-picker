@@ -39,7 +39,7 @@
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "NODE_ENV=production rollup --config",
+    "build": "rollup --config",
     "start": "vite",
     "test": "vitest run --coverage",
     "lint": "eslint --ext .js,.vue src",
