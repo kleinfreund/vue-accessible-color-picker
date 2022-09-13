@@ -2,33 +2,33 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  <title>vue-accessible-color-picker demo</title>
+	<title>vue-accessible-color-picker demo</title>
 </head>
 
 <body>
-  <noscript>
-    <strong>
-      We’re sorry but this site doesn’t work properly without JavaScript enabled. Please enable it to continue.
-    </strong>
-  </noscript>
+	<noscript>
+		<strong>
+			We’re sorry but this site doesn’t work properly without JavaScript enabled. Please enable it to continue.
+		</strong>
+	</noscript>
 
-  <main id="app" style="max-width: 500px; margin-right: auto; margin-left: auto;"></main>
+	<main id="app" style="max-width: 500px; margin-right: auto; margin-left: auto;"></main>
 
-  <script type="module">
-    import { createApp } from 'vue/dist/vue.esm-bundler.js'
+	<script type="module">
+		import { createApp } from 'vue/dist/vue.esm-bundler.js'
 
-    import ColorPicker from './src/ColorPicker.vue'
+		import ColorPicker from './src/ColorPicker.vue'
 
-    const app = createApp({
-      components: { ColorPicker },
-      template: `<ColorPicker />`,
-    })
+		const app = createApp({
+			components: { ColorPicker },
+			template: `<ColorPicker />`,
+		})
 
-    app.mount('#app')
-  </script>
+		app.mount('#app')
+	</script>
 </body>
 
 </html>

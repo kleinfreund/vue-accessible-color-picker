@@ -6,15 +6,15 @@
  * @returns {boolean}
  */
 export function colorsAreValueEqual (colorA, colorB) {
-  if (typeof colorA === 'string' || typeof colorB === 'string') {
-    return colorA === colorB
-  }
+	if (typeof colorA === 'string' || typeof colorB === 'string') {
+		return colorA === colorB
+	}
 
-  for (const channelA in colorA) {
-    if (colorA[channelA] !== colorB[channelA]) {
-      return false
-    }
-  }
+	for (const channelA in colorA) {
+		if (colorA[channelA] !== colorB[channelA]) {
+			return false
+		}
+	}
 
-  return true
+	return true
 }

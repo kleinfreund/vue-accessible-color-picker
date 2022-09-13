@@ -8,10 +8,10 @@
  * @returns {ColorHsv}
  */
 export function convertHwbToHsv (hwb) {
-  return {
-    h: hwb.h,
-    s: hwb.b === 1 ? 0 : 1 - hwb.w / (1 - hwb.b),
-    v: 1 - hwb.b,
-    a: hwb.a,
-  }
+	return {
+		h: hwb.h,
+		s: hwb.b === 1 ? 0 : 1 - hwb.w / (1 - hwb.b),
+		v: 1 - hwb.b,
+		a: hwb.a,
+	}
 }

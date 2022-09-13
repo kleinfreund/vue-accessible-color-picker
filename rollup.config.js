@@ -17,31 +17,31 @@ https://github.com/TrySound/rollup-plugin-terser#options
 */
 
 export default defineConfig([
-  {
-    input: 'src/index.js',
-    output: {
-      file: 'dist/vue-accessible-color-picker.js',
-    },
-    // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
-    external: ['vue'],
-    plugins: [
-      vue(),
-      postcss({ minimize: true }),
-      terser(),
-    ],
-  },
+	{
+		input: 'src/index.js',
+		output: {
+			file: 'dist/vue-accessible-color-picker.js',
+		},
+		// The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
+		external: ['vue'],
+		plugins: [
+			vue(),
+			postcss({ minimize: true }),
+			terser(),
+		],
+	},
 
-  {
-    input: 'src/index.js',
-    output: {
-      file: 'dist/vue-accessible-color-picker-unstyled.js',
-    },
-    // The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
-    external: ['vue'],
-    plugins: [
-      vue(),
-      discardCss(),
-      terser(),
-    ],
-  },
+	{
+		input: 'src/index.js',
+		output: {
+			file: 'dist/vue-accessible-color-picker-unstyled.js',
+		},
+		// The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
+		external: ['vue'],
+		plugins: [
+			vue(),
+			discardCss(),
+			terser(),
+		],
+	},
 ])

@@ -10,12 +10,12 @@
  * @returns {ColorRgb}
  */
 export function convertHsvToRgb (hsv) {
-  return {
-    r: fn(5, hsv),
-    g: fn(3, hsv),
-    b: fn(1, hsv),
-    a: hsv.a,
-  }
+	return {
+		r: fn(5, hsv),
+		g: fn(3, hsv),
+		b: fn(1, hsv),
+		a: hsv.a,
+	}
 }
 
 /**
@@ -24,6 +24,6 @@ export function convertHsvToRgb (hsv) {
  * @returns {number}
  */
 function fn (n, hsv) {
-  const k = (n + hsv.h * 6) % 6
-  return hsv.v - hsv.v * hsv.s * Math.max(0, Math.min(k, 4 - k, 1))
+	const k = (n + hsv.h * 6) % 6
+	return hsv.v - hsv.v * hsv.s * Math.max(0, Math.min(k, 4 - k, 1))
 }

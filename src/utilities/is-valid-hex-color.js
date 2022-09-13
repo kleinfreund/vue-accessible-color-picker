@@ -5,5 +5,5 @@
  * @returns {boolean}
  */
 export function isValidHexColor (hexColor) {
-  return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(hexColor)
+	return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(hexColor)
 }

@@ -6,14 +6,14 @@ import { round } from './round.js'
  * @returns {number} in the range [0, 1]
  */
 export function fromHueAngle (value) {
-  if (value.endsWith('.')) {
-    return NaN
-  }
+	if (value.endsWith('.')) {
+		return NaN
+	}
 
-  // Maps the angle to the range [0, 360] (e.g. -30 becomes 330, 385 becomes 15, etc).
-  const boundAngle = ((parseFloat(value) % 360) + 360) % 360
+	// Maps the angle to the range [0, 360] (e.g. -30 becomes 330, 385 becomes 15, etc).
+	const boundAngle = ((parseFloat(value) % 360) + 360) % 360
 
-  return boundAngle / 360
+	return boundAngle / 360
 }
 
 /**
@@ -21,7 +21,7 @@ export function fromHueAngle (value) {
  * @returns {string} in the range [0, 360]
  */
 export function toHueAngle (value) {
-  return round(value * 360)
+	return round(value * 360)
 }
 
 /**
@@ -29,23 +29,23 @@ export function toHueAngle (value) {
  * @returns {number} in the range [0, 1]
  */
 export function fromPercentage (value) {
-  if (!value.endsWith('%')) {
-    return NaN
-  }
+	if (!value.endsWith('%')) {
+		return NaN
+	}
 
-  const numberString = value.substring(0, value.length - 1)
+	const numberString = value.substring(0, value.length - 1)
 
-  if (numberString.endsWith('.')) {
-    return NaN
-  }
+	if (numberString.endsWith('.')) {
+		return NaN
+	}
 
-  const numberValue = parseFloat(numberString)
+	const numberValue = parseFloat(numberString)
 
-  if (Number.isNaN(numberValue)) {
-    return NaN
-  }
+	if (Number.isNaN(numberValue)) {
+		return NaN
+	}
 
-  return clamp(numberValue, 0, 100) / 100
+	return clamp(numberValue, 0, 100) / 100
 }
 
 /**
@@ -53,7 +53,7 @@ export function fromPercentage (value) {
  * @returns {string} in the range [0%, 100%]
  */
 export function toPercentage (value) {
-  return round(value * 100) + '%'
+	return round(value * 100) + '%'
 }
 
 /**
@@ -61,21 +61,21 @@ export function toPercentage (value) {
  * @returns {number} in the range [0, 1]
  */
 export function from8BitDecimal (value) {
-  if (value.endsWith('%')) {
-    return fromPercentage(value)
-  }
+	if (value.endsWith('%')) {
+		return fromPercentage(value)
+	}
 
-  if (value.endsWith('.')) {
-    return NaN
-  }
+	if (value.endsWith('.')) {
+		return NaN
+	}
 
-  const numberValue = parseFloat(value)
+	const numberValue = parseFloat(value)
 
-  if (Number.isNaN(numberValue)) {
-    return NaN
-  }
+	if (Number.isNaN(numberValue)) {
+		return NaN
+	}
 
-  return clamp(numberValue, 0, 255) / 255
+	return clamp(numberValue, 0, 255) / 255
 }
 
 /**
@@ -83,7 +83,7 @@ export function from8BitDecimal (value) {
  * @returns {string} in the range [0, 255]
  */
 export function to8BitDecimal (value) {
-  return round(value * 255)
+	return round(value * 255)
 }
 
 /**
@@ -91,11 +91,11 @@ export function to8BitDecimal (value) {
  * @returns {number} in the range [0, 1]
  */
 export function fromAlpha (value) {
-  if (value.endsWith('%')) {
-    return fromPercentage(value)
-  } else {
-    return clamp(parseFloat(value), 0, 1)
-  }
+	if (value.endsWith('%')) {
+		return fromPercentage(value)
+	} else {
+		return clamp(parseFloat(value), 0, 1)
+	}
 }
 
 /**
@@ -103,5 +103,5 @@ export function fromAlpha (value) {
  * @returns {string} in the range [0, 1]
  */
 export function toAlpha (value) {
-  return String(value)
+	return String(value)
 }

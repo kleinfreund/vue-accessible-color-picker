@@ -21,15 +21,15 @@
  * @returns {Plugin}
  */
 export function discardCss () {
-  return {
-    name: 'discard-css',
-    transform (_code, id) {
-      // Only processes CSS files.
-      if (!id.endsWith('.css')) {
-        return null
-      }
+	return {
+		name: 'discard-css',
+		transform (_code, id) {
+			// Only processes CSS files.
+			if (!id.endsWith('.css')) {
+				return null
+			}
 
-      return ''
-    },
-  }
+			return ''
+		},
+	}
 }

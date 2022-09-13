@@ -10,29 +10,29 @@ Links:
 
 - [demo](https://vue-accessible-color-picker.netlify.app)
 - [**npmjs.com**/package/vue-accessible-color-picker](https://www.npmjs.com/package/vue-accessible-color-picker)
-  - [on BundlePhobia](https://bundlephobia.com/result?p=vue-accessible-color-picker)
+	- [on BundlePhobia](https://bundlephobia.com/result?p=vue-accessible-color-picker)
 - [**github.com**/kleinfreund/vue-accessible-color-picker](https://github.com/kleinfreund/vue-accessible-color-picker)
-  - [code of conduct](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CODE_OF_CONDUCT.md)
-  - [contributing guidelines](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CONTRIBUTING.md)
+	- [code of conduct](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CODE_OF_CONDUCT.md)
+	- [contributing guidelines](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CONTRIBUTING.md)
 
 ## Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Documentation](#documentation)
-  - [Props](#props)
-    - [`color`](#color)
-    - [`visibleFormats`](#visibleformats)
-    - [`defaultFormat`](#defaultformat)
-    - [`alphaChannel`](#alphachannel)
-    - [`id`](#id)
-  - [Events](#events)
-    - [`color-change`](#color-change)
-  - [Slots](#slots)
-    - [hue-range-input-label](#hue-range-input-label)
-    - [alpha-range-input-label](#alpha-range-input-label)
-    - [copy-button](#copy-button)
-    - [format-switch-button](#format-switch-button)
+	- [Props](#props)
+		- [`color`](#color)
+		- [`visibleFormats`](#visibleformats)
+		- [`defaultFormat`](#defaultformat)
+		- [`alphaChannel`](#alphachannel)
+		- [`id`](#id)
+	- [Events](#events)
+		- [`color-change`](#color-change)
+	- [Slots](#slots)
+		- [hue-range-input-label](#hue-range-input-label)
+		- [alpha-range-input-label](#alpha-range-input-label)
+		- [copy-button](#copy-button)
+		- [format-switch-button](#format-switch-button)
 - [Versioning](#versioning)
 - [Design](#design)
 
@@ -50,7 +50,7 @@ When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-
 
 ```vue
 <template>
-  <ColorPicker />
+	<ColorPicker />
 </template>
 
 <script setup>
@@ -62,16 +62,16 @@ When using Vue’s options API, the component must first be registered using the
 
 ```vue
 <template>
-  <ColorPicker />
+	<ColorPicker />
 </template>
 
 <script>
 import { ColorPicker } from 'vue-accessible-color-picker'
 
 export default {
-  components: {
-    ColorPicker,
-  },
+	components: {
+		ColorPicker,
+	},
 }
 </script>
 ```
@@ -96,37 +96,37 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Default**: `#ffffffff`
 - **Usage**:
 
-  ```vue
-  <ColorPicker color="hsl(270 100% 50% / 0.8)" />
-  ```
+	```vue
+	<ColorPicker color="hsl(270 100% 50% / 0.8)" />
+	```
 
-  ```vue
-  <ColorPicker color="#f80b" />
-  ```
+	```vue
+	<ColorPicker color="#f80b" />
+	```
 
-  ```vue
-  <ColorPicker :color="{ h: 0.75, s: 1, l: 0.5, a: 0.8 }" />
-  ```
+	```vue
+	<ColorPicker :color="{ h: 0.75, s: 1, l: 0.5, a: 0.8 }" />
+	```
 
-  ```vue
-  <template>
-    <ColorPicker
-      :color="color"
-      @color-change="updateColor"
-    />
-  </template>
+	```vue
+	<template>
+		<ColorPicker
+			:color="color"
+			@color-change="updateColor"
+		/>
+	</template>
 
-  <script setup>
-  import { ref } from 'vue'
-  import { ColorPicker } from 'vue-accessible-color-picker'
+	<script setup>
+	import { ref } from 'vue'
+	import { ColorPicker } from 'vue-accessible-color-picker'
 
-  const color = ref('hsl(270 100% 50% / 0.8)')
+	const color = ref('hsl(270 100% 50% / 0.8)')
 
-  function updateColor (eventData) {
-    color.value = eventData.cssColor
-  }
-  </script>
-  ```
+	function updateColor (eventData) {
+		color.value = eventData.cssColor
+	}
+	</script>
+	```
 
 #### `visibleFormats`
 
@@ -136,9 +136,9 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
 - **Usage**:
 
-  ```vue
-  <ColorPicker :visible-formats="['hsl', 'hwb']" />
-  ```
+	```vue
+	<ColorPicker :visible-formats="['hsl', 'hwb']" />
+	```
 
 #### `defaultFormat`
 
@@ -148,9 +148,9 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Default**: `'rgb'`
 - **Usage**:
 
-  ```vue
-  <ColorPicker default-format="hwb" />
-  ```
+	```vue
+	<ColorPicker default-format="hwb" />
+	```
 
 #### `alphaChannel`
 
@@ -160,9 +160,9 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Default**: `'show'`
 - **Usage**:
 
-  ```vue
-  <ColorPicker alpha-channel="hide" />
-  ```
+	```vue
+	<ColorPicker alpha-channel="hide" />
+	```
 
 #### `id`
 
@@ -172,9 +172,9 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Default**: `'color-picker'`
 - **Usage**:
 
-  ```vue
-  <ColorPicker id="color-picker-1" />
-  ```
+	```vue
+	<ColorPicker id="color-picker-1" />
+	```
 
 ### Events
 
@@ -183,37 +183,37 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Description**: An `input` event is emitted each time the internal colors object is updated.
 - **Data**: The event emits an object containing both the internal colors object and a CSS color value as a string based on the currently active format. The `cssColor` property will respect `alphaChannel`.
 
-  ```ts
-  {
-    colors: {
-      hex: string
-      hsl: ColorHsl
-      hsv: ColorHsv
-      hwb: ColorHwb
-      rgb: ColorRgb
-    }
-    cssColor: string
-  }
-  ```
+	```ts
+	{
+		colors: {
+			hex: string
+			hsl: ColorHsl
+			hsv: ColorHsv
+			hwb: ColorHwb
+			rgb: ColorRgb
+		}
+		cssColor: string
+	}
+	```
 
 - **Usage**:
 
-  ```vue
-  <template>
-    <ColorPicker
-      color="hsl(270 100% 50% / 0.8)"
-      @color-change="updateColor"
-    />
-  </template>
+	```vue
+	<template>
+		<ColorPicker
+			color="hsl(270 100% 50% / 0.8)"
+			@color-change="updateColor"
+		/>
+	</template>
 
-  <script setup>
-  import { ColorPicker } from 'vue-accessible-color-picker'
+	<script setup>
+	import { ColorPicker } from 'vue-accessible-color-picker'
 
-  function updateColor (eventData) {
-    console.log(eventData)
-  }
-  </script>
-  ```
+	function updateColor (eventData) {
+		console.log(eventData)
+	}
+	</script>
+	```
 
 ### Slots
 
@@ -222,28 +222,28 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Description**: Overrides the content of the hue range input’s `label` element.
 - **Default content**:
 
-  > Hue
+	> Hue
 
 #### alpha-range-input-label
 
 - **Description**: Overrides the content of the alpha range input’s `label` element.
 - **Default content**:
 
-  > Alpha
+	> Alpha
 
 #### copy-button
 
 - **Description**: Overrides the content of the copy button element.
 - **Default content**:
 
-  > Copy color
+	> Copy color
 
 #### format-switch-button
 
 - **Description**: Overrides the content of the format switch button element.
 - **Default content**:
 
-  > Switch format
+	> Switch format
 
 ## Versioning
 
@@ -255,26 +255,26 @@ The color picker consists of the following main elements:
 
 - **Color space**:
 
-  For fine-tuning the saturation and lightness/value, a slice of the HSV cylinder for the currently selected hue is shown.
+	For fine-tuning the saturation and lightness/value, a slice of the HSV cylinder for the currently selected hue is shown.
 
-  The HSV cylinder is more convenient for this task than the HSL cylinder as it shows a color at 100% saturation and 100% value in the top right corner (i.e. one can drag the color space thumb into the corner as a quasi shortcut). The HSL cylinder’s slice has this color at the halfway point of the Y axis (i.e. at 50% lightness) which isn’t easy to select.
+	The HSV cylinder is more convenient for this task than the HSL cylinder as it shows a color at 100% saturation and 100% value in the top right corner (i.e. one can drag the color space thumb into the corner as a quasi shortcut). The HSL cylinder’s slice has this color at the halfway point of the Y axis (i.e. at 50% lightness) which isn’t easy to select.
 
 - **Hue slider**:
 
-  A slider for selecting the current hue. This rotates the HSV cylinder; thus, it changes the slice of the HSV cylinder that’s shown in the color space.
+	A slider for selecting the current hue. This rotates the HSV cylinder; thus, it changes the slice of the HSV cylinder that’s shown in the color space.
 
 - **Alpha slider**:
 
-  A slider for selecting the current alpha value.
+	A slider for selecting the current alpha value.
 
 - **Copy button**:
 
-  Copies the color formatted as a CSS color string in the active format.
+	Copies the color formatted as a CSS color string in the active format.
 
 - **Color inputs**:
 
-  A set of text fields which allow you to enter the individual components of each color. The text fields are shown based on the active format.
+	A set of text fields which allow you to enter the individual components of each color. The text fields are shown based on the active format.
 
 - **Switch format button**:
 
-  Cycles through the available color formats (currently HEX, HSL, HWB, and RGB).
+	Cycles through the available color formats (currently HEX, HSL, HWB, and RGB).

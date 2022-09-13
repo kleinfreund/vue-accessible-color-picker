@@ -23,36 +23,36 @@ import { convertRgbToHwb } from './color-conversions/convert-rgb-to-hwb.js'
  * @type {{ [key in ColorFormat]: Array<[ColorFormat, (color: any) => any]> }}
  */
 export const conversions = {
-  hex: [
-    ['hsl', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHsl])],
-    ['hsv', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHwb, convertHwbToHsv])],
-    ['hwb', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHwb])],
-    ['rgb', convertHexToRgb],
-  ],
-  hsl: [
-    ['hex', (hsl) => chainConvert(hsl, [convertHslToRgb, convertRgbToHex])],
-    ['hsv', convertHslToHsv],
-    ['hwb', (hsl) => chainConvert(hsl, [convertHslToRgb, convertRgbToHwb])],
-    ['rgb', convertHslToRgb],
-  ],
-  hsv: [
-    ['hex', (hsv) => chainConvert(hsv, [convertHsvToRgb, convertRgbToHex])],
-    ['hsl', convertHsvToHsl],
-    ['hwb', convertHsvToHwb],
-    ['rgb', convertHsvToRgb],
-  ],
-  hwb: [
-    ['hex', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb, convertRgbToHex])],
-    ['hsl', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb, convertRgbToHsl])],
-    ['hsv', convertHwbToHsv],
-    ['rgb', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb])],
-  ],
-  rgb: [
-    ['hex', convertRgbToHex],
-    ['hsl', convertRgbToHsl],
-    ['hsv', (rgb) => chainConvert(rgb, [convertRgbToHwb, convertHwbToHsv])],
-    ['hwb', convertRgbToHwb],
-  ],
+	hex: [
+		['hsl', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHsl])],
+		['hsv', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHwb, convertHwbToHsv])],
+		['hwb', (hex) => chainConvert(hex, [convertHexToRgb, convertRgbToHwb])],
+		['rgb', convertHexToRgb],
+	],
+	hsl: [
+		['hex', (hsl) => chainConvert(hsl, [convertHslToRgb, convertRgbToHex])],
+		['hsv', convertHslToHsv],
+		['hwb', (hsl) => chainConvert(hsl, [convertHslToRgb, convertRgbToHwb])],
+		['rgb', convertHslToRgb],
+	],
+	hsv: [
+		['hex', (hsv) => chainConvert(hsv, [convertHsvToRgb, convertRgbToHex])],
+		['hsl', convertHsvToHsl],
+		['hwb', convertHsvToHwb],
+		['rgb', convertHsvToRgb],
+	],
+	hwb: [
+		['hex', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb, convertRgbToHex])],
+		['hsl', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb, convertRgbToHsl])],
+		['hsv', convertHwbToHsv],
+		['rgb', (hwb) => chainConvert(hwb, [convertHwbToHsv, convertHsvToRgb])],
+	],
+	rgb: [
+		['hex', convertRgbToHex],
+		['hsl', convertRgbToHsl],
+		['hsv', (rgb) => chainConvert(rgb, [convertRgbToHwb, convertHwbToHsv])],
+		['hwb', convertRgbToHwb],
+	],
 }
 
 /**
@@ -65,5 +65,5 @@ export const conversions = {
  * @returns {any}
  */
 function chainConvert (sourceColor, convertFunctions) {
-  return convertFunctions.reduce((color, convert) => convert(color), sourceColor)
+	return convertFunctions.reduce((color, convert) => convert(color), sourceColor)
 }

@@ -12,23 +12,23 @@ import { convertRgbToHwb } from './convert-rgb-to-hwb.js'
  * @returns {ColorHsl}
  */
 export function convertRgbToHsl (rgb) {
-  const hwb = convertRgbToHwb(rgb)
-  const min = hwb.w
-  const max = 1 - hwb.b
+	const hwb = convertRgbToHwb(rgb)
+	const min = hwb.w
+	const max = 1 - hwb.b
 
-  const l = (max + min) / 2
+	const l = (max + min) / 2
 
-  let s
-  if (max === 0 || min === 1) {
-    s = 0
-  } else {
-    s = (max - l) / Math.min(l, 1 - l)
-  }
+	let s
+	if (max === 0 || min === 1) {
+		s = 0
+	} else {
+		s = (max - l) / Math.min(l, 1 - l)
+	}
 
-  return {
-    h: hwb.h,
-    s,
-    l,
-    a: rgb.a,
-  }
+	return {
+		h: hwb.h,
+		s,
+		l,
+		a: rgb.a,
+	}
 }

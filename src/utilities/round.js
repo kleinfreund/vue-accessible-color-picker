@@ -10,5 +10,5 @@
  * @returns {string}
  */
 export function round (value, decimalPrecision = 2) {
-  return value.toFixed(decimalPrecision).replace(/\.?0+$/, '')
+	return value.toFixed(decimalPrecision).replace(/\.?0+$/, '')
 }

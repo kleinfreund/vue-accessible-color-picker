@@ -3,67 +3,67 @@ name: main
 on: push
 
 jobs:
-  test-unit:
-    # Skip this job if the head commit’s message contains the string “[skip ci]”.
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    name: Tests & build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        # https://github.com/actions/checkout
-        uses: actions/checkout@v3
+	test-unit:
+		# Skip this job if the head commit’s message contains the string “[skip ci]”.
+		if: "!contains(github.event.head_commit.message, '[skip ci]')"
+		name: Tests & build
+		runs-on: ubuntu-latest
+		steps:
+			- name: Checkout repository
+				# https://github.com/actions/checkout
+				uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        # https://github.com/actions/setup-node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+			- name: Setup Node.js
+				# https://github.com/actions/setup-node
+				uses: actions/setup-node@v3
+				with:
+					node-version: '16'
 
-      - name: Cache node_modules and dist
-        # https://github.com/actions/cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-            dist
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+			- name: Cache node_modules and dist
+				# https://github.com/actions/cache
+				uses: actions/cache@v3
+				with:
+					path: |
+						**/node_modules
+						dist
+					key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install
-        run: npm install
+			- name: Install
+				run: npm install
 
-      - name: Lint
-        run: npm run lint
+			- name: Lint
+				run: npm run lint
 
-      - name: Build
-        run: npm run build --if-present
+			- name: Build
+				run: npm run build --if-present
 
-      - name: Test
-        run: npm test
-        env:
-          CI: true
+			- name: Test
+				run: npm test
+				env:
+					CI: true
 
-  release:
-    # The release job runs only on pushes to or merges into the release branches configured in the semantic-release configuration.
-    if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/next-major' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha'"
-    needs: test-unit
-    name: Publish package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        # https://github.com/actions/checkout
-        uses: actions/checkout@v3
+	release:
+		# The release job runs only on pushes to or merges into the release branches configured in the semantic-release configuration.
+		if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/next-major' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha'"
+		needs: test-unit
+		name: Publish package
+		runs-on: ubuntu-latest
+		steps:
+			- name: Checkout repository
+				# https://github.com/actions/checkout
+				uses: actions/checkout@v3
 
-      - name: Cache node_modules and dist
-        # https://github.com/actions/cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-            dist
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+			- name: Cache node_modules and dist
+				# https://github.com/actions/cache
+				uses: actions/cache@v3
+				with:
+					path: |
+						**/node_modules
+						dist
+					key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Release package
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+			- name: Release package
+				env:
+					GH_TOKEN: ${{ secrets.GH_TOKEN }}
+					NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+				run: npx semantic-release
