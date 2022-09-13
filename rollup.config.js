@@ -25,7 +25,11 @@ export default defineConfig([
 		// The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
 		external: ['vue'],
 		plugins: [
-			vue(),
+			vue({
+				compilerOptions: {
+					comments: false,
+				},
+			}),
 			postcss({ minimize: true }),
 			terser(),
 		],
@@ -39,7 +43,11 @@ export default defineConfig([
 		// The package lists “vue” as a peer dependency; thus, it is marked as external to this package here and won’t be included in the bundle. Package consumers must provide it in their project.
 		external: ['vue'],
 		plugins: [
-			vue(),
+			vue({
+				compilerOptions: {
+					comments: false,
+				},
+			}),
 			discardCss(),
 			terser(),
 		],
