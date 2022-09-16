@@ -34,6 +34,17 @@ export type ColorRgb = {
 
 export type AlphaChannelProp = 'show' | 'hide'
 
+export type ColorChangeEvent = {
+	colors: {
+		hex: string
+		hsl: ColorHsl
+		hsv: ColorHsv
+		hwb: ColorHwb
+		rgb: ColorRgb
+	}
+	cssColor: string
+}
+
 declare const ColorPicker: Component
 
 export { ColorPicker }

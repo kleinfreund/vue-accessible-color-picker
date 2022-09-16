@@ -149,6 +149,7 @@
  * @template T
  */
 /** @typedef {import('../types/index').AlphaChannelProp} AlphaChannelProp */
+/** @typedef {import('../types/index').ColorChangeEvent} ColorChangeEvent */
 /** @typedef {import('../types/index').ColorFormat} ColorFormat */
 /** @typedef {import('../types/index').ColorHsl} ColorHsl */
 /** @typedef {import('../types/index').ColorHsv} ColorHsv */
@@ -578,7 +579,7 @@ function setCssProps () {
 }
 
 /**
- * @returns {{ colors: any, cssColor: string }}
+ * @returns {ColorChangeEvent}
  */
 function getEventData () {
 	const excludeAlphaChannel = props.alphaChannel === 'hide'
