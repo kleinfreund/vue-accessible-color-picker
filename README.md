@@ -220,30 +220,22 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 #### hue-range-input-label
 
 - **Description**: Overrides the content of the hue range input’s `label` element.
-- **Default content**:
-
-	> Hue
+- **Default content**: Hue
 
 #### alpha-range-input-label
 
 - **Description**: Overrides the content of the alpha range input’s `label` element.
-- **Default content**:
-
-	> Alpha
+- **Default content**: Alpha
 
 #### copy-button
 
 - **Description**: Overrides the content of the copy button element.
-- **Default content**:
-
-	> Copy color
+- **Default content**: Copy color (and SVG icon)
 
 #### format-switch-button
 
 - **Description**: Overrides the content of the format switch button element.
-- **Default content**:
-
-	> Switch format
+- **Default content**: Switch format (and SVG icon)
 
 ## Versioning
 

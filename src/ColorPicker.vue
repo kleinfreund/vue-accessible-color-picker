@@ -70,7 +70,20 @@
 			@click="copyColor"
 		>
 			<slot name="copy-button">
-				Copy color
+				<span class="vacp-visually-hidden">Copy color</span>
+
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					aria-hidden="true"
+					width="24"
+					height="24"
+					viewBox="0 0 32 32"
+				>
+					<path
+						d="M25.313 28v-18.688h-14.625v18.688h14.625zM25.313 6.688c1.438 0 2.688 1.188 2.688 2.625v18.688c0 1.438-1.25 2.688-2.688 2.688h-14.625c-1.438 0-2.688-1.25-2.688-2.688v-18.688c0-1.438 1.25-2.625 2.688-2.625h14.625zM21.313 1.313v2.688h-16v18.688h-2.625v-18.688c0-1.438 1.188-2.688 2.625-2.688h16z"
+						fill="currentColor"
+					/>
+				</svg>
 			</slot>
 		</button>
 
@@ -124,7 +137,20 @@
 				@click="switchFormat"
 			>
 				<slot name="format-switch-button">
-					Switch format
+					<span class="vacp-visually-hidden">Switch format</span>
+
+					<svg
+						class="vacp-icon"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="15"
+					>
+						<path
+							d="M8 15l5-5-1-1-4 2-4-2-1 1zm4-9l1-1-5-5-5 5 1 1 4-2z"
+							fill="currentColor"
+						/>
+					</svg>
 				</slot>
 			</button>
 		</div>
@@ -637,21 +663,19 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 */
 .vacp-color-picker {
 	--vacp-color: hsl(calc(var(--vacp-hsl-h) * 360) calc(var(--vacp-hsl-s) * 100%) calc(var(--vacp-hsl-l) * 100%) / var(--vacp-hsl-a));
-	--vacp-focus-color: dodgerblue;
+	--vacp-focus-color: #19f;
+	--vacp-focus-outline: 2px solid var(--vacp-focus-color);
+	--vacp-border-width: 1px;
+	--vacp-border-color: #000;
+	--vacp-border: var(--vacp-border-width) solid var(--vacp-border-color);
 	--vacp-color-space-width: 300px;
 	--vacp-spacing: 6px;
-	--vacp-tiled-background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
 
 	max-width: var(--vacp-color-space-width);
 	padding: var(--vacp-spacing);
 	display: grid;
 	grid-gap: var(--vacp-spacing);
 	grid-template-columns: 1fr min-content;
-	grid-template-areas:
-		"color-space color-space"
-		"range-inputs copy-button"
-		"color-inputs color-inputs"
-	;
 	font-size: 0.8em;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 	background-color: #fff;
@@ -669,11 +693,11 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 }
 
 .vacp-color-picker :focus {
-	outline: 2px solid var(--vacp-focus-color);
+	outline: var(--vacp-focus-outline);
 }
 
 .vacp-color-space {
-	grid-area: color-space;
+	grid-column: 1 / -1;
 
 	overflow: hidden;
 	height: calc(var(--vacp-color-space-width) * 0.6);
@@ -688,7 +712,7 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 	margin-bottom: calc(-1 * var(--vacp-thumb-size) / 2);
 	border: 3px solid #fff;
 	border-radius: 50%;
-	box-shadow: 0 0 0 1px #000;
+	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
 }
 
 /*
@@ -696,19 +720,17 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 */
 .vacp-color-space-thumb:focus {
 	outline-color: transparent; /* 1. */
-	box-shadow: 0 0 0 1px #000, 0 0 0 3px var(--vacp-focus-color);
+	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color), 0 0 0 3px var(--vacp-focus-color);
 }
 
 .vacp-range-input-label {
 	--vacp-slider-track-width: 100%;
 	--vacp-slider-track-height: calc(var(--vacp-spacing) * 3);
-	--vacp-slider-thumb-size: calc(var(--vacp-slider-track-height) + var(--vacp-spacing));
 
 	display: block;
 }
 
 .vacp-range-input-group {
-	grid-area: range-inputs;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -729,8 +751,8 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 	height: var(--vacp-slider-track-height);
 	margin-right: 0;
 	margin-left: 0;
-	margin-top: calc(var(--vacp-spacing) / 2);
-	margin-bottom: calc(var(--vacp-spacing) / 2);
+	margin-top: calc(var(--vacp-spacing) / 2 + 1px);
+	margin-bottom: calc(var(--vacp-spacing) / 2 + 1px);
 	padding: 0;
 	border: none;
 	background: none;
@@ -747,7 +769,10 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 
 .vacp-range-input--alpha {
 	background-color: #fff;
-	background-image: var(--vacp-tiled-background-image);
+	background-image:
+		linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee),
+		linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee)
+	;
 	background-size: calc(var(--vacp-spacing) * 2) calc(var(--vacp-spacing) * 2);
 	background-position: 0 0, var(--vacp-spacing) var(--vacp-spacing);
 }
@@ -757,37 +782,36 @@ Range input: Tracks
 */
 
 .vacp-range-input::-moz-range-track {
-	display: block;
-	box-sizing: border-box;
+	box-sizing: content-box;
+	width: var(--vacp-slider-track-width);
 	height: var(--vacp-slider-track-height);
-	border: none;
+	border: var(--vacp-border);
 }
 
 .vacp-range-input::-webkit-slider-runnable-track {
+	box-sizing: content-box;
 	width: var(--vacp-slider-track-width);
 	height: var(--vacp-slider-track-height);
-	border: none;
+	border: var(--vacp-border);
 }
 
 .vacp-range-input::-ms-track {
+	box-sizing: content-box;
 	width: var(--vacp-slider-track-width);
 	height: var(--vacp-slider-track-height);
-	border: none;
+	border: var(--vacp-border);
 }
 
 .vacp-range-input:focus::-moz-range-track {
-	border: 1px solid var(--vacp-focus-color);
-	outline: 2px solid var(--vacp-focus-color);
+	outline: var(--vacp-focus-outline);
 }
 
 .vacp-range-input:focus::-webkit-slider-runnable-track {
-	border: 1px solid var(--vacp-focus-color);
-	outline: 2px solid var(--vacp-focus-color);
+	outline: var(--vacp-focus-outline);
 }
 
 .vacp-range-input:focus::-ms-track {
-	border: 1px solid var(--vacp-focus-color);
-	outline: 2px solid var(--vacp-focus-color);
+	outline: var(--vacp-focus-outline);
 }
 
 .vacp-range-input--alpha::-moz-range-track {
@@ -818,40 +842,41 @@ Range input: Tracks
 Range input: thumbs
 */
 .vacp-range-input::-moz-range-thumb {
-	box-sizing: border-box;
-	width: var(--vacp-slider-thumb-size);
-	height: var(--vacp-slider-thumb-size);
+	box-sizing: content-box;
+	width: var(--vacp-slider-track-height);
+	height: var(--vacp-slider-track-height);
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
-	box-shadow: 0 0 0 1px #000;
-	transform: rotate(0);
+	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	isolation: isolate;
 }
 
 .vacp-range-input::-webkit-slider-thumb {
-	width: var(--vacp-slider-thumb-size);
-	height: var(--vacp-slider-thumb-size);
-	margin-top: calc((var(--vacp-slider-track-height) - var(--vacp-slider-thumb-size)) / 2);
+	box-sizing: content-box;
+	width: var(--vacp-slider-track-height);
+	height: var(--vacp-slider-track-height);
+	margin-top: calc(-1 * (var(--vacp-spacing) / 2));
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
-	box-shadow: 0 0 0 1px #000;
-	transform: rotate(0);
+	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	isolation: isolate;
 }
 
 .vacp-range-input::-ms-thumb {
-	width: var(--vacp-slider-thumb-size);
-	height: var(--vacp-slider-thumb-size);
-	margin-top: 0;
+	box-sizing: content-box;
+	width: var(--vacp-slider-track-height);
+	height: var(--vacp-slider-track-height);
+	margin-top: calc(-1 * (var(--vacp-spacing) / 2));
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
-	box-shadow: 0 0 0 1px #000;
-	transform: rotate(0);
+	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	isolation: isolate;
 }
 
 .vacp-copy-button {
-	grid-area: copy-button;
 	justify-self: center;
 	align-self: center;
 
@@ -862,19 +887,9 @@ Range input: thumbs
 	justify-content: center;
 	width: calc(var(--vacp-spacing) * 6);
 	height: calc(var(--vacp-spacing) * 6);
-	border: 1px solid transparent;
+	border: var(--vacp-border-width) solid transparent;
 	border-radius: 50%;
-	color: #fff;
-
-	/* Tiled background */
 	background-color: #fff;
-	background-image: linear-gradient(var(--vacp-color), var(--vacp-color)), var(--vacp-tiled-background-image);
-	background-size: calc(var(--vacp-spacing) * 2) calc(var(--vacp-spacing) * 2);
-	background-position: 0 0, var(--vacp-spacing) var(--vacp-spacing);
-}
-
-.vacp-copy-button:enabled:not(:hover) svg {
-	display: none;
 }
 
 /*
@@ -882,17 +897,17 @@ Range input: thumbs
 */
 .vacp-copy-button:enabled:focus {
 	outline: none; /* 1. */
+	border-color: var(--vacp-border-color);
 	box-shadow: 0 0 0 2px var(--vacp-focus-color);
-	border-color: var(--vacp-focus-color);
 }
 
 .vacp-copy-button:enabled:hover {
-	background-color: var(--vacp-color);
-	background-image: linear-gradient(rgb(0 0 0 / 0.25), rgb(0 0 0 / 0.25));
+	background-color: #0002;
 }
 
 .vacp-color-inputs {
-	grid-area: color-inputs;
+	grid-column: 1 / -1;
+
 	display: flex;
 	align-items: center;
 }
@@ -903,16 +918,13 @@ Range input: thumbs
 
 .vacp-color-input-group {
 	flex-grow: 1;
-	display: flex;
+	display: grid;
+	grid-auto-flow: column;
+	column-gap: var(--vacp-spacing);
 }
 
 .vacp-color-input-label {
-	flex-grow: 1;
 	text-align: center;
-}
-
-.vacp-color-input-label:not(:first-child) {
-	margin-left: var(--vacp-spacing);
 }
 
 .vacp-color-input {
@@ -920,15 +932,11 @@ Range input: thumbs
 	margin: 0;
 	margin-top: calc(var(--vacp-spacing) / 2);
 	padding: var(--vacp-spacing);
-	border: 1px solid #ccc;
+	border: var(--vacp-border);
 	font: inherit;
 	text-align: center;
 	color: inherit;
 	background-color: #fff;
-}
-
-.vacp-color-input:enabled:focus {
-	border-color: var(--vacp-focus-color);
 }
 
 .vacp-format-switch-button {
@@ -937,17 +945,30 @@ Range input: thumbs
 	align-items: center;
 	margin: 0;
 	padding: var(--vacp-spacing);
-	border: 1px solid transparent;
+	border: var(--vacp-border-width) solid transparent;
+	border-radius: 50%;
 	font: inherit;
 	color: inherit;
 	background-color: #fff;
 }
 
 .vacp-format-switch-button:enabled:focus {
-	border-color: var(--vacp-focus-color);
+	border-color: var(--vacp-border-color);
 }
 
 .vacp-format-switch-button:enabled:hover {
-	background-color: #eee;
+	background-color: #0002;
+}
+
+.vacp-visually-hidden {
+	position: absolute;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	white-space: nowrap;
 }
 </style>
