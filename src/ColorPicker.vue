@@ -181,8 +181,7 @@ const props = defineProps({
 	 * The initially rendered color.
 	 */
 	color: {
-		/** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */
-		type: [String, Object],
+		type: /** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */ ([String, Object]),
 		required: false,
 		default: '#ffffffff',
 	},
@@ -200,8 +199,7 @@ const props = defineProps({
 	 * The list of visible color formats.
 	 */
 	visibleFormats: {
-		/** @type {PropType<VisibleColorFormat[]>} */
-		type: Array,
+		type: /** @type {PropType<VisibleColorFormat[]>} */ (Array),
 		required: false,
 		default: () => ALLOWED_VISIBLE_FORMATS,
 		validator (/** @type {any[]} */ visibleFormats) {
@@ -213,7 +211,7 @@ const props = defineProps({
 	 * The initially visible color format. Default: `'hsl'`.
 	 */
 	defaultFormat: {
-		type: String,
+		type: /** @type {PropType<VisibleColorFormat>} */ (String),
 		required: false,
 		default: 'hsl',
 		validator (/** @type {VisibleColorFormat} */ defaultFormat) {
@@ -230,7 +228,7 @@ const props = defineProps({
 	 * - **hide**: The alpha channel range input and the alpha channel value input are not rendered. The `color-change` event emits a `cssColor` property without the alpha channel part.
 	 */
 	alphaChannel: {
-		type: String,
+		type: /** @type {PropType<AlphaChannelProp>} */ (String),
 		required: false,
 		default: 'show',
 		validator (/** @type {string} */ alphaChannel) {
