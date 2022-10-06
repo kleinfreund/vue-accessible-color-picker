@@ -9,36 +9,20 @@ jobs:
     name: Tests & build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        # https://github.com/actions/checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        # https://github.com/actions/setup-node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v3 # https://github.com/actions/checkout
+      - uses: actions/setup-node@v3 # https://github.com/actions/setup-node
         with:
           node-version: '16'
-
-      - name: Cache node_modules and dist
-        # https://github.com/actions/cache
-        uses: actions/cache@v3
+      - uses: actions/cache@v3 # https://github.com/actions/cache
         with:
           path: |
             **/node_modules
             dist
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install
-        run: npm install
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build --if-present
-
-      - name: Test
-        run: npm test
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
         env:
           CI: true
 
@@ -49,21 +33,14 @@ jobs:
     name: Publish package
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        # https://github.com/actions/checkout
-        uses: actions/checkout@v3
-
-      - name: Cache node_modules and dist
-        # https://github.com/actions/cache
-        uses: actions/cache@v3
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
             dist
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Release package
-        env:
+      - env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
