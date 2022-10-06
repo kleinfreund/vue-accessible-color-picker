@@ -1,3 +1,10 @@
+## [4.0.7](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.6...v4.0.7) (2022-10-06)
+
+
+### Bug Fixes
+
+* not falling back to visible format correctly ([9530d37](https://github.com/kleinfreund/vue-accessible-color-picker/commit/9530d37455933a58af8718527bea6844effa8fdd)), closes [#23](https://github.com/kleinfreund/vue-accessible-color-picker/issues/23)
+
 ## [4.0.6](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.5...v4.0.6) (2022-09-02)
 
 
