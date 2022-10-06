@@ -140,6 +140,19 @@ describe('ColorPicker', () => {
 			expect(input.value).toBe('#ffffffff')
 		})
 
+		test('falls back to visible color format when defaultFormat isn\'t a visible format', () => {
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					color: '#fff',
+					defaultFormat: 'hsl',
+					visibleFormats: ['hex'],
+				},
+			})
+
+			const input = /** @type {HTMLInputElement} */ (wrapper.find('.vacp-color-input').element)
+			expect(input.value).toBe('#ffffffff')
+		})
+
 		test.each([
 			[undefined, ['H', 'S', 'L']],
 			['hex', ['Hex']],
