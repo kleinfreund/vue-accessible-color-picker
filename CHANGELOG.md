@@ -1,4 +1,4 @@
-# [4.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.7...v4.1.0) (2022-10-06)
+## [4.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.0.7...v4.1.0) (2022-10-06)
 
 
 ### Features
