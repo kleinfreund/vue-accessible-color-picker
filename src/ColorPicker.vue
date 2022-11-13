@@ -585,21 +585,18 @@ function setCssProps () {
 	colorPicker.value.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
 	colorPicker.value.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
 
-	colorSpace.value.setAttribute('style', `
-		position: relative;
-		background-color: hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%); /* 1. */
-		background-image:
-			linear-gradient(to top, #000, transparent),  /* 2. */
-			linear-gradient(to right, #fff, transparent) /* 2. */
-		;
-	`)
+	// Sets a few CSS properties as inline styles because they're essential for the operation of the color picker.
+	colorSpace.value.style.position = 'relative'
+	// Sets the background of the hue slice to the color represented by the currently selected hue with full saturation and half the lightness (which is 100% value for an HSV color).
+	colorSpace.value.style.backgroundColor = 'hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%)'
+	// These overlapping gradients together with the underlying background color create a visual representation of a slice through the HSV cylinder. The slice’s angle is determined by the current hue. Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
+	colorSpace.value.style.backgroundImage = 'linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)'
 
-	thumb.value.setAttribute('style', `
-		box-sizing: border-box;
-		position: absolute;
-		left: ${colors.hsv.s * 100}%;   /* 3. */
-		bottom: ${colors.hsv.v * 100}%; /* 3. */
-	`)
+	thumb.value.style.boxSizing = 'border-box'
+	thumb.value.style.position = 'absolute'
+	// The X and Y coordinates of the color space thumb’s position are expressed in the saturation and value parts of an HSV color. This is because the color space represents the hue slice of the HSV cylinder. This the most convenient option because a fully saturated color at 50% lightness is located in the top right corner of that slice (i.e. at saturation 100% and value 100%). A full red (#f00) can thus be picked by dragging the hue slider all the way to either end and the color space thumb in the most top right corner of the color space. This will set the hue to 0, the saturation to 100%, and the value to 100%.
+	thumb.value.style.left = `${colors.hsv.s * 100}%`
+	thumb.value.style.bottom = `${colors.hsv.v * 100}%`
 }
 
 /**
