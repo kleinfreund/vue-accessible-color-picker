@@ -73,7 +73,7 @@
 		"jsdom": "^20.0.2",
 		"postcss": "^8.4.19",
 		"rimraf": "^3.0.2",
-		"rollup": "^2.79.1",
+		"rollup": "^3.3.0",
 		"rollup-plugin-postcss": "^4.0.2",
 		"rollup-plugin-vue": "^6.0.0",
 		"semantic-release": "^19.0.5",
