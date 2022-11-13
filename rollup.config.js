@@ -1,6 +1,6 @@
 import { defineConfig } from 'rollup'
 import postcss from 'rollup-plugin-postcss'
-import { terser } from 'rollup-plugin-terser'
+import terser from '@rollup/plugin-terser'
 import vue from 'rollup-plugin-vue'
 
 import { discardCss } from './rollup-plugin-discard-css.js'
@@ -13,7 +13,7 @@ postcss options:
 https://github.com/egoist/rollup-plugin-postcss#options
 
 terser options:
-https://github.com/TrySound/rollup-plugin-terser#options
+https://github.com/rollup/plugins/tree/master/packages/terser#options
 */
 
 export default defineConfig([
