@@ -103,7 +103,7 @@
 						class="vacp-color-input"
 						type="text"
 						:value="hexInputValue"
-						@input="updateHexColorValue($event)"
+						@input="updateHexColorValue"
 					>
 				</label>
 
