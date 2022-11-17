@@ -73,6 +73,7 @@
 				<span class="vacp-visually-hidden">Copy color</span>
 
 				<svg
+					class="vacp-icon"
 					xmlns="http://www.w3.org/2000/svg"
 					aria-hidden="true"
 					width="24"
