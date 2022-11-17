@@ -209,7 +209,6 @@ const props = defineProps({
 	 */
 	color: {
 		type: /** @type {PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>} */ ([String, Object]),
-		required: false,
 		default: '#ffffffff',
 	},
 
@@ -218,7 +217,6 @@ const props = defineProps({
 	 */
 	id: {
 		type: String,
-		required: false,
 		default: 'color-picker',
 	},
 
@@ -227,7 +225,6 @@ const props = defineProps({
 	 */
 	visibleFormats: {
 		type: /** @type {PropType<VisibleColorFormat[]>} */ (Array),
-		required: false,
 		default: () => ALLOWED_VISIBLE_FORMATS,
 		validator (/** @type {any[]} */ visibleFormats) {
 			return visibleFormats.length > 0 && visibleFormats.every((format) => ALLOWED_VISIBLE_FORMATS.includes(format))
@@ -239,7 +236,6 @@ const props = defineProps({
 	 */
 	defaultFormat: {
 		type: /** @type {PropType<VisibleColorFormat>} */ (String),
-		required: false,
 		default: 'hsl',
 		validator (/** @type {VisibleColorFormat} */ defaultFormat) {
 			return ALLOWED_VISIBLE_FORMATS.includes(defaultFormat)
@@ -256,7 +252,6 @@ const props = defineProps({
 	 */
 	alphaChannel: {
 		type: /** @type {PropType<AlphaChannelProp>} */ (String),
-		required: false,
 		default: 'show',
 		validator (/** @type {string} */ alphaChannel) {
 			return ALPHA_CHANNEL_PROP_VALUES.includes(alphaChannel)
@@ -646,7 +641,7 @@ function changeInputValue (event) {
 	const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
 	const value = parseFloat(input.value) + direction * step * RANGE_INPUT_STEP_FACTOR
 	const newValue = clamp(value, parseInt(input.min), parseInt(input.max))
-	// Intentionally removes a single step from `newValue` because the default action associated with an `input` element’s `keydown` event will add one itself.
+	// Intentionally removes a single step from `newValue` because the default action associated with an `input[type=range]` element’s `keydown` event will add one itself.
 	input.value = String(newValue - direction * step)
 }
 </script>
