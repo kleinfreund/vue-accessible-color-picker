@@ -113,7 +113,7 @@
 					:id="`${id}-color-${activeFormat}-${channel}`"
 					:key="`${id}-color-${activeFormat}-${channel}`"
 					class="vacp-color-input-label"
-					:for="`${id}-color-${activeFormat}`"
+					:for="`${id}-color-value-${activeFormat}-${channel}`"
 					@input="updateColorValue($event, channel)"
 				>
 					<span class="vacp-color-input-label-text">
@@ -121,7 +121,7 @@
 					</span>
 
 					<input
-						:id="`${id}-color-${activeFormat}`"
+						:id="`${id}-color-value-${activeFormat}-${channel}`"
 						class="vacp-color-input"
 						type="text"
 						:value="getChannelAsCssValue(activeFormat, channel)"
