@@ -17,15 +17,18 @@ import { isValidHexColor } from './is-valid-hex-color.js'
  * @returns {{ format: ColorFormat, color: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb } | null}
  */
 export function parsePropsColor (propsColor) {
+	// 1. Objects
 	if (typeof propsColor !== 'string') {
 		const format = detectFormat(propsColor)
 		return { format, color: propsColor }
 	}
 
+	// 2. Strings: hexadecimal
 	if (isValidHexColor(propsColor)) {
 		return { format: 'hex', color: propsColor }
 	}
 
+	// 3. Strings: named
 	if (!propsColor.includes('(')) {
 		const context = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'))
 		context.fillStyle = propsColor
@@ -39,22 +42,24 @@ export function parsePropsColor (propsColor) {
 		return { format: 'hex', color }
 	}
 
+	// 4. Strings: functional
 	// Split a color string like `rgba(255 255 128 / .5)` into `rgba` and `255 255 128 / .5)`.
 	const [cssFormat, rest] = /** @type {[string, string]} */ (propsColor.split('('))
 	const format = /** @type {ColorFormat} */ (cssFormat.substring(0, 3))
 	const parameters = rest
-	// Replace all characters that aren’t needed any more, leaving a string like `255 255 128 .5`.
+		// Replace all characters that aren’t needed any more, leaving a string like `255 255 128 .5`.
 		.replace(/[,/)]/g, ' ')
-	// Replace consecutive spaces with one space.
+		// Replace consecutive spaces with one space.
 		.replace(/\s+/g, ' ')
-		.trim().split(' ')
+		.trim()
+		.split(' ')
 
 	// Normalize color to always have an alpha channel in its internal representation.
 	if (parameters.length === 3) {
 		parameters.push('1')
 	}
 
-	const channels = format.split('').concat('a')
+	const channels = (format + 'a').split('')
 	const color = /** @type {ColorHsl | ColorHsv | ColorHwb | ColorRgb} */ (Object.fromEntries(channels.map((channel, index) => [
 		channel,
 		colorChannels[format][channel].from(parameters[index]),
