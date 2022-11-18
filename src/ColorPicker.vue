@@ -111,8 +111,8 @@
 				<label
 					v-for="channel in visibleChannels"
 					v-else
-					:id="`${id}-color-${activeFormat}-${channel}`"
-					:key="`${id}-color-${activeFormat}-${channel}`"
+					:id="`${id}-color-${activeFormat}-${channel}-label`"
+					:key="`${id}-color-${activeFormat}-${channel}-label`"
 					class="vacp-color-input-label"
 					:for="`${id}-color-${activeFormat}-${channel}`"
 					@input="updateColorValue($event, channel)"

@@ -215,10 +215,13 @@ describe('ColorPicker', () => {
 
 			for (const format of formats) {
 				const channels = format.split('')
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]}-label"]`).exists()).toBe(true)
 				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]}"]`).exists()).toBe(true)
 				expect(wrapper.find(`[for="${id}-color-${format}-${channels[0]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]}-label"]`).exists()).toBe(true)
 				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]}"]`).exists()).toBe(true)
 				expect(wrapper.find(`[for="${id}-color-${format}-${channels[1]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]}-label"]`).exists()).toBe(true)
 				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]}"]`).exists()).toBe(true)
 				expect(wrapper.find(`[for="${id}-color-${format}-${channels[2]}"]`).exists()).toBe(true)
 				expect(wrapper.find(`[id="${id}-color-${format}-a"]`).exists()).toBe(true)
