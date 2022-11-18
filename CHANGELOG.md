@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.1...v4.1.2) (2022-11-18)
+
+
+### Bug Fixes
+
+* more duplicate ID attributes ([fec5ff3](https://github.com/kleinfreund/vue-accessible-color-picker/commit/fec5ff3d44c53b81c962df5aba01ddd5d075a1d9))
+
 ## [4.1.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.0...v4.1.1) (2022-11-18)
 
 
