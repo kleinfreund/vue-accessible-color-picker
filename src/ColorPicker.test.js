@@ -204,32 +204,28 @@ describe('ColorPicker', () => {
 					id,
 				},
 			})
+			const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
 
 			const hueInput = wrapper.find(`#${id}-hue-slider`)
 			expect(hueInput.exists()).toBe(true)
 			const alphaInput = wrapper.find(`#${id}-alpha-slider`)
 			expect(alphaInput.exists()).toBe(true)
 
-			const colorHslHueInput = wrapper.find(`#${id}-color-hsl-h`)
-			expect(colorHslHueInput.exists()).toBe(true)
-			const colorHslSaturationInput = wrapper.find(`#${id}-color-hsl-s`)
-			expect(colorHslSaturationInput.exists()).toBe(true)
-			const colorHslLightnessInput = wrapper.find(`#${id}-color-hsl-l`)
-			expect(colorHslLightnessInput.exists()).toBe(true)
-			const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
-			expect(colorHslAlphaInput.exists()).toBe(true)
+			const formats = ['hsl', 'hwb', 'rgb']
 
-			const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
-			await formatSwitchButton.trigger('click')
+			for (const format of formats) {
+				const channels = format.split('')
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-${channels[0]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-${channels[1]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-${channels[2]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-a"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-a"]`).exists()).toBe(true)
 
-			const colorRgbRedInput = wrapper.find(`#${id}-color-hwb-h`)
-			expect(colorRgbRedInput.exists()).toBe(true)
-			const colorRgbGreenInput = wrapper.find(`#${id}-color-hwb-w`)
-			expect(colorRgbGreenInput.exists()).toBe(true)
-			const colorRgbBlueInput = wrapper.find(`#${id}-color-hwb-b`)
-			expect(colorRgbBlueInput.exists()).toBe(true)
-			const colorRgbAlphaInput = wrapper.find(`#${id}-color-hwb-a`)
-			expect(colorRgbAlphaInput.exists()).toBe(true)
+				await formatSwitchButton.trigger('click')
+			}
 		})
 
 		test.each([
