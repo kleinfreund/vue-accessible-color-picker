@@ -706,6 +706,8 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 	border: 3px solid #fff;
 	border-radius: 50%;
 	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	/* Corrects the box-shadow being cut-off in Firefox. “isolation: isolate” doesn't work. */
+	transform: rotate(0);
 }
 
 /*
