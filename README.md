@@ -145,7 +145,7 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Description**: The color format to show by default when rendering the color picker. Must be one of the formats specified in `visibleFormats`.
 - **Type**: `VisibleColorFormat`
 - **Required**: `false`
-- **Default**: `'rgb'`
+- **Default**: `'hsl'`
 - **Usage**:
 
 	```vue
