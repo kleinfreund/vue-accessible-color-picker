@@ -31,7 +31,12 @@ export default defineConfig([
 				},
 			}),
 			postcss({ minimize: true }),
-			terser(),
+			terser({
+				output: {
+					comments: false,
+					ecma: 2020,
+				},
+			}),
 		],
 	},
 
@@ -49,7 +54,12 @@ export default defineConfig([
 				},
 			}),
 			discardCss(),
-			terser(),
+			terser({
+				output: {
+					comments: false,
+					ecma: 2020,
+				},
+			}),
 		],
 	},
 ])
