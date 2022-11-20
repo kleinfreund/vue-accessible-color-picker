@@ -93,7 +93,7 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 - **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HSV, HWB, or RGB color.
 - **Type**: `string`, `ColorHsl`, `ColorHsv`, `ColorHwb`, or `ColorRgb`
 - **Required**: `false`
-- **Default**: `#ffffffff`
+- **Default**: `'#ffffffff'`
 - **Usage**:
 
 	```vue
@@ -180,7 +180,7 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 
 #### `color-change`
 
-- **Description**: An `input` event is emitted each time the internal colors object is updated.
+- **Description**: The event that is emitted each time the internal colors object is updated.
 - **Data**: The event emits an object containing both the internal colors object and a CSS color value as a string based on the currently active format. The `cssColor` property will respect `alphaChannel`.
 
 	```ts
