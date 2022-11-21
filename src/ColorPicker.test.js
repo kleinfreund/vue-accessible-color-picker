@@ -87,23 +87,33 @@ describe('ColorPicker', () => {
 		const wrapper = shallowMount(ColorPicker)
 
 		const colorSpace = wrapper.find('.vacp-color-space')
-		await colorSpace.trigger('mousedown')
-		const mouseMoveEvent = new MouseEvent('mousemove', { buttons: 1 })
 
-		document.dispatchEvent(mouseMoveEvent)
-		let emittedColorChangeEvents = wrapper.emitted('color-change')
-		expect(emittedColorChangeEvents?.length).toBe(1)
+		colorSpace.element.getBoundingClientRect = vi.fn(() => ({
+			width: 200,
+			height: 200,
+			x: 0,
+			y: 0,
+			top: 0,
+			left: 0,
+			bottom: 0,
+			right: 0,
+			toJSON: vi.fn(),
+		}))
 
-		document.dispatchEvent(mouseMoveEvent)
-		emittedColorChangeEvents = wrapper.emitted('color-change')
-		expect(emittedColorChangeEvents?.length).toBe(2)
+		// await colorSpace.trigger('mousedown', { buttons: 1, clientX: 0 })
+		await colorSpace.element.dispatchEvent(new MouseEvent('mousedown', { buttons: 1, clientX: 0 }))
+
+		document.dispatchEvent(new MouseEvent('mousemove', { buttons: 1, clientX: 0 }))
+		expect(wrapper.emitted('color-change')).toBe(undefined)
+
+		document.dispatchEvent(new MouseEvent('mousemove', { buttons: 1, clientX: 1 }))
+		expect(wrapper.emitted('color-change')?.length).toBe(1)
 
 		wrapper.unmount()
 
-		document.dispatchEvent(mouseMoveEvent)
-		emittedColorChangeEvents = wrapper.emitted('color-change')
+		document.dispatchEvent(new MouseEvent('mousemove', { buttons: 1, clientX: 2 }))
 		// Note that we assert here that the method hasn’t been called *again*.
-		expect(emittedColorChangeEvents).toBe(undefined)
+		expect(wrapper.emitted('color-change')).toBe(undefined)
 	})
 
 	describe('props & attributes', () => {
@@ -250,11 +260,9 @@ describe('ColorPicker', () => {
 			const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
 			expect(colorHslAlphaInput.exists()).toBe(isElementVisible)
 
-			const input = wrapper.find(`#${id}-color-hsl-h`)
-			const inputElement = /** @type {HTMLInputElement} */ (input.element)
+			const inputElement = /** @type {HTMLInputElement} */ (wrapper.find(`#${id}-color-hsl-h`).element)
 			inputElement.value = '180'
-
-			await input.trigger('input')
+			inputElement.dispatchEvent(new InputEvent('input'))
 
 			const emittedColorChangeEvents = wrapper.emitted('color-change')
 			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
@@ -270,7 +278,7 @@ describe('ColorPicker', () => {
 			expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(false)
 
 			const colorSpace = wrapper.find('.vacp-color-space')
-			await colorSpace.trigger('mousedown')
+			await colorSpace.trigger('mousedown', { buttons: 1 })
 			expect(wrapper.vm.pointerOriginatedInColorSpace).toBe(true)
 
 			document.dispatchEvent(new MouseEvent('mouseup'))
@@ -287,15 +295,6 @@ describe('ColorPicker', () => {
 		})
 
 		test('can initiate moving the color space thumb with a mouse', async () => {
-			const clientX = 0
-			const clientY = 0
-			const mouseMoveEvent = {
-				buttons: 1,
-				preventDefault: vi.fn(),
-				clientX,
-				clientY,
-			}
-
 			const wrapper = shallowMount(ColorPicker, {
 				attachTo: document.body,
 				props: {
@@ -303,15 +302,29 @@ describe('ColorPicker', () => {
 				},
 			})
 
-			let emittedColorChangeEvents = wrapper.emitted('color-change')
-			expect(emittedColorChangeEvents?.length).toBe(1)
+			expect(wrapper.emitted('color-change')?.length).toBe(1)
 
 			const colorSpace = wrapper.find('.vacp-color-space')
-			await colorSpace.trigger('mousedown')
-			await colorSpace.trigger('mousemove', mouseMoveEvent)
 
-			emittedColorChangeEvents = wrapper.emitted('color-change')
-			expect(emittedColorChangeEvents?.length).toBe(2)
+			colorSpace.element.getBoundingClientRect = vi.fn(() => ({
+				width: 200,
+				height: 200,
+				x: 0,
+				y: 0,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: 0,
+				toJSON: vi.fn(),
+			}))
+
+			await colorSpace.trigger('mousedown', { buttons: 1 })
+			colorSpace.trigger('mousemove', {
+				buttons: 1,
+				preventDefault: vi.fn(),
+			})
+
+			expect(wrapper.emitted('color-change')?.length).toBe(2)
 
 			// Remove test HTML injected via the `attachTo` option during mount.
 			wrapper.unmount()
@@ -325,33 +338,43 @@ describe('ColorPicker', () => {
 				},
 			})
 
-			let emittedColorChangeEvents = wrapper.emitted('color-change')
-			expect(emittedColorChangeEvents?.length).toBe(1)
+			expect(wrapper.emitted('color-change')?.length).toBe(1)
 
 			const colorSpace = wrapper.find('.vacp-color-space')
+
+			colorSpace.element.getBoundingClientRect = vi.fn(() => ({
+				width: 200,
+				height: 200,
+				x: 0,
+				y: 0,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				right: 0,
+				toJSON: vi.fn(),
+			}))
+
 			await colorSpace.trigger('touchstart', {
 				preventDefault: vi.fn(),
 				touches: [{ clientX: 0, clientY: 0 }],
 			})
 			await colorSpace.trigger('touchmove', {
 				preventDefault: vi.fn(),
-				touches: [{ clientX: 0, clientY: 0 }],
+				touches: [{ clientX: 1, clientY: 0 }],
 			})
 
-			emittedColorChangeEvents = wrapper.emitted('color-change')
-			expect(emittedColorChangeEvents?.length).toBe(3)
+			expect(wrapper.emitted('color-change')?.length).toBe(3)
 
 			await colorSpace.trigger('touchstart', {
 				preventDefault: vi.fn(),
-				touches: [{ clientX: 0, clientY: 0 }],
+				touches: [{ clientX: 2, clientY: 0 }],
 			})
 			await colorSpace.trigger('touchmove', {
 				preventDefault: vi.fn(),
-				touches: [{ clientX: 0, clientY: 0 }],
+				touches: [{ clientX: 3, clientY: 0 }],
 			})
 
-			emittedColorChangeEvents = wrapper.emitted('color-change')
-			expect(emittedColorChangeEvents?.length).toBe(5)
+			expect(wrapper.emitted('color-change')?.length).toBe(5)
 
 			// Remove test HTML injected via the `attachTo` option during mount.
 			wrapper.unmount()
@@ -755,18 +778,23 @@ describe('ColorPicker', () => {
 
 	describe('color inputs', () => {
 		test.each([
-			[{ color: '#12345678', defaultFormat: 'hex', alphaChannel: 'show' }, '#12345678'],
-			[{ color: '#12345678', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123456'],
-			[{ color: '#123456', defaultFormat: 'hex', alphaChannel: 'show' }, '#123456'],
-			[{ color: '#123456', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123456'],
-			[{ color: '#123a', defaultFormat: 'hex', alphaChannel: 'show' }, '#123a'],
-			[{ color: '#123a', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123'],
-			[{ color: '#123', defaultFormat: 'hex', alphaChannel: 'show' }, '#123'],
-			[{ color: '#123', defaultFormat: 'hex', alphaChannel: 'hide' }, '#123'],
+			[{ color: '#12345678', alphaChannel: 'show' }, '#12345678'],
+			[{ color: '#12345678', alphaChannel: 'hide' }, '#123456'],
+			[{ color: '#123456', alphaChannel: 'show' }, '#123456'],
+			[{ color: '#123456', alphaChannel: 'hide' }, '#123456'],
+			[{ color: '#123a', alphaChannel: 'show' }, '#123a'],
+			[{ color: '#123a', alphaChannel: 'hide' }, '#123'],
+			[{ color: '#123', alphaChannel: 'show' }, '#123'],
+			[{ color: '#123', alphaChannel: 'hide' }, '#123'],
 		])('shows expected color for hex colors', async (props, expectedHexColor) => {
-			const wrapper = shallowMount(ColorPicker, { props })
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					defaultFormat: 'hex',
+					...props,
+				},
+			})
 
-			await wrapper.setProps({ color: props.color })
+			await flushPromises()
 
 			const input = /** @type {HTMLInputElement} */ (wrapper.find('#color-picker-color-hex').element)
 			expect(input.value).toBe(expectedHexColor)

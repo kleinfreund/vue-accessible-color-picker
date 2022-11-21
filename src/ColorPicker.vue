@@ -620,8 +620,8 @@ function getNewThumbPosition (colorSpace, clientX, clientY) {
 	const y = clientY - rect.top
 
 	return {
-		x: clamp(x / rect.width, 0, 1),
-		y: clamp(1 - y / rect.height, 0, 1),
+		x: rect.width === 0 ? 0 : clamp(x / rect.width, 0, 1),
+		y: rect.height === 0 ? 0 : clamp(1 - y / rect.height, 0, 1),
 	}
 }
 
