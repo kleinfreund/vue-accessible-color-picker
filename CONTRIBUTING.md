@@ -9,7 +9,7 @@ This project follows a [code of conduct](https://github.com/kleinfreund/vue-acce
 The following software will be required to contribute to this project:
 
 - git
-- Node.js (version 16 or higher)
+- Node.js (version 18 or higher)
 - npm (version 8 or higher)
 
 ## Development
