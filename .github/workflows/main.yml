@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3 # https://github.com/actions/checkout
       - uses: actions/setup-node@v3 # https://github.com/actions/setup-node
         with:
-          node-version: '16'
+          node-version: '18'
       - uses: actions/cache@v3 # https://github.com/actions/cache
         with:
           path: |
