@@ -188,10 +188,10 @@ import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
 	{
 		colors: {
 			hex: string
-			hsl: ColorHsl
-			hsv: ColorHsv
-			hwb: ColorHwb
-			rgb: ColorRgb
+			hsl: { h: number, s: number, l: number, a: number }
+			hsv: { h: number, s: number, v: number, a: number }
+			hwb: { h: number, w: number, b: number, a: number }
+			rgb: { r: number, g: number, b: number, a: number }
 		}
 		cssColor: string
 	}
