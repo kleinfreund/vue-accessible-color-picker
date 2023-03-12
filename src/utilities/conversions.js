@@ -1,8 +1,8 @@
-/** @typedef {import('../../types/index').ColorFormat} ColorFormat */
-/** @typedef {import('../../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../../types/index').ColorHsv} ColorHsv */
-/** @typedef {import('../../types/index').ColorHwb} ColorHwb */
-/** @typedef {import('../../types/index').ColorRgb} ColorRgb */
+/** @typedef {import('../../types/index.d').ColorFormat} ColorFormat */
+/** @typedef {import('../../types/index.d').ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index.d').ColorHsv} ColorHsv */
+/** @typedef {import('../../types/index.d').ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index.d').ColorRgb} ColorRgb */
 
 import { convertHexToRgb } from './color-conversions/convert-hex-to-rgb.js'
 

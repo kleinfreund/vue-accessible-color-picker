@@ -1,5 +1,5 @@
-/** @typedef {import('../../../types/index').ColorRgb} ColorRgb */
-/** @typedef {import('../../../types/index').ColorHwb} ColorHwb */
+/** @typedef {import('../../../types/index.d').ColorRgb} ColorRgb */
+/** @typedef {import('../../../types/index.d').ColorHwb} ColorHwb */
 
 /**
  * Converts an RGB color object to an HWB color object.

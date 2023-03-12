@@ -1,7 +1,7 @@
-/** @typedef {import('../../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../../types/index').ColorHwb} ColorHwb */
-/** @typedef {import('../../types/index').ColorRgb} ColorRgb */
-/** @typedef {import('../../types/index').VisibleColorFormat} VisibleColorFormat */
+/** @typedef {import('../../types/index.d').ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index.d').ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index.d').ColorRgb} ColorRgb */
+/** @typedef {import('../../types/index.d').VisibleColorFormat} VisibleColorFormat */
 
 import { describe, test, expect } from 'vitest'
 

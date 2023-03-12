@@ -1,5 +1,5 @@
-/** @typedef {import('../../../types/index').ColorHsv} ColorHsv */
-/** @typedef {import('../../../types/index').ColorRgb} ColorRgb */
+/** @typedef {import('../../../types/index.d').ColorHsv} ColorHsv */
+/** @typedef {import('../../../types/index.d').ColorRgb} ColorRgb */
 
 /**
  * Converts an HSV color object to an RGB color object.

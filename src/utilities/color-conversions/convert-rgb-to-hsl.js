@@ -1,5 +1,5 @@
-/** @typedef {import('../../../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../../../types/index').ColorRgb} ColorRgb */
+/** @typedef {import('../../../types/index.d').ColorHsl} ColorHsl */
+/** @typedef {import('../../../types/index.d').ColorRgb} ColorRgb */
 
 import { convertRgbToHwb } from './convert-rgb-to-hwb.js'
 

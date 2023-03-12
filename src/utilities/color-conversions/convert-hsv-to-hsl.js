@@ -1,5 +1,5 @@
-/** @typedef {import('../../../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../../../types/index').ColorHsv} ColorHsv */
+/** @typedef {import('../../../types/index.d').ColorHsl} ColorHsl */
+/** @typedef {import('../../../types/index.d').ColorHsv} ColorHsv */
 
 /**
  * Converts an HSV color object to an HSL color object.

@@ -175,14 +175,14 @@
  * @typedef {import('vue').UnwrapRef<T>} UnwrapRef<T>
  * @template T
  */
-/** @typedef {import('../types/index').AlphaChannelProp} AlphaChannelProp */
-/** @typedef {import('../types/index').ColorChangeEvent} ColorChangeEvent */
-/** @typedef {import('../types/index').ColorFormat} ColorFormat */
-/** @typedef {import('../types/index').ColorHsl} ColorHsl */
-/** @typedef {import('../types/index').ColorHsv} ColorHsv */
-/** @typedef {import('../types/index').ColorHwb} ColorHwb */
-/** @typedef {import('../types/index').ColorRgb} ColorRgb */
-/** @typedef {import('../types/index').VisibleColorFormat} VisibleColorFormat */
+/** @typedef {import('../types/index.d').AlphaChannelProp} AlphaChannelProp */
+/** @typedef {import('../types/index.d').ColorChangeEvent} ColorChangeEvent */
+/** @typedef {import('../types/index.d').ColorFormat} ColorFormat */
+/** @typedef {import('../types/index.d').ColorHsl} ColorHsl */
+/** @typedef {import('../types/index.d').ColorHsv} ColorHsv */
+/** @typedef {import('../types/index.d').ColorHwb} ColorHwb */
+/** @typedef {import('../types/index.d').ColorRgb} ColorRgb */
+/** @typedef {import('../types/index.d').VisibleColorFormat} VisibleColorFormat */
 
 import {
 	computed,
