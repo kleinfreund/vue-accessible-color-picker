@@ -42,7 +42,7 @@ jobs:
             **/node_modules
             dist
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-      - env:
+      - run: npx semantic-release
+        env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
