@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "es2022",
 		"module": "es2022",
-		"moduleResolution": "node",
+		"moduleResolution": "node16",
 		"checkJs": true,
 		"allowUnreachableCode": false,
 		"exactOptionalPropertyTypes": true,

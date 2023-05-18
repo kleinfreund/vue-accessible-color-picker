@@ -1,4 +1,4 @@
-/** @typedef {import('../types/index.d').VisibleColorFormat} VisibleColorFormat */
+/** @typedef {import('../types/index.d.js').VisibleColorFormat} VisibleColorFormat */
 
 /** @type {VisibleColorFormat[]} */ export const ALLOWED_VISIBLE_FORMATS = ['hex', 'hsl', 'hwb', 'rgb']
 

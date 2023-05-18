@@ -1,8 +1,8 @@
-/** @typedef {import('../../types/index.d').ColorFormat} ColorFormat */
-/** @typedef {import('../../types/index.d').ColorHsl} ColorHsl */
-/** @typedef {import('../../types/index.d').ColorHsv} ColorHsv */
-/** @typedef {import('../../types/index.d').ColorHwb} ColorHwb */
-/** @typedef {import('../../types/index.d').ColorRgb} ColorRgb */
+/** @typedef {import('../../types/index.d.js').ColorFormat} ColorFormat */
+/** @typedef {import('../../types/index.d.js').ColorHsl} ColorHsl */
+/** @typedef {import('../../types/index.d.js').ColorHsv} ColorHsv */
+/** @typedef {import('../../types/index.d.js').ColorHwb} ColorHwb */
+/** @typedef {import('../../types/index.d.js').ColorRgb} ColorRgb */
 
 /**
  * Lazy function that returns the format of a given color object.

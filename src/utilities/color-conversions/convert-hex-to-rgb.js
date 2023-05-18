@@ -1,4 +1,4 @@
-/** @typedef {import('../../../types/index.d').ColorRgb} ColorRgb */
+/** @typedef {import('../../../types/index.d.js').ColorRgb} ColorRgb */
 
 /**
  * Converts a HEX color string to an RGB color object.
