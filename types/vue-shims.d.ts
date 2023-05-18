@@ -2,9 +2,9 @@
 // Cannot find module './ColorPicker.vue' or its corresponding type declarations.
 
 declare module '*.vue' {
-	import { defineComponent } from 'vue'
+	import { DefineComponent } from 'vue'
 
-	const component: ReturnType<typeof defineComponent>
+	const component: DefineComponent<{}, {}, any>
 
 	export default component
 }
