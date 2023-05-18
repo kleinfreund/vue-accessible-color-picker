@@ -25,8 +25,15 @@
 	],
 	"type": "module",
 	"exports": {
-		".": "./dist/vue-accessible-color-picker.js",
-		"./unstyled": "./dist/vue-accessible-color-picker-unstyled.js"
+		".": {
+			"default": "./dist/vue-accessible-color-picker.js",
+			"types": "./types/index.d.ts"
+		},
+		"./unstyled": {
+			"default": "./dist/vue-accessible-color-picker-unstyled.js",
+			"types": "./types/index.d.ts"
+		},
+		"./*": "./*"
 	},
 	"main": "./dist/vue-accessible-color-picker.js",
 	"module": "./dist/vue-accessible-color-picker.js",
