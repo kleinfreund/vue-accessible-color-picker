@@ -33,7 +33,7 @@
 			"types": "./types/index.d.ts",
 			"default": "./dist/vue-accessible-color-picker-unstyled.js"
 		},
-		"./*": "./*"
+		"./types/index.d.ts": "./types/index.d.ts"
 	},
 	"main": "./dist/vue-accessible-color-picker.js",
 	"module": "./dist/vue-accessible-color-picker.js",
