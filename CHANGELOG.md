@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.2...v4.1.3) (2023-05-18)
+
+
+### Bug Fixes
+
+* types being misconfigured in pkg.exports ([c56cb99](https://github.com/kleinfreund/vue-accessible-color-picker/commit/c56cb994b4a6a93263dc088390e952a25b2c86c9))
+
 ## [4.1.2](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.1...v4.1.2) (2022-11-18)
 
 
