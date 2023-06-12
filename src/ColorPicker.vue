@@ -281,7 +281,7 @@ const thumb = /** @type {Ref<HTMLElement | null>} */ (ref(null))
  *
  * Only if it did do we want to run the logic of dragging the color space thumb around.
  */
-const pointerOriginatedInColorSpace = ref(false)
+let pointerOriginatedInColorSpace = false
 
 /**
  * The currently visible color format (i.e. what’s cycled through using the “Switch format” button).
@@ -351,7 +351,7 @@ function switchFormat () {
  * @param {MouseEvent} event
  */
 function startMovingThumbWithMouse (event) {
-	pointerOriginatedInColorSpace.value = true
+	pointerOriginatedInColorSpace = true
 	moveThumbWithMouse(event)
 }
 
@@ -359,12 +359,12 @@ function startMovingThumbWithMouse (event) {
  * @param {TouchEvent} event
  */
 function startMovingThumbWithTouch (event) {
-	pointerOriginatedInColorSpace.value = true
+	pointerOriginatedInColorSpace = true
 	moveThumbWithTouch(event)
 }
 
 function stopMovingThumb () {
-	pointerOriginatedInColorSpace.value = false
+	pointerOriginatedInColorSpace = false
 }
 
 /**
@@ -373,7 +373,7 @@ function stopMovingThumb () {
 function moveThumbWithMouse (event) {
 	if (
 		event.buttons !== 1 ||
-		pointerOriginatedInColorSpace.value === false ||
+		pointerOriginatedInColorSpace === false ||
 		!(colorSpace.value instanceof HTMLElement)
 	) {
 		return
@@ -387,7 +387,7 @@ function moveThumbWithMouse (event) {
  */
 function moveThumbWithTouch (event) {
 	if (
-		pointerOriginatedInColorSpace.value === false ||
+		pointerOriginatedInColorSpace === false ||
 		!(colorSpace.value instanceof HTMLElement)
 	) {
 		return
