@@ -286,7 +286,7 @@ let pointerOriginatedInColorSpace = false
 /**
  * The currently visible color format (i.e. what’s cycled through using the “Switch format” button).
  */
-const activeFormat = /** @type {Ref<VisibleColorFormat>} */ (ref(!props.visibleFormats.includes(props.defaultFormat) ? props.visibleFormats[0] : props.defaultFormat))
+const activeFormat = /** @type {Ref<VisibleColorFormat>} */ (ref(props.visibleFormats.includes(props.defaultFormat) ? props.defaultFormat : props.visibleFormats[0]))
 
 /**
  * The current color represented in all supported color formats.
