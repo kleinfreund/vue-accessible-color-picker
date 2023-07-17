@@ -1,4 +1,4 @@
-name: main
+name: Tests
 
 on:
   push:
@@ -7,42 +7,23 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  test-unit:
-    name: Tests & build
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3 # https://github.com/actions/checkout
       - uses: actions/setup-node@v3 # https://github.com/actions/setup-node
         with:
-          node-version: '18'
+          node-version-file: .nvmrc
       - uses: actions/cache@v3 # https://github.com/actions/cache
+        id: node-modules-cache
         with:
           path: |
             **/node_modules
-            dist
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
-      - run: npm test
-        env:
-          CI: true
-
-  release:
-    # The release job runs only on pushes to or merges into the release branches configured in the semantic-release configuration.
-    if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/next-major' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha'"
-    needs: test-unit
-    name: Publish package
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-            dist
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-      - run: npx semantic-release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm clean-install
+      - run: npm audit signatures
+      - run: npm run lint:lockfile
+      - run: npm run lint:package
+      - run: npm run lint:code
+      - run: npm run test

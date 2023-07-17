@@ -1,6 +1,6 @@
 # vue-accessible-color-picker
 
-[![Tests passing](https://github.com/kleinfreund/vue-accessible-color-picker/workflows/main/badge.svg)](https://github.com/kleinfreund/vue-accessible-color-picker/actions)
+[![Tests passing](https://github.com/kleinfreund/vue-accessible-color-picker/workflows/Tests/badge.svg)](https://github.com/kleinfreund/vue-accessible-color-picker/actions)
 
 A color picker component for Vue.js 3.
 
