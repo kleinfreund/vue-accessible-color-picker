@@ -674,6 +674,7 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 	background-color: #fff;
 }
 
+.vacp-color-picker,
 .vacp-color-picker *,
 .vacp-color-picker *::before,
 .vacp-color-picker *::after {
