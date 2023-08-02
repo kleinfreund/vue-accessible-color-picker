@@ -1,3 +1,10 @@
+## [4.1.4](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.3...v4.1.4) (2023-08-02)
+
+
+### Bug Fixes
+
+* not setting box-sizing on the color picker element ([651a0fd](https://github.com/kleinfreund/vue-accessible-color-picker/commit/651a0fd5fae87d3306f3c90fa50c8e94de88da28))
+
 ## [4.1.3](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.2...v4.1.3) (2023-05-18)
 
 
