@@ -9,7 +9,9 @@
 
 		// This takes the releasing commits’ messages and compiles release notes to be used for the CHANGELOG.md file and the GitHub release.
 		// https://github.com/semantic-release/release-notes-generator
-		'@semantic-release/release-notes-generator',
+		['@semantic-release/release-notes-generator', {
+			preset: 'conventionalcommits',
+		}],
 
 		// This creates/updates the CHANGELOG.md file.
 		// https://github.com/semantic-release/changelog
