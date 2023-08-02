@@ -9,6 +9,8 @@
 		// Other rules.
 		'comma-dangle': ['error', 'always-multiline'],
 		'space-before-function-paren': ['error', 'always'],
+		// Reason: https://github.com/vuejs/eslint-plugin-vue/issues/2259
+		'vue/no-setup-props-destructure': 'off',
 	},
 }
 
