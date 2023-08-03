@@ -1,5 +1,5 @@
 name: Release
-run-name: 'Release (branch: ${{ github.event.workflow_run.head_branch }})'
+run-name: "Release (branch: ${{ github.event.workflow_run.head_branch }})"
 
 on:
   workflow_run:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: release
+  group: ${{ github.workflow }}-release
 
 jobs:
   release:
