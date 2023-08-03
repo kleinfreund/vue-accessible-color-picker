@@ -24,8 +24,12 @@ export function parsePropsColor (propsColor) {
 	}
 
 	// 2. Strings: hexadecimal
-	if (isValidHexColor(propsColor)) {
-		return { format: 'hex', color: propsColor }
+	if (propsColor.startsWith('#')) {
+		if (isValidHexColor(propsColor)) {
+			return { format: 'hex', color: propsColor }
+		} else {
+			return null
+		}
 	}
 
 	// 3. Strings: named

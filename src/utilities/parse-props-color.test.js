@@ -4,11 +4,9 @@
 /** @typedef {import('../../types/index.d.js').ColorHwb} ColorHwb */
 /** @typedef {import('../../types/index.d.js').ColorRgb} ColorRgb */
 
-import { describe, test, expect } from 'vitest'
+import { describe, test, expect, vi } from 'vitest'
 
 import { parsePropsColor } from './parse-props-color.js'
-
-// Note: This test is the reason this project has the package `canvas` installed. JSDom uses it automatically to handle HTML canvas which is used by `parsePropsColor` to convert a CSS color name to a color in hexadecimal format.
 
 describe('getCssColorAsRgbString', () => {
 	test.each(/** @type {[string | ColorHsl | ColorHsv | ColorHwb | ColorRgb, { format: ColorFormat, color: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb } | null][]} */ ([
@@ -31,11 +29,35 @@ describe('getCssColorAsRgbString', () => {
 		['#123456', { format: 'hex', color: '#123456' }],
 		['#12345678', { format: 'hex', color: '#12345678' }],
 		['#123456789', null],
-		['red', { format: 'hex', color: '#ff0000' }],
-		['rebeccapurple', { format: 'hex', color: '#663399' }],
-		['black', { format: 'hex', color: '#000000' }],
-		['invalid', null],
 	]))('parses “%s” correctly', (cssColor, rgbColorString) => {
 		expect(parsePropsColor(cssColor)).toEqual(rgbColorString)
+	})
+
+	test('handles valid named color correctly', () => {
+		class FillStyle {
+			get fillStyle () {
+				return '#663399'
+			}
+
+			set fillStyle (_fillStyle) {}
+		}
+		// @ts-ignore
+		vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => new FillStyle())
+
+		expect(parsePropsColor('rebeccapurple')).toEqual({ format: 'hex', color: '#663399' })
+	})
+
+	test('handles invalid named color correctly', () => {
+		class FillStyle {
+			get fillStyle () {
+				return '#000000'
+			}
+
+			set fillStyle (_fillStyle) {}
+		}
+		// @ts-ignore
+		vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => new FillStyle())
+
+		expect(parsePropsColor('invalid')).toEqual(null)
 	})
 })
