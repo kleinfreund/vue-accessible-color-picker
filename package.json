@@ -16,43 +16,44 @@
 		"url": "https://github.com/kleinfreund/vue-accessible-color-picker/issues"
 	},
 	"keywords": [
-		"vue",
-		"color",
-		"picker",
+		"color picker",
 		"component",
 		"hsl",
-		"hwb"
+		"hwb",
+		"vue"
 	],
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./types/index.d.ts",
-			"default": "./dist/vue-accessible-color-picker.js"
+			"types": "./dist/ColorPicker.d.ts",
+			"default": "./dist/ColorPicker.js"
 		},
-		"./unstyled": {
-			"types": "./types/index.d.ts",
-			"default": "./dist/vue-accessible-color-picker-unstyled.js"
-		},
-		"./types/index.d.ts": "./types/index.d.ts"
+		"./styles": "./dist/ColorPicker.css"
 	},
-	"main": "./dist/vue-accessible-color-picker.js",
-	"module": "./dist/vue-accessible-color-picker.js",
-	"types": "./types/index.d.ts",
+	"main": "./dist/ColorPicker.js",
+	"module": "./dist/ColorPicker.js",
+	"types": "./dist/ColorPicker.d.ts",
 	"files": [
-		"dist/vue-accessible-color-picker.js",
-		"dist/vue-accessible-color-picker-unstyled.js",
-		"types/index.d.ts"
+		"dist/ColorPicker.css",
+		"dist/ColorPicker.d.ts",
+		"dist/ColorPicker.js"
 	],
 	"sideEffects": false,
 	"scripts": {
 		"prebuild": "rimraf dist",
-		"build": "rollup --config",
+		"build": "npm run build:lib",
+		"postbuild": "rimraf dist/src",
+		"build:lib": "vite build",
+		"postbuild:lib": "npm run build:types",
+		"build:types": "vue-tsc --project tsconfig.build-types.json",
+		"postbuild:types": "api-extractor run --local --verbose",
 		"start": "vite",
 		"test": "vitest run --coverage",
-		"lint:code": "eslint --ext .js,.vue .",
+		"lint:code": "eslint --ext .ts,.vue .",
 		"lint:code:fix": "npm run lint:code -- --fix",
 		"lint:lockfile": "lockfile-lint --path package-lock.json --validate-hosts --allowed-hosts npm",
 		"lint:package": "publint",
+		"lint:types": "vue-tsc --noEmit",
 		"release": "semantic-release",
 		"prepare": "husky install",
 		"prepublishOnly": "npm run build"
@@ -61,17 +62,21 @@
 		"vue": "^3.2.x"
 	},
 	"devDependencies": {
+		"@babel/types": "^7.23.3",
 		"@commitlint/cli": "^18.4.2",
 		"@commitlint/config-conventional": "^18.4.2",
-		"@rollup/plugin-terser": "^0.4.4",
+		"@microsoft/api-extractor": "^7.38.3",
 		"@semantic-release/changelog": "^6.0.3",
 		"@semantic-release/commit-analyzer": "^11.1.0",
 		"@semantic-release/git": "^10.0.1",
 		"@semantic-release/github": "^9.2.3",
 		"@semantic-release/npm": "^11.0.1",
 		"@semantic-release/release-notes-generator": "^12.1.0",
+		"@typescript-eslint/eslint-plugin": "^6.11.0",
+		"@typescript-eslint/parser": "^6.11.0",
 		"@vitejs/plugin-vue": "^4.5.0",
 		"@vitest/coverage-v8": "^0.34.6",
+		"@vue/eslint-config-typescript": "^12.0.0",
 		"@vue/test-utils": "^2.4.2",
 		"eslint": "^8.54.0",
 		"eslint-config-standard": "^17.1.0",
@@ -82,12 +87,11 @@
 		"postcss": "^8.4.31",
 		"publint": "^0.2.5",
 		"rimraf": "^5.0.5",
-		"rollup": "^4.5.0",
-		"rollup-plugin-postcss": "^4.0.2",
-		"rollup-plugin-vue": "^6.0.0",
 		"semantic-release": "^22.0.8",
 		"standard": "^17.1.0",
+		"tslib": "^2.6.2",
 		"vite": "^4.5.0",
-		"vitest": "^0.34.6"
+		"vitest": "^0.34.6",
+		"vue-tsc": "^1.8.22"
 	}
 }

@@ -25,9 +25,9 @@
 		// https://github.com/semantic-release/github
 		['@semantic-release/github', {
 			assets: [
-				{ path: 'dist/vue-accessible-color-picker.js' },
-				{ path: 'dist/vue-accessible-color-picker-unstyled.js' },
-				{ path: 'types/index.d.ts' },
+				{ path: 'dist/ColorPicker.css' },
+				{ path: 'dist/ColorPicker.d.ts' },
+				{ path: 'dist/ColorPicker.js' },
 			],
 		}],
 
@@ -37,4 +37,5 @@
 	],
 }
 
+/* eslint-env node */
 module.exports = options

@@ -33,4 +33,5 @@ jobs:
       - run: npm run lint:lockfile
       - run: npm run lint:package
       - run: npm run lint:code
+      - run: npm run lint:types
       - run: npm run test

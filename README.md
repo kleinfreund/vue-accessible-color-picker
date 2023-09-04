@@ -47,7 +47,7 @@ npm install vue-accessible-color-picker
 
 In a Vue single file component, import the `ColorPicker` component.
 
-When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use the component in the file’s `template` section.
+When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use the component in the file’s `template` section once you imported it. Also import the styles if you want to make use of them.
 
 ```vue
 <template>
@@ -57,33 +57,13 @@ When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-
 <script setup>
 import { ColorPicker } from 'vue-accessible-color-picker'
 </script>
+
+<style>
+@import url('vue-accessible-color-picker/styles');
+</style>
 ```
 
-When using Vue’s options API, the component must first be registered using the `components` property on the Vue instance.
-
-```vue
-<template>
-	<ColorPicker />
-</template>
-
-<script>
-import { ColorPicker } from 'vue-accessible-color-picker'
-
-export default {
-	components: {
-		ColorPicker,
-	},
-}
-</script>
-```
-
-**Unstyled component**:
-
-If you want to use the unstyled variant of the component, you need to adjust the import statement to use the module specifier “vue-accessible-color-picker/unstyled”:
-
-```js
-import { ColorPicker } from 'vue-accessible-color-picker/unstyled'
-```
+You can also register the component and import the styles globally.
 
 ## Documentation
 
