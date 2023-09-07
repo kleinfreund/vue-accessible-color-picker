@@ -57,7 +57,7 @@ type: PropType<string>;
 default: string;
 };
 color: {
-type: PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>;
+type: PropType<string | ColorHsl | ColorHwb | ColorRgb>;
 default: string;
 };
 visibleFormats: {
@@ -80,7 +80,7 @@ type: PropType<string>;
 default: string;
 };
 color: {
-type: PropType<string | ColorHsl | ColorHsv | ColorHwb | ColorRgb>;
+type: PropType<string | ColorHsl | ColorHwb | ColorRgb>;
 default: string;
 };
 visibleFormats: {
@@ -99,7 +99,7 @@ default: string;
 "onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
 }, {
 id: string;
-color: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb;
+color: string | ColorHsl | ColorHwb | ColorRgb;
 visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
 alphaChannel: AlphaChannelProp;
@@ -114,7 +114,7 @@ export declare interface ColorPickerProps {
     /**
      * The initially rendered color.
      */
-    color?: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb;
+    color?: string | ColorHsl | ColorHwb | ColorRgb;
     /**
      * The prefix for all ID attribute values used by the color picker.
      */

@@ -57,7 +57,7 @@ export interface ColorPickerProps {
 	/**
 	 * The initially rendered color.
 	 */
-	color?: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb
+	color?: string | ColorHsl | ColorHwb | ColorRgb
 
 	/**
 	 * The prefix for all ID attribute values used by the color picker.

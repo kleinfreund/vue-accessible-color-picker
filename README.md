@@ -72,7 +72,7 @@ You can also register the component and import the styles globally.
 #### `color`
 
 - **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HSV, HWB, or RGB color.
-- **Type**: `string`, `ColorHsl`, `ColorHsv`, `ColorHwb`, or `ColorRgb`
+- **Type**: `string`, `ColorHsl`, `ColorHwb`, or `ColorRgb`
 - **Required**: `false`
 - **Default**: `'#ffffffff'`
 - **Usage**:
