@@ -125,7 +125,7 @@
 						:id="`${id}-color-${activeFormat}-${channel}`"
 						class="vacp-color-input"
 						type="text"
-						:value="getChannelAsCssValue(activeFormat, channel)"
+						:value="getChannelAsCssValue(channel)"
 						@input="updateColorValue($event, channel)"
 					>
 				</label>
@@ -172,6 +172,7 @@ import { clamp } from './utilities/clamp.js'
 import { colorChannels } from './utilities/colorChannels.js'
 import { colorsAreValueEqual } from './utilities/colorsAreValueEqual.js'
 import { convert } from './utilities/conversions.js'
+import { CssValue } from './utilities/CssValues.js'
 import { formatAsCssColor } from './utilities/formatAsCssColor.js'
 import { isValidHexColor } from './utilities/isValidHexColor.js'
 import { parsePropsColor } from './utilities/parsePropsColor.js'
@@ -377,8 +378,10 @@ function updateHexColorValue (event: Event) {
 function updateColorValue (event: Event, channel: string) {
 	const input = event.target as HTMLInputElement
 
-	const color = Object.assign({}, colors[activeFormat.value])
-	const value = colorChannels[activeFormat.value][channel].from(input.value)
+	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
+	const color = Object.assign({}, colors[format])
+	const cssValue = colorChannels[format][channel] as CssValue
+	const value = cssValue.from(input.value)
 
 	if (Number.isNaN(value) || value === undefined) {
 		// This means that the input value does not result in a valid CSS value.
@@ -387,7 +390,7 @@ function updateColorValue (event: Event, channel: string) {
 
 	color[channel] = value
 
-	setColor(activeFormat.value, color)
+	setColor(format, color)
 }
 
 /**
@@ -438,7 +441,7 @@ function setColor (format: ColorFormat, color: string | ColorHsl | ColorHsv | Co
 async function copyColor (): Promise<void> {
 	const activeColor = colors[activeFormat.value]
 	const excludeAlphaChannel = props.alphaChannel === 'hide'
-	const cssColor = formatAsCssColor(activeColor, activeFormat.value, excludeAlphaChannel)
+	const cssColor = formatAsCssColor({ color: activeColor, format: activeFormat.value }, excludeAlphaChannel)
 
 	// Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
 	await window.navigator.clipboard.writeText(cssColor)
@@ -447,8 +450,10 @@ async function copyColor (): Promise<void> {
 /**
  * Wrapper function. Converts a color channel’s value into its CSS value representation.
  */
-function getChannelAsCssValue (format: 'hsl' | 'hwb' | 'rgb', channel: string): string {
-	return colorChannels[format][channel].to(colors[format][channel])
+function getChannelAsCssValue (channel: string): string {
+	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
+	const cssValue = colorChannels[format][channel] as CssValue
+	return cssValue.to(colors[format][channel])
 }
 
 /**
@@ -482,7 +487,7 @@ function setCssProps (colorPicker: HTMLElement, colorSpace: HTMLElement, thumb: 
 
 function getEventData (): ColorChangeDetail {
 	const excludeAlphaChannel = props.alphaChannel === 'hide'
-	const cssColor = formatAsCssColor(colors[activeFormat.value], activeFormat.value, excludeAlphaChannel)
+	const cssColor = formatAsCssColor({ color: colors[activeFormat.value], format: activeFormat.value }, excludeAlphaChannel)
 
 	return {
 		colors,

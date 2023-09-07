@@ -18,7 +18,12 @@
 
 		const app = createApp({
 			components: { ColorPicker },
-			template: `<ColorPicker />`,
+			template: `<ColorPicker @color-change="handleColorChange" />`,
+			methods: {
+				handleColorChange(event) {
+					console.log(event)
+				},
+			}
 		})
 
 		app.mount('#app')
