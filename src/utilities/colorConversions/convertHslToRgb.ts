@@ -3,34 +3,28 @@ import { ColorHsl, ColorRgb } from '../../types.js'
 /**
  * Converts an HSL color object to an RGB color object.
  *
- * Source: https://en.m.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
+ * Source: https://github.com/LeaVerou/color.js/blob/2bd19b0a913da3f3310b9d8c1daa859ceb123c37/src/spaces/hsl.js#L49-L67
  */
 export function convertHslToRgb (hsl: ColorHsl): ColorRgb {
-	const q = hsl.l < 0.5 ? hsl.l * (1 + hsl.s) : hsl.l + hsl.s - hsl.l * hsl.s
-	const p = 2 * hsl.l - q
+	let h = hsl.h % 360
+	if (h < 0) {
+		h += 360
+	}
+
+	const s = hsl.s/100
+	const l = hsl.l/100
 
 	return {
-		r: hue2rgb(p, q, hsl.h + 1 / 3),
-		g: hue2rgb(p, q, hsl.h),
-		b: hue2rgb(p, q, hsl.h - 1 / 3),
+		r: fn(0, h, s, l) * 255,
+		g: fn(8, h, s, l) * 255,
+		b: fn(4, h, s, l) * 255,
 		a: hsl.a,
 	}
 }
 
-function hue2rgb (p: number, q: number, t: number): number {
-	if (t < 0) {
-		t += 1
-	} else if (t > 1) {
-		t -= 1
-	}
+function fn (n: number, h: number, s: number, l: number) {
+	const k = (n + h/30) % 12
+	const a = s*Math.min(l, 1 - l)
 
-	if (t < 1 / 6) {
-		return p + (q - p) * 6 * t
-	} else if (t < 1 / 2) {
-		return q
-	} else if (t < 2 / 3) {
-		return p + (q - p) * (2 / 3 - t) * 6
-	} else {
-		return p
-	}
+	return l - a*Math.max(-1, Math.min(k - 3, 9 - k, 1))
 }

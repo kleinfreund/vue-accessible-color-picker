@@ -19,25 +19,25 @@ const formatters: Formatters = {
 	},
 
 	hsl (hsl: ColorHsl, excludeAlphaChannel: boolean): string {
-		const h = round(hsl.h * 360, 2)
-		const s = round(hsl.s * 100, 2)
-		const l = round(hsl.l * 100, 2)
+		const h = round(hsl.h, 2)
+		const s = round(hsl.s, 2)
+		const l = round(hsl.l, 2)
 
 		return `hsl(${h} ${s}% ${l}%` + (excludeAlphaChannel ? ')' : ` / ${round(hsl.a, 2)})`)
 	},
 
 	hwb (hwb: ColorHwb, excludeAlphaChannel: boolean): string {
-		const h = round(hwb.h * 360, 2)
-		const w = round(hwb.w * 100, 2)
-		const b = round(hwb.b * 100, 2)
+		const h = round(hwb.h, 2)
+		const w = round(hwb.w, 2)
+		const b = round(hwb.b, 2)
 
 		return `hwb(${h} ${w}% ${b}%` + (excludeAlphaChannel ? ')' : ` / ${round(hwb.a, 2)})`)
 	},
 
 	rgb (rgb: ColorRgb, excludeAlphaChannel: boolean): string {
-		const r = round(rgb.r * 255, 2)
-		const g = round(rgb.g * 255, 2)
-		const b = round(rgb.b * 255, 2)
+		const r = round(rgb.r, 2)
+		const g = round(rgb.g, 2)
+		const b = round(rgb.b, 2)
 
 		return `rgb(${r} ${g} ${b}` + (excludeAlphaChannel ? ')' : ` / ${round(rgb.a, 2)})`)
 	},

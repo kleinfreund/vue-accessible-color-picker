@@ -7,13 +7,11 @@ export function fromHueAngle (value: string): number {
 	}
 
 	// Maps the angle to the range [0, 360] (e.g. -30 becomes 330, 385 becomes 15, etc).
-	const boundAngle = ((parseFloat(value) % 360) + 360) % 360
-
-	return boundAngle / 360
+	return ((parseFloat(value) % 360) + 360) % 360
 }
 
 export function toHueAngle (value: number): string {
-	return round(value * 360, 2)
+	return round(value, 2)
 }
 
 export function fromPercentage (value: string): number {
@@ -33,16 +31,16 @@ export function fromPercentage (value: string): number {
 		return NaN
 	}
 
-	return clamp(numberValue, 0, 100) / 100
+	return clamp(numberValue, 0, 100)
 }
 
 export function toPercentage (value: number): string {
-	return round(value * 100, 2) + '%'
+	return round(value, 2) + '%'
 }
 
 export function from8BitDecimal (value: string): number {
 	if (value.endsWith('%')) {
-		return fromPercentage(value)
+		return fromPercentage(value)/100*255
 	}
 
 	if (value.endsWith('.')) {
@@ -55,16 +53,16 @@ export function from8BitDecimal (value: string): number {
 		return NaN
 	}
 
-	return clamp(numberValue, 0, 255) / 255
+	return clamp(numberValue, 0, 255)
 }
 
 export function to8BitDecimal (value: number): string {
-	return round(value * 255, 2)
+	return round(value, 2)
 }
 
 export function fromAlpha (value: string): number {
 	if (value.endsWith('%')) {
-		return fromPercentage(value)
+		return fromPercentage(value)/100
 	} else {
 		return clamp(parseFloat(value), 0, 1)
 	}

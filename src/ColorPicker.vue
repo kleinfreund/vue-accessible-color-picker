@@ -31,7 +31,7 @@
 				<input
 					:id="`${id}-hue-slider`"
 					class="vacp-range-input vacp-range-input--hue"
-					:value="colors.hsv.h * 360"
+					:value="colors.hsv.h"
 					type="range"
 					min="0"
 					max="360"
@@ -53,11 +53,11 @@
 				<input
 					:id="`${id}-alpha-slider`"
 					class="vacp-range-input vacp-range-input--alpha"
-					:value="colors.hsv.a * 100"
+					:value="colors.hsv.a"
 					type="range"
 					min="0"
-					max="100"
-					step="1"
+					max="1"
+					step="0.01"
 					@keydown.passive="changeInputValue"
 					@input="handleSliderInput($event, 'a')"
 				>
@@ -233,10 +233,10 @@ const activeFormat = ref<VisibleColorFormat>(props.visibleFormats.includes(props
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const colors = reactive<any>({
 	hex: '#ffffffff',
-	hsl: { h: 0, s: 0, l: 1, a: 1 },
-	hsv: { h: 0, s: 0, v: 1, a: 1 },
-	hwb: { h: 0, w: 1, b: 0, a: 1 },
-	rgb: { r: 1, g: 1, b: 1, a: 1 },
+	hsl: { h: 0, s: 0, l: 100, a: 1 },
+	hsv: { h: 0, s: 0, v: 100, a: 1 },
+	hwb: { h: 0, w: 100, b: 0, a: 1 },
+	rgb: { r: 255, g: 255, b: 255, a: 1 },
 })
 
 /**
@@ -344,9 +344,9 @@ function moveThumbWithArrows (event: KeyboardEvent) {
 	const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
 	const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
 	const step = event.shiftKey ? 10 : 1
-	const newColorValue = colors.hsv[channel] + direction * step * 0.01
+	const newColorValue = colors.hsv[channel] + direction * step
 	const hsvColor = Object.assign({}, colors.hsv)
-	hsvColor[channel] = clamp(newColorValue, 0, 1)
+	hsvColor[channel] = clamp(newColorValue, 0, 100)
 
 	setColor('hsv', hsvColor)
 }
@@ -361,7 +361,7 @@ function setColorFromProp (propsColor: string | ColorHsl | ColorHsv | ColorHwb |
 function handleSliderInput (event: Event, channel: 'h' | 'a') {
 	const input = event.currentTarget as HTMLInputElement
 	const hsvColor = Object.assign({}, colors.hsv)
-	hsvColor[channel] = parseInt(input.value) / parseInt(input.max)
+	hsvColor[channel] = Number(input.value)
 
 	setColor('hsv', hsvColor)
 }
@@ -469,15 +469,15 @@ function setCssProps (colorPicker: HTMLElement, colorSpace: HTMLElement, thumb: 
 	// Sets a few CSS properties as inline styles because they're essential for the operation of the color picker.
 	colorSpace.style.position = 'relative'
 	// Sets the background of the hue slice to the color represented by the currently selected hue with full saturation and half the lightness (which is 100% value for an HSV color).
-	colorSpace.style.backgroundColor = 'hsl(calc(var(--vacp-hsl-h) * 360) 100% 50%)'
+	colorSpace.style.backgroundColor = 'hsl(var(--vacp-hsl-h) 100% 50%)'
 	// These overlapping gradients together with the underlying background color create a visual representation of a slice through the HSV cylinder. The slice’s angle is determined by the current hue. Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
 	colorSpace.style.backgroundImage = 'linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)'
 
 	thumb.style.boxSizing = 'border-box'
 	thumb.style.position = 'absolute'
 	// The X and Y coordinates of the color space thumb’s position are expressed in the saturation and value parts of an HSV color. This is because the color space represents the hue slice of the HSV cylinder. This the most convenient option because a fully saturated color at 50% lightness is located in the top right corner of that slice (i.e. at saturation 100% and value 100%). A full red (#f00) can thus be picked by dragging the hue slider all the way to either end and the color space thumb in the most top right corner of the color space. This will set the hue to 0, the saturation to 100%, and the value to 100%.
-	thumb.style.left = `${colors.hsv.s * 100}%`
-	thumb.style.bottom = `${colors.hsv.v * 100}%`
+	thumb.style.left = `${colors.hsv.s}%`
+	thumb.style.bottom = `${colors.hsv.v}%`
 }
 
 function getEventData (): ColorChangeDetail {
@@ -496,8 +496,8 @@ function getNewThumbPosition (colorSpace: HTMLElement, clientX: number, clientY:
 	const y = clientY - rect.top
 
 	return {
-		x: rect.width === 0 ? 0 : clamp(x / rect.width, 0, 1),
-		y: rect.height === 0 ? 0 : clamp(1 - y / rect.height, 0, 1),
+		x: rect.width === 0 ? 0 : clamp((x / rect.width)*100, 0, 100),
+		y: rect.height === 0 ? 0 : clamp((1 - y / rect.height)*100, 0, 100),
 	}
 }
 
@@ -510,10 +510,10 @@ function changeInputValue (event: KeyboardEvent) {
 	}
 
 	const input = event.currentTarget as HTMLInputElement
-	const step = parseFloat(input.step)
+	const step = Number(input.step)
 	const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
-	const value = parseFloat(input.value) + direction * step * 10
-	const newValue = clamp(value, parseInt(input.min), parseInt(input.max))
+	const value = Number(input.value) + direction * step * 10
+	const newValue = clamp(value, Number(input.min), Number(input.max))
 	// Intentionally removes a single step from `newValue` because the default action associated with an `input[type=range]` element’s `keydown` event will add one itself.
 	input.value = String(newValue - direction * step)
 }

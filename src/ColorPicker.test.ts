@@ -76,7 +76,7 @@ describe('ColorPicker', () => {
 		const colorPicker = wrapper.find<HTMLElement>('.vacp-color-picker').element
 		expect(colorPicker.style.getPropertyValue('--vacp-hsl-h')).toBe('0')
 		expect(colorPicker.style.getPropertyValue('--vacp-hsl-s')).toBe('0')
-		expect(colorPicker.style.getPropertyValue('--vacp-hsl-l')).toBe('1')
+		expect(colorPicker.style.getPropertyValue('--vacp-hsl-l')).toBe('100')
 		expect(colorPicker.style.getPropertyValue('--vacp-hsl-a')).toBe('1')
 
 		const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb').element
@@ -124,20 +124,16 @@ describe('ColorPicker', () => {
 				'#f00',
 			],
 			[
-				{ color: { r: 1, g: 0.5, b: 0, a: 0.5 } },
+				{ color: { r: 255, g: 127.5, b: 0, a: 0.5 } },
 				'#ff800080',
 			],
 			[
-				{ color: { h: 0, s: 1, l: 0.5, a: 1 } },
+				{ color: { h: 0, s: 100, l: 50, a: 1 } },
 				'#ff0000ff',
 			],
 			[
-				{ color: { h: 0.5, w: 0.33, b: 0.5, a: 1 } },
+				{ color: { h: 180, w: 33, b: 50, a: 1 } },
 				'#548080ff',
-			],
-			[
-				{ color: { h: 0.5, s: 0.33, v: 0.5, a: 1 } },
-				'#558080ff',
 			],
 		] as const)('mounts correctly with a valid color prop', async (props: ColorPickerProps, expectedHexInputValue) => {
 			const wrapper = createWrapper({
@@ -212,11 +208,11 @@ describe('ColorPicker', () => {
 		test.each([
 			[
 				'#f80c',
-				{ r: 1, g: 0.5333333333333333, b: 0, a: 0.8 },
+				{ r: 255, g: 136, b: 0, a: 0.8 },
 			],
 			[
-				{ h: 0.5, s: 0.33, v: 0.5, a: 1 },
-				{ r: 0.33499999999999996, g: 0.5, b: 0.5, a: 1 },
+				{ h: 180, s: 50, l: 50, a: 1 },
+				{ r: 63.75, g: 191.25, b: 191.25, a: 1 },
 			],
 		])('recomputes colors when color prop changes', async (colorProp, expectedColorChangePayload) => {
 			const wrapper = createWrapper()
@@ -231,7 +227,7 @@ describe('ColorPicker', () => {
 			emittedColorChangeEvents = wrapper.emitted('color-change')
 			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
 			emittedRgbColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.rgb
-			expect(emittedRgbColor).toEqual({ r: 1, g: 1, b: 1, a: 0.8 })
+			expect(emittedRgbColor).toEqual({ r: 255, g: 255, b: 255, a: 0.8 })
 		})
 
 		test('id attributes are set correctly', async () => {
@@ -400,14 +396,14 @@ describe('ColorPicker', () => {
 		})
 
 		test.each([
-			['ArrowDown', false, 'v', 0.99],
-			['ArrowDown', true, 'v', 0.9],
-			['ArrowUp', false, 'v', 1],
-			['ArrowUp', true, 'v', 1],
-			['ArrowRight', false, 's', 1],
-			['ArrowRight', true, 's', 1],
-			['ArrowLeft', false, 's', 0.99],
-			['ArrowLeft', true, 's', 0.9],
+			['ArrowDown', false, 'v', 49],
+			['ArrowDown', true, 'v', 40],
+			['ArrowUp', false, 'v', 51],
+			['ArrowUp', true, 'v', 60],
+			['ArrowRight', false, 's', 51],
+			['ArrowRight', true, 's', 60],
+			['ArrowLeft', false, 's', 49],
+			['ArrowLeft', true, 's', 40],
 		])('can move the color space thumb with the %s key (holding shift: %s)', async (key, shiftKey, channel, expectedColorValue) => {
 			const keydownEvent = {
 				key,
@@ -417,7 +413,7 @@ describe('ColorPicker', () => {
 
 			const wrapper = createWrapper({
 				props: {
-					color: 'rgb(128, 0, 255)',
+					color: 'hwb(180, 25%, 50%, 1)',
 				},
 			})
 			expect(keydownEvent.preventDefault).not.toHaveBeenCalled()
@@ -484,8 +480,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('hue slider updates internal colors', async () => {
-			const hueAngle = 30
-			const expectedHueValue = hueAngle / 360
+			const expectedHueValue = 30
 
 			const wrapper = createWrapper({
 				props: {
@@ -494,7 +489,7 @@ describe('ColorPicker', () => {
 			})
 			const hueRangeInput = wrapper.find<HTMLInputElement>('#color-picker-hue-slider')
 			const hueRangeInputElement = hueRangeInput.element
-			hueRangeInputElement.value = String(hueAngle)
+			hueRangeInputElement.value = String(expectedHueValue)
 			const hueInputEvent = { currentTarget: hueRangeInputElement }
 
 			await hueRangeInput.trigger('input', hueInputEvent)
@@ -506,12 +501,11 @@ describe('ColorPicker', () => {
 			let emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
 			expect(emittedHsvColor.h).toEqual(expectedHueValue)
 
-			const alpha = 90
-			const expectedAlphaValue = alpha / 100
+			const expectedAlphaValue = 0.9
 
 			const alphaRangeInput = wrapper.find<HTMLInputElement>('#color-picker-alpha-slider')
 			const alphaRangeInputElement = alphaRangeInput.element
-			alphaRangeInputElement.value = String(alpha)
+			alphaRangeInputElement.value = String(expectedAlphaValue)
 			const alphaInputEvent = { currentTarget: alphaRangeInputElement }
 
 			await alphaRangeInput.trigger('input', alphaInputEvent)
@@ -697,10 +691,10 @@ describe('ColorPicker', () => {
 					cssColor: 'hsl(350 100% 80% / 0.8)',
 					colors: {
 						hex: '#ff99aacc',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 0.8 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 0.8 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 0.8 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 0.8 },
+						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
+						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
 					},
 				},
 			],
@@ -710,10 +704,10 @@ describe('ColorPicker', () => {
 					cssColor: 'hsl(350 100% 80% / 0.8)',
 					colors: {
 						hex: '#f9ac',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 0.8 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 0.8 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 0.8 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 0.8 },
+						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
+						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
 					},
 				},
 			],
@@ -723,10 +717,10 @@ describe('ColorPicker', () => {
 					cssColor: '#ff99aacc',
 					colors: {
 						hex: '#ff99aacc',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 0.8 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 0.8 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 0.8 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 0.8 },
+						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
+						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
 					},
 				},
 			],
@@ -736,10 +730,10 @@ describe('ColorPicker', () => {
 					cssColor: '#f9ac',
 					colors: {
 						hex: '#f9ac',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 0.8 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 0.8 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 0.8 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 0.8 },
+						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
+						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
 					},
 				},
 			],
@@ -749,10 +743,10 @@ describe('ColorPicker', () => {
 					cssColor: 'hsl(350 100% 80%)',
 					colors: {
 						hex: '#ff99aaff',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 1 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 1 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 1 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 1 },
+						hsl: { h: 350, s: 100, l: 80, a: 1 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
+						rgb: { r: 255, g: 153, b: 170, a: 1 },
 					},
 				},
 			],
@@ -762,10 +756,10 @@ describe('ColorPicker', () => {
 					cssColor: 'hsl(350 100% 80%)',
 					colors: {
 						hex: '#f9af',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 1 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 1 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 1 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 1 },
+						hsl: { h: 350, s: 100, l: 80, a: 1 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
+						rgb: { r: 255, g: 153, b: 170, a: 1 },
 					},
 				},
 			],
@@ -775,10 +769,10 @@ describe('ColorPicker', () => {
 					cssColor: '#ff99aa',
 					colors: {
 						hex: '#ff99aaff',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 1 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 1 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 1 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 1 },
+						hsl: { h: 350, s: 100, l: 80, a: 1 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
+						rgb: { r: 255, g: 153, b: 170, a: 1 },
 					},
 				},
 			],
@@ -788,10 +782,10 @@ describe('ColorPicker', () => {
 					cssColor: '#f9a',
 					colors: {
 						hex: '#f9af',
-						hsl: { h: 0.9722222222222222, s: 1, l: 0.8, a: 1 },
-						hsv: { h: 0.9722222222222222, s: 0.4, v: 1, a: 1 },
-						hwb: { h: 0.9722222222222222, w: 0.6, b: 0, a: 1 },
-						rgb: { r: 1, g: 0.6, b: 0.6666666666666666, a: 1 },
+						hsl: { h: 350, s: 100, l: 80, a: 1 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
+						rgb: { r: 255, g: 153, b: 170, a: 1 },
 					},
 				},
 			],
@@ -801,10 +795,10 @@ describe('ColorPicker', () => {
 					cssColor: '#23a96a',
 					colors: {
 						hex: '#23a96aff',
-						hsl: { h: 0.4216417910447761, s: 0.6568627450980391, l: 0.4, a: 1 },
-						hsv: { h: 0.4216417910447761, s: 0.7928994082840236, v: 0.6627450980392157, a: 1 },
-						hwb: { h: 0.4216417910447761, w: 0.13725490196078433, b: 0.33725490196078434, a: 1 },
-						rgb: { r: 0.13725490196078433, g: 0.6627450980392157, b: 0.41568627450980394, a: 1 },
+						hsl: { h: 151.7910447761194, s: 65.68627450980392, l: 40, a: 1 },
+						hsv: { h: 151.7910447761194, s: 79.28994082840237, v: 66.27450980392157, a: 1 },
+						hwb: { h: 151.7910447761194, w: 13.725490196078432, b: 33.725490196078425, a: 1 },
+						rgb: { r: 35, g: 169, b: 106, a: 1 },
 					},
 				},
 			],

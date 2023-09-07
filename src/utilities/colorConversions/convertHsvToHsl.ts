@@ -6,14 +6,14 @@ import { ColorHsl, ColorHsv } from '../../types.js'
  * Source: https://en.m.wikipedia.org/wiki/HSL_and_HSV#HSV_to_HSL
  */
 export function convertHsvToHsl (hsv: ColorHsv): ColorHsl {
-	const l = hsv.v - (hsv.v * hsv.s) / 2
-	const lMin = Math.min(l, 1 - l)
-	const s = lMin === 0 ? 0 : (hsv.v - l) / lMin
+	const s = hsv.s/100
+	const v = hsv.v/100
+	const l = v*(1 - s/2)
 
 	return {
 		h: hsv.h,
-		s,
-		l,
+		s: (l === 0 || l === 1) ? 0 : ((v - l)/Math.min(l, 1 - l)) * 100,
+		l: l * 100,
 		a: hsv.a,
 	}
 }

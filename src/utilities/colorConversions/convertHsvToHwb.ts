@@ -6,8 +6,8 @@ import { ColorHsv, ColorHwb } from '../../types.js'
 export function convertHsvToHwb (hsv: ColorHsv): ColorHwb {
 	return {
 		h: hsv.h,
-		w: (1 - hsv.s) * hsv.v,
-		b: 1 - hsv.v,
+		w: hsv.v*(100 - hsv.s)/100,
+		b: 100 - hsv.v,
 		a: hsv.a,
 	}
 }

@@ -6,30 +6,26 @@ import { ColorRgb } from '../../types.js'
  * Supports HEX color strings with length 3, 4, 6, and 8.
  */
 export function convertHexToRgb (hex: string): ColorRgb {
-	const hexWithoutHash = hex.replace(/^#/, '')
-
-	const channels = []
+	const channels: number[] = []
 
 	// Slice hex color string into two characters each.
 	// For longhand hex color strings, two characters can be consumed at a time.
-	const step = hexWithoutHash.length > 4 ? 2 : 1
-	for (let i = 0; i < hexWithoutHash.length; i += step) {
-		const channel = hexWithoutHash.slice(i, i + step)
-		// Repeat the character once for shorthand hex color strings.
-		channels.push(channel.repeat(step % 2 + 1))
+	const step = hex.length > 5 ? 2 : 1
+	for (let i = 1; i < hex.length; i += step) {
+		// Repeat the character twice for shorthand and once for longhand hex color strings.
+		const channel = hex.substring(i, i + step).repeat(step % 2 + 1)
+		const value = parseInt(channel, 16)
+		channels.push(i === 3 * step + 1 ? value / 255 : value)
 	}
 
 	if (channels.length === 3) {
-		channels.push('ff')
+		channels.push(1)
 	}
 
-	// Okay, TypeScript, let’s agree that we got four elements in that array, alright?
-	const rgbChannels = channels.map(channel => parseInt(channel, 16) / 255) as [number, number, number, number]
-
 	return {
-		r: rgbChannels[0],
-		g: rgbChannels[1],
-		b: rgbChannels[2],
-		a: rgbChannels[3],
+		r: channels[0] as number,
+		g: channels[1] as number,
+		b: channels[2] as number,
+		a: channels[3] as number,
 	}
 }
