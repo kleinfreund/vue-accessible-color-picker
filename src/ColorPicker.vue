@@ -419,7 +419,7 @@ function setColor (format: ColorFormat, color: string | ColorHsl | ColorHsv | Co
 			}
 		}
 
-		emit('color-change', getEventData())
+		emit('color-change', getColorChangeDetail())
 	}
 
 	if (
@@ -485,7 +485,7 @@ function setCssProps (colorPicker: HTMLElement, colorSpace: HTMLElement, thumb: 
 	thumb.style.bottom = `${colors.hsv.v}%`
 }
 
-function getEventData (): ColorChangeDetail {
+function getColorChangeDetail (): ColorChangeDetail {
 	const excludeAlphaChannel = props.alphaChannel === 'hide'
 	const cssColor = formatAsCssColor({ color: colors[activeFormat.value], format: activeFormat.value }, excludeAlphaChannel)
 
