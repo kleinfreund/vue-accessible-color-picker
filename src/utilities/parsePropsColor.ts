@@ -1,8 +1,7 @@
-import { colorChannels } from './colorChannels.js'
 import { detectFormat } from './detectFormat.js'
 import { isValidHexColor } from './isValidHexColor.js'
 import { ColorPair, VisibleColorFormat } from '../types.js'
-import { CssValue } from './CssValues.js'
+import { getCssValue } from './CssValues.js'
 
 const CHANNELS_BY_FORMAT = {
 	hsl: ['h', 's', 'l', 'a'],
@@ -73,7 +72,7 @@ export function parsePropsColor (propsColor: string | Record<string, unknown>): 
 
 	const channels = CHANNELS_BY_FORMAT[format]
 	const color = Object.fromEntries(channels.map((channel, index) => {
-		const cssValue = colorChannels[format][channel] as CssValue
+		const cssValue = getCssValue(format, channel)
 
 		return [
 			channel,

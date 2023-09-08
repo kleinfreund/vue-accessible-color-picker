@@ -169,10 +169,9 @@ import {
 } from 'vue'
 
 import { clamp } from './utilities/clamp.js'
-import { colorChannels } from './utilities/colorChannels.js'
 import { colorsAreValueEqual } from './utilities/colorsAreValueEqual.js'
 import { convert } from './utilities/conversions.js'
-import { CssValue } from './utilities/CssValues.js'
+import { getCssValue } from './utilities/CssValues.js'
 import { formatAsCssColor } from './utilities/formatAsCssColor.js'
 import { isValidHexColor } from './utilities/isValidHexColor.js'
 import { parsePropsColor } from './utilities/parsePropsColor.js'
@@ -380,7 +379,7 @@ function updateColorValue (event: Event, channel: string) {
 
 	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
 	const color = Object.assign({}, colors[format])
-	const cssValue = colorChannels[format][channel] as CssValue
+	const cssValue = getCssValue(format, channel)
 	const value = cssValue.from(input.value)
 
 	if (Number.isNaN(value) || value === undefined) {
@@ -452,7 +451,7 @@ async function copyColor (): Promise<void> {
  */
 function getChannelAsCssValue (channel: string): string {
 	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
-	const cssValue = colorChannels[format][channel] as CssValue
+	const cssValue = getCssValue(format, channel)
 	return cssValue.to(colors[format][channel])
 }
 

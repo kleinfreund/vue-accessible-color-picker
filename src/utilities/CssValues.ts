@@ -1,3 +1,4 @@
+import { VisibleColorFormat } from '../types.js'
 import { clamp } from './clamp.js'
 import { round } from './round.js'
 
@@ -26,7 +27,7 @@ interface CssValuePercentageFromOptions extends CssValueNumberFromOptions {
 	referenceValue?: number
 }
 
-export type CssValue<
+type CssValue<
 	FromOptions = Record<string, never>,
 	ToOptions = Record<string, never>,
 > = {
@@ -131,4 +132,30 @@ export const rgbNumber: CssValue = {
 	to (value) {
 		return number.to(value)
 	},
+}
+
+
+const colorChannels: Record<Exclude<VisibleColorFormat, 'hex'>, Record<string, CssValue>> = {
+	hsl: {
+		h: angle,
+		s: percentage,
+		l: percentage,
+		a: alpha,
+	},
+	hwb: {
+		h: angle,
+		w: percentage,
+		b: percentage,
+		a: alpha,
+	},
+	rgb: {
+		r: rgbNumber,
+		g: rgbNumber,
+		b: rgbNumber,
+		a: alpha,
+	},
+}
+
+export function getCssValue (format: Exclude<VisibleColorFormat, 'hex'>, channel: string): CssValue {
+	return colorChannels[format][channel] as CssValue
 }

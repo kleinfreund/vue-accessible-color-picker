@@ -3,74 +3,6 @@ function M(t, o, n) {
   return Math.max(o, Math.min(t, n));
 }
 function xt(t, o) {
-  const n = t.toFixed(o);
-  return n.includes(".") ? n.replace(/\.?0+$/, "") : n;
-}
-const Ct = {
-  deg: 1,
-  grad: 0.9,
-  rad: 180 / Math.PI,
-  turn: 360
-}, O = {
-  from(t) {
-    return t.endsWith("%") ? C.from(t, { referenceValue: 1 }) : m.from(t, { min: 0, max: 1 });
-  },
-  to(t) {
-    return m.to(t);
-  }
-}, q = {
-  from(t) {
-    const o = t.match(/deg|g?rad|turn$/);
-    if (o === null)
-      return m.from(t);
-    const n = o[0];
-    return m.from(t.slice(0, -n.length)) * Ct[n];
-  },
-  to(t) {
-    return m.to(t);
-  }
-}, m = {
-  from(t, { min: o = Number.NEGATIVE_INFINITY, max: n = Number.POSITIVE_INFINITY } = {}) {
-    return t.endsWith(".") ? NaN : M(Number(t), o, n);
-  },
-  to(t) {
-    return xt(t, 2);
-  }
-}, C = {
-  from(t, { referenceValue: o = 100, min: n = 0, max: r = 100 } = {}) {
-    return t.endsWith("%") ? m.from(t.slice(0, -1), { min: n, max: r }) * o / 100 : NaN;
-  },
-  to(t) {
-    return m.to(t) + "%";
-  }
-}, R = {
-  from(t) {
-    return t.endsWith("%") ? C.from(t, { referenceValue: 255 }) : m.from(t, { min: 0, max: 255 });
-  },
-  to(t) {
-    return m.to(t);
-  }
-}, E = {
-  hsl: {
-    h: q,
-    s: C,
-    l: C,
-    a: O
-  },
-  hwb: {
-    h: q,
-    w: C,
-    b: C,
-    a: O
-  },
-  rgb: {
-    r: R,
-    g: R,
-    b: R,
-    a: O
-  }
-};
-function _t(t, o) {
   if (typeof t == "string" || typeof o == "string")
     return t === o;
   for (const n in t)
@@ -105,13 +37,13 @@ function A(t) {
   o < 0 && (o += 360);
   const n = t.s / 100, r = t.l / 100;
   return {
-    r: j(0, o, n, r) * 255,
-    g: j(8, o, n, r) * 255,
-    b: j(4, o, n, r) * 255,
+    r: O(0, o, n, r) * 255,
+    g: O(8, o, n, r) * 255,
+    b: O(4, o, n, r) * 255,
     a: t.a
   };
 }
-function j(t, o, n, r) {
+function O(t, o, n, r) {
   const c = (t + o / 30) % 12, h = n * Math.min(r, 1 - r);
   return r - h * Math.max(-1, Math.min(c - 3, 9 - c, 1));
 }
@@ -164,7 +96,7 @@ function V(t) {
 function T(t) {
   return tt(Q(H(t)));
 }
-const Tt = {
+const Ct = {
   hex: {
     hex: (t) => t,
     hsl: (t) => H(N(t)),
@@ -201,14 +133,85 @@ const Tt = {
     rgb: (t) => t
   }
 };
-function Mt(t, o, n) {
-  return Tt[t][o](n);
+function _t(t, o, n) {
+  return Ct[t][o](n);
+}
+function Tt(t, o) {
+  const n = t.toFixed(o);
+  return n.includes(".") ? n.replace(/\.?0+$/, "") : n;
+}
+const Mt = {
+  deg: 1,
+  grad: 0.9,
+  rad: 180 / Math.PI,
+  turn: 360
+}, R = {
+  from(t) {
+    return t.endsWith("%") ? C.from(t, { referenceValue: 1 }) : m.from(t, { min: 0, max: 1 });
+  },
+  to(t) {
+    return m.to(t);
+  }
+}, q = {
+  from(t) {
+    const o = t.match(/deg|g?rad|turn$/);
+    if (o === null)
+      return m.from(t);
+    const n = o[0];
+    return m.from(t.slice(0, -n.length)) * Mt[n];
+  },
+  to(t) {
+    return m.to(t);
+  }
+}, m = {
+  from(t, { min: o = Number.NEGATIVE_INFINITY, max: n = Number.POSITIVE_INFINITY } = {}) {
+    return t.endsWith(".") ? NaN : M(Number(t), o, n);
+  },
+  to(t) {
+    return Tt(t, 2);
+  }
+}, C = {
+  from(t, { referenceValue: o = 100, min: n = 0, max: r = 100 } = {}) {
+    return t.endsWith("%") ? m.from(t.slice(0, -1), { min: n, max: r }) * o / 100 : NaN;
+  },
+  to(t) {
+    return m.to(t) + "%";
+  }
+}, j = {
+  from(t) {
+    return t.endsWith("%") ? C.from(t, { referenceValue: 255 }) : m.from(t, { min: 0, max: 255 });
+  },
+  to(t) {
+    return m.to(t);
+  }
+}, $t = {
+  hsl: {
+    h: q,
+    s: C,
+    l: C,
+    a: R
+  },
+  hwb: {
+    h: q,
+    w: C,
+    b: C,
+    a: R
+  },
+  rgb: {
+    r: j,
+    g: j,
+    b: j,
+    a: R
+  }
+};
+function E(t, o) {
+  return $t[t][o];
 }
 function G({ format: t, color: o }, n) {
   if (t === "hex")
     return n && [5, 9].includes(o.length) ? o.substring(0, o.length - (o.length - 1) / 4) : o;
   const r = Object.entries(o).slice(0, n ? 3 : 4).map(([c, h]) => {
-    const p = E[t][c];
+    const p = E(t, c);
     return (c === "a" ? "/ " : "") + p.to(h);
   });
   return `${t}(${r.join(" ")})`;
@@ -216,7 +219,7 @@ function G({ format: t, color: o }, n) {
 function et(t) {
   return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(t);
 }
-function $t(t) {
+function Ft(t) {
   return "r" in t ? "rgb" : "w" in t ? "hwb" : "v" in t ? "hsv" : "s" in t ? "hsl" : null;
 }
 const J = {
@@ -224,9 +227,9 @@ const J = {
   hwb: ["h", "w", "b", "a"],
   rgb: ["r", "g", "b", "a"]
 };
-function Ft(t) {
+function kt(t) {
   if (typeof t != "string") {
-    const v = $t(t);
+    const v = Ft(t);
     return v === null ? null : { format: v, color: t };
   }
   if (t.startsWith("#"))
@@ -243,7 +246,7 @@ function Ft(t) {
   const c = n.replace(/[,/)]/g, " ").replace(/\s+/g, " ").trim().split(" ");
   c.length === 3 && c.push("1");
   const h = J[r], p = Object.fromEntries(h.map((v, u) => {
-    const l = E[r][v];
+    const l = E(r, v);
     return [
       v,
       l.from(c[u])
@@ -251,7 +254,7 @@ function Ft(t) {
   }));
   return { format: r, color: p };
 }
-const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Vt = ["id", "value"], At = ["for"], Ht = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Et = ["id", "value"], Lt = /* @__PURE__ */ f("span", { class: "vacp-visually-hidden" }, "Copy color", -1), St = /* @__PURE__ */ f("svg", {
+const It = { class: "vacp-range-input-group" }, Nt = ["for"], Vt = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, At = ["id", "value"], Ht = ["for"], Et = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Lt = ["id", "value"], St = /* @__PURE__ */ f("span", { class: "vacp-visually-hidden" }, "Copy color", -1), Pt = /* @__PURE__ */ f("svg", {
   class: "vacp-icon",
   xmlns: "http://www.w3.org/2000/svg",
   "aria-hidden": "true",
@@ -263,7 +266,7 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
     d: "M25.313 28v-18.688h-14.625v18.688h14.625zM25.313 6.688c1.438 0 2.688 1.188 2.688 2.625v18.688c0 1.438-1.25 2.688-2.688 2.688h-14.625c-1.438 0-2.688-1.25-2.688-2.688v-18.688c0-1.438 1.25-2.625 2.688-2.625h14.625zM21.313 1.313v2.688h-16v18.688h-2.625v-18.688c0-1.438 1.188-2.688 2.625-2.688h16z",
     fill: "currentColor"
   })
-], -1), Pt = { class: "vacp-color-inputs" }, Ot = { class: "vacp-color-input-group" }, Rt = ["for"], jt = /* @__PURE__ */ f("span", { class: "vacp-color-input-label-text" }, " Hex ", -1), Wt = ["id", "value"], Dt = ["id", "for", "onInput"], zt = { class: "vacp-color-input-label-text" }, Kt = ["id", "value", "onInput"], Yt = /* @__PURE__ */ f("span", { class: "vacp-visually-hidden" }, "Switch format", -1), Bt = /* @__PURE__ */ f("svg", {
+], -1), Ot = { class: "vacp-color-inputs" }, Rt = { class: "vacp-color-input-group" }, jt = ["for"], Wt = /* @__PURE__ */ f("span", { class: "vacp-color-input-label-text" }, " Hex ", -1), Dt = ["id", "value"], zt = ["id", "for", "onInput"], Kt = { class: "vacp-color-input-label-text" }, Yt = ["id", "value", "onInput"], Bt = /* @__PURE__ */ f("span", { class: "vacp-visually-hidden" }, "Switch format", -1), Ut = /* @__PURE__ */ f("svg", {
   class: "vacp-icon",
   "aria-hidden": "true",
   xmlns: "http://www.w3.org/2000/svg",
@@ -274,7 +277,7 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
     d: "M8 15l5-5-1-1-4 2-4-2-1 1zm4-9l1-1-5-5-5 5 1 1 4-2z",
     fill: "currentColor"
   })
-], -1), Ut = /* @__PURE__ */ vt({
+], -1), Xt = /* @__PURE__ */ vt({
   __name: "ColorPicker",
   props: {
     color: { default: "#ffffffff" },
@@ -339,7 +342,7 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
       g[a] = M(d, 0, 100), b("hsv", g);
     }
     function D(e) {
-      const s = Ft(e);
+      const s = kt(e);
       s !== null && b(s.format, s.color);
     }
     function z(e, s) {
@@ -351,7 +354,7 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
       et(s.value) && b("hex", s.value);
     }
     function K(e, s) {
-      const a = e.target, i = u.value, d = Object.assign({}, l[i]), P = E[i][s].from(a.value);
+      const a = e.target, i = u.value, d = Object.assign({}, l[i]), P = E(i, s).from(a.value);
       Number.isNaN(P) || P === void 0 || (d[s] = P, b(i, d));
     }
     function b(e, s) {
@@ -364,10 +367,10 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
           a = s.substring(0, s.length - i) + "f".repeat(i);
         } else
           [4, 7].includes(s.length) && (a = s + "f".repeat((s.length - 1) / 3));
-      if (!_t(l[e], a)) {
+      if (!xt(l[e], a)) {
         l[e] = a;
         for (const i of r)
-          i !== e && (l[i] = Mt(e, i, a));
+          i !== e && (l[i] = _t(e, i, a));
         o("color-change", ht());
       }
       c.value instanceof HTMLElement && h.value instanceof HTMLElement && p.value instanceof HTMLElement && ct(c.value, h.value, p.value);
@@ -378,7 +381,7 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
     }
     function ut(e) {
       const s = u.value;
-      return E[s][e].to(l[s][e]);
+      return E(s, e).to(l[s][e]);
     }
     function ct(e, s, a) {
       e.style.setProperty("--vacp-hsl-h", String(l.hsl.h)), e.style.setProperty("--vacp-hsl-s", String(l.hsl.s)), e.style.setProperty("--vacp-hsl-l", String(l.hsl.l)), e.style.setProperty("--vacp-hsl-a", String(l.hsl.a)), s.style.position = "relative", s.style.backgroundColor = "hsl(var(--vacp-hsl-h) 100% 50%)", s.style.backgroundImage = "linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)", a.style.boxSizing = "border-box", a.style.position = "absolute", a.style.left = `${l.hsv.s}%`, a.style.bottom = `${l.hsv.v}%`;
@@ -424,12 +427,12 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
           onKeydown: at
         }, null, 544)
       ], 544),
-      f("div", kt, [
+      f("div", It, [
         f("label", {
           class: "vacp-range-input-label vacp-range-input-label--hue",
           for: `${e.id}-hue-slider`
         }, [
-          f("span", Nt, [
+          f("span", Vt, [
             I(e.$slots, "hue-range-input-label", {}, () => [
               U("Hue")
             ])
@@ -444,14 +447,14 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
             step: "1",
             onKeydownPassive: Y,
             onInput: s[0] || (s[0] = (a) => z(a, "h"))
-          }, null, 40, Vt)
-        ], 8, It),
+          }, null, 40, At)
+        ], 8, Nt),
         e.alphaChannel === "show" ? (w(), y("label", {
           key: 0,
           class: "vacp-range-input-label vacp-range-input-label--alpha",
           for: `${e.id}-alpha-slider`
         }, [
-          f("span", Ht, [
+          f("span", Et, [
             I(e.$slots, "alpha-range-input-label", {}, () => [
               U("Alpha")
             ])
@@ -466,8 +469,8 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
             step: "0.01",
             onKeydownPassive: Y,
             onInput: s[1] || (s[1] = (a) => z(a, "a"))
-          }, null, 40, Et)
-        ], 8, At)) : X("", !0)
+          }, null, 40, Lt)
+        ], 8, Ht)) : X("", !0)
       ]),
       f("button", {
         class: "vacp-copy-button",
@@ -475,41 +478,41 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
         onClick: it
       }, [
         I(e.$slots, "copy-button", {}, () => [
-          Lt,
-          St
+          St,
+          Pt
         ])
       ]),
-      f("div", Pt, [
-        f("div", Ot, [
+      f("div", Ot, [
+        f("div", Rt, [
           u.value === "hex" ? (w(), y("label", {
             key: 0,
             class: "vacp-color-input-label",
             for: `${e.id}-color-hex`
           }, [
-            jt,
+            Wt,
             f("input", {
               id: `${e.id}-color-hex`,
               class: "vacp-color-input",
               type: "text",
               value: nt.value,
               onInput: lt
-            }, null, 40, Wt)
-          ], 8, Rt)) : (w(!0), y(bt, { key: 1 }, wt($.value, (a) => (w(), y("label", {
+            }, null, 40, Dt)
+          ], 8, jt)) : (w(!0), y(bt, { key: 1 }, wt($.value, (a) => (w(), y("label", {
             id: `${e.id}-color-${u.value}-${a}-label`,
             key: `${e.id}-color-${u.value}-${a}-label`,
             class: "vacp-color-input-label",
             for: `${e.id}-color-${u.value}-${a}`,
             onInput: (i) => K(i, a)
           }, [
-            f("span", zt, yt(a.toUpperCase()), 1),
+            f("span", Kt, yt(a.toUpperCase()), 1),
             f("input", {
               id: `${e.id}-color-${u.value}-${a}`,
               class: "vacp-color-input",
               type: "text",
               value: ut(a),
               onInput: (i) => K(i, a)
-            }, null, 40, Kt)
-          ], 40, Dt))), 128))
+            }, null, 40, Yt)
+          ], 40, zt))), 128))
         ]),
         e.visibleFormats.length > 1 ? (w(), y("button", {
           key: 0,
@@ -518,20 +521,20 @@ const kt = { class: "vacp-range-input-group" }, It = ["for"], Nt = { class: "vac
           onClick: ot
         }, [
           I(e.$slots, "format-switch-button", {}, () => [
-            Yt,
-            Bt
+            Bt,
+            Ut
           ])
         ])) : X("", !0)
       ])
     ], 512));
   }
 });
-const qt = {
+const Gt = {
   install(t) {
-    t.component("ColorPicker", Ut);
+    t.component("ColorPicker", Xt);
   }
 };
 export {
-  Ut as ColorPicker,
-  qt as default
+  Xt as ColorPicker,
+  Gt as default
 };
