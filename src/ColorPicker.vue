@@ -170,7 +170,7 @@ import {
 
 import { clamp } from './utilities/clamp.js'
 import { colorsAreValueEqual } from './utilities/colorsAreValueEqual.js'
-import { convert } from './utilities/conversions.js'
+import { convert } from './utilities/convert.js'
 import { getCssValue } from './utilities/CssValues.js'
 import { formatAsCssColor } from './utilities/formatAsCssColor.js'
 import { isValidHexColor } from './utilities/isValidHexColor.js'
