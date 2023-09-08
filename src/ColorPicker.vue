@@ -185,6 +185,7 @@ import {
 	ColorRgb,
 	VisibleColorFormat,
 } from './types.js'
+import { getNewThumbPosition } from './utilities/getNewThumbPosition.js'
 
 const COLOR_FORMATS = ['hex', 'hsl', 'hsv', 'hwb', 'rgb'] as const satisfies ReadonlyArray<ColorFormat>
 
@@ -491,17 +492,6 @@ function getEventData (): ColorChangeDetail {
 	return {
 		colors,
 		cssColor,
-	}
-}
-
-function getNewThumbPosition (colorSpace: HTMLElement, clientX: number, clientY: number): { x: number, y: number } {
-	const rect = colorSpace.getBoundingClientRect()
-	const x = clientX - rect.left
-	const y = clientY - rect.top
-
-	return {
-		x: rect.width === 0 ? 0 : clamp((x / rect.width)*100, 0, 100),
-		y: rect.height === 0 ? 0 : clamp((1 - y / rect.height)*100, 0, 100),
 	}
 }
 
