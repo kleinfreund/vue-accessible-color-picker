@@ -17,8 +17,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3 # https://github.com/actions/checkout
-      - uses: actions/setup-node@v3 # https://github.com/actions/setup-node
+      - uses: actions/checkout@v4 # https://github.com/actions/checkout
+      - uses: actions/setup-node@v4 # https://github.com/actions/setup-node
         with:
           node-version-file: .nvmrc
       - uses: actions/cache@v3 # https://github.com/actions/cache
