@@ -34,6 +34,7 @@ Links:
 		- [alpha-range-input-label](#alpha-range-input-label)
 		- [copy-button](#copy-button)
 		- [format-switch-button](#format-switch-button)
+	- [Theming](#theming)
 - [Versioning](#versioning)
 - [Design](#design)
 
@@ -217,6 +218,33 @@ You can also register the component and import the styles globally.
 
 - **Description**: Overrides the content of the format switch button element.
 - **Default content**: Switch format (and SVG icon)
+
+### Theming
+
+You can customize the GUI of the color picker using CSS custom properties:
+
+```css
+:root {
+	--vacp-color-focus: tomato;
+	--vacp-width-border: 2px;
+}
+```
+
+Available custom properties and their default values:
+
+| Custom property                 | Default value |
+| ------------------------------- | ------------- |
+| `--vacp-color-background-input` | `#fff`
+| `--vacp-color-background`       | `#fff`
+| `--vacp-color-border`           | `#000`
+| `--vacp-color-focus`            | `#19f`
+| `--vacp-color-text-input`       | `currentColor`
+| `--vacp-color-text`             | `currentColor`
+| `--vacp-font-family`            | `-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif`
+| `--vacp-font-size`              | `0.8em`
+| `--vacp-spacing`                | `6px`
+| `--vacp-width-border`           | `1px`
+| `--vacp-width-color-space`      | `300px`
 
 ## Versioning
 

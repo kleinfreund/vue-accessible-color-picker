@@ -7,6 +7,27 @@ import { Plugin as Plugin_2 } from 'vue';
 import { PropType } from 'vue';
 import { VNodeProps } from 'vue';
 
+declare type __VLS_NonUndefinedable<T> = T extends undefined ? never : T;
+
+declare type __VLS_Prettify<T> = {
+    [K in keyof T]: T[K];
+} & {};
+
+declare type __VLS_TypePropsToRuntimeProps<T> = {
+    [K in keyof T]-?: {} extends Pick<T, K> ? {
+        type: PropType<__VLS_NonUndefinedable<T[K]>>;
+    } : {
+        type: PropType<T[K]>;
+        required: true;
+    };
+};
+
+declare type __VLS_WithDefaults<P, D> = {
+    [K in keyof Pick<P, keyof P>]: K extends keyof D ? __VLS_Prettify<P[K] & {
+        default: D[K];
+    }> : P[K];
+};
+
 declare type __VLS_WithTemplateSlots<T, S> = T & {
     new (): {
         $slots: S;
@@ -51,51 +72,21 @@ export declare type ColorMap = {
     rgb: ColorRgb;
 };
 
-export declare const ColorPicker: __VLS_WithTemplateSlots<DefineComponent<    {
-id: {
-type: PropType<string>;
-default: string;
-};
-color: {
-type: PropType<string | ColorHsl | ColorHwb | ColorRgb>;
-default: string;
-};
-visibleFormats: {
-type: PropType<VisibleColorFormat[]>;
-default: () => string[];
-};
-defaultFormat: {
-type: PropType<VisibleColorFormat>;
-default: string;
-};
-alphaChannel: {
-type: PropType<AlphaChannelProp>;
-default: string;
-};
-}, {}, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+export declare const ColorPicker: __VLS_WithTemplateSlots<DefineComponent<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<ColorPickerProps>, {
+color: string;
+id: string;
+visibleFormats: () => string[];
+defaultFormat: string;
+alphaChannel: string;
+}>, {}, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
 "color-change": (data: ColorChangeDetail) => void;
-}, string, VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<ExtractPropTypes<    {
-id: {
-type: PropType<string>;
-default: string;
-};
-color: {
-type: PropType<string | ColorHsl | ColorHwb | ColorRgb>;
-default: string;
-};
-visibleFormats: {
-type: PropType<VisibleColorFormat[]>;
-default: () => string[];
-};
-defaultFormat: {
-type: PropType<VisibleColorFormat>;
-default: string;
-};
-alphaChannel: {
-type: PropType<AlphaChannelProp>;
-default: string;
-};
-}>> & {
+}, string, VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<ColorPickerProps>, {
+color: string;
+id: string;
+visibleFormats: () => string[];
+defaultFormat: string;
+alphaChannel: string;
+}>>> & {
 "onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
 }, {
 id: string;

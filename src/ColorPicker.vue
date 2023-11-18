@@ -457,30 +457,24 @@ function getChannelAsCssValue (channel: string): string {
 }
 
 /**
- * Sets some CSS properties.
- *
- * 1. Sets the background of the hue slice to the color represented by the currently selected hue with full saturation and half the lightness (which is 100% value for an HSV color).
- *
- * 2. These overlapping gradients together with the underlying background color create a visual representation of a slice through the HSV cylinder. The slice’s angle is determined by the current hue. Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
- *
- * 3. The X and Y coordinates of the color space thumb’s position are expressed in the saturation and value parts of an HSV color. This is because the color space represents the hue slice of the HSV cylinder. This the most convenient option because a fully saturated color at 50% lightness is located in the top right corner of that slice (i.e. at saturation 100% and value 100%). A full red (#f00) can thus be picked by dragging the hue slider all the way to either end and the color space thumb in the most top right corner of the color space. This will set the hue to 0, the saturation to 100%, and the value to 100%.
+ * Sets the essential properties of the color picker as inline styles so that they can't be overridden.
  */
 function setCssProps (colorPicker: HTMLElement, colorSpace: HTMLElement, thumb: HTMLElement) {
-	colorPicker.style.setProperty('--vacp-hsl-h', String(colors.hsl.h))
-	colorPicker.style.setProperty('--vacp-hsl-s', String(colors.hsl.s))
-	colorPicker.style.setProperty('--vacp-hsl-l', String(colors.hsl.l))
-	colorPicker.style.setProperty('--vacp-hsl-a', String(colors.hsl.a))
+	// Use the current color as the *opaque* end of the the alpha channel slider. For this purpose, we use the current color with its alpha channel set to 1.
+	const opaqueColor = formatAsCssColor({ format: 'hsl', color: colors.hsl }, false)
+	colorPicker.style.setProperty('--vacp-color', opaqueColor)
 
-	// Sets a few CSS properties as inline styles because they're essential for the operation of the color picker.
+	// Allows the color space thumb to be positioned relative to this element.
 	colorSpace.style.position = 'relative'
-	// Sets the background of the hue slice to the color represented by the currently selected hue with full saturation and half the lightness (which is 100% value for an HSV color).
-	colorSpace.style.backgroundColor = 'hsl(var(--vacp-hsl-h) 100% 50%)'
-	// These overlapping gradients together with the underlying background color create a visual representation of a slice through the HSV cylinder. The slice’s angle is determined by the current hue. Changing the hue is equivalent with rotating the slice inside the HSV cylinder.
+	// Sets the background color of the color space. The color space shows a *slice* through the HSV color cylinder's center. The slice's angle represents the color's *hue* (i.e. rotating the angle of the HSV slice changes the color's hue). We want this color at 100% *saturation* and 100% *value* (which is the same as 50% lightness of the corresponding HSL color).
+	colorSpace.style.backgroundColor = `hsl(${colors.hsl.h} 100% 50%)`
+	// Adds two gradients on top of the solid background color of the color space. This creates the final image of the HSV slice. The first gradient goes from fully opaque black at the bottom to fully transparent at the top. The second gradient goes from full opaque white at the left to fully transparent at the right.
 	colorSpace.style.backgroundImage = 'linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)'
 
 	thumb.style.boxSizing = 'border-box'
+	// Allows positioning the color space thumb.
 	thumb.style.position = 'absolute'
-	// The X and Y coordinates of the color space thumb’s position are expressed in the saturation and value parts of an HSV color. This is because the color space represents the hue slice of the HSV cylinder. This the most convenient option because a fully saturated color at 50% lightness is located in the top right corner of that slice (i.e. at saturation 100% and value 100%). A full red (#f00) can thus be picked by dragging the hue slider all the way to either end and the color space thumb in the most top right corner of the color space. This will set the hue to 0, the saturation to 100%, and the value to 100%.
+	// Sets the X and Y coordinates of the color space thumb. Having chosen the color space to be a slice through the HSV cylinder allows us to map the saturation and value of the current color in HSV representation directly to the thumb's coordinates. In other words: the thumb controls the saturation (X coordinate) and value (Y coordinate) linearly.
 	thumb.style.left = `${colors.hsv.s}%`
 	thumb.style.bottom = `${colors.hsv.v}%`
 }
@@ -513,7 +507,7 @@ function changeInputValue (event: KeyboardEvent) {
 }
 </script>
 
-<style>
+<style lang="scss">
 /*
 This style block is unscoped intentionally.
 
@@ -521,24 +515,29 @@ This is done to have a lower specificity for its selectors which in turn makes i
 
 Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while the specificity for `.vacp-color-space` is 10.
 */
-.vacp-color-picker {
-	--vacp-color: hsl(calc(var(--vacp-hsl-h) * 360) calc(var(--vacp-hsl-s) * 100%) calc(var(--vacp-hsl-l) * 100%) / var(--vacp-hsl-a));
-	--vacp-focus-color: #19f;
-	--vacp-focus-outline: 2px solid var(--vacp-focus-color);
-	--vacp-border-width: 1px;
-	--vacp-border-color: #000;
-	--vacp-border: var(--vacp-border-width) solid var(--vacp-border-color);
-	--vacp-color-space-width: 300px;
-	--vacp-spacing: 6px;
 
-	max-width: var(--vacp-color-space-width);
-	padding: var(--vacp-spacing);
+$color-background-input: #fff;
+$color-background: #fff;
+$color-border: #000;
+$color-focus: #19f;
+$color-text-input: currentColor;
+$color-text: currentColor;
+$font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif;
+$font-size: 0.8em;
+$spacing: 6px;
+$width-border: 1px;
+$width-color-space: 300px;
+
+.vacp-color-picker {
+	max-width: var(--vacp-width-color-space, $width-color-space);
+	padding: var(--vacp-spacing, $spacing);
 	display: grid;
-	grid-gap: var(--vacp-spacing);
+	grid-gap: var(--vacp-spacing, $spacing);
 	grid-template-columns: 1fr min-content;
-	font-size: 0.8em;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
-	background-color: #fff;
+	font-size: var(--vacp-font-size, $font-size);
+	font-family: var(--vacp-font-family, $font-family);
+	color: var(--vacp-color-text, $color-text);
+	background-color: var(--vacp-color-background, $color-background);
 }
 
 .vacp-color-picker,
@@ -554,18 +553,18 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 }
 
 .vacp-color-picker :focus {
-	outline: var(--vacp-focus-outline);
+	outline: 2px solid var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-color-space {
 	grid-column: 1 / -1;
 
 	overflow: hidden;
-	height: calc(var(--vacp-color-space-width) * 0.6);
+	height: calc(var(--vacp-width-color-space, $width-color-space) * 0.6);
 }
 
 .vacp-color-space-thumb {
-	--vacp-thumb-size: calc(var(--vacp-spacing) * 4);
+	--vacp-thumb-size: calc(var(--vacp-spacing, #{$spacing}) * 4);
 
 	width: var(--vacp-thumb-size);
 	height: var(--vacp-thumb-size);
@@ -573,7 +572,7 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 	margin-bottom: calc(-1 * var(--vacp-thumb-size) / 2);
 	border: 3px solid #fff;
 	border-radius: 50%;
-	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border);
 	/* Corrects the box-shadow being cut-off in Firefox. “isolation: isolate” doesn't work. */
 	transform: rotate(0);
 }
@@ -583,12 +582,12 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 */
 .vacp-color-space-thumb:focus {
 	outline-color: transparent; /* 1. */
-	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color), 0 0 0 3px var(--vacp-focus-color);
+	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border), 0 0 0 3px var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-range-input-label {
-	--vacp-slider-track-width: 100%;
-	--vacp-slider-track-height: calc(var(--vacp-spacing) * 3);
+	--vacp-slider-track-height: calc(var(--vacp-spacing, #{$spacing}) * 3);
+	--vacp-slider-thumb-size: calc(var(--vacp-spacing, #{$spacing}) * 4 - var(--vacp-width-border, #{$width-border}) * 2);
 
 	display: block;
 }
@@ -600,7 +599,7 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 }
 
 .vacp-range-input-group > :not(:first-child) {
-	margin-top: var(--vacp-spacing);
+	margin-top: var(--vacp-spacing, $spacing);
 }
 
 .vacp-range-input,
@@ -610,12 +609,12 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 
 .vacp-range-input {
 	display: block;
-	width: var(--vacp-slider-track-width);
+	width: 100%;
 	height: var(--vacp-slider-track-height);
 	margin-right: 0;
 	margin-left: 0;
-	margin-top: calc(var(--vacp-spacing) / 2 + 1px);
-	margin-bottom: calc(var(--vacp-spacing) / 2 + 1px);
+	margin-top: calc(var(--vacp-spacing, $spacing) / 2 + 1px);
+	margin-bottom: calc(var(--vacp-spacing, $spacing) / 2 + 1px);
 	padding: 0;
 	border: none;
 	background: none;
@@ -636,8 +635,8 @@ Example: the specificity for `.vacp-color-space[data-v-76c97bd2]` is 20 while th
 		linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee),
 		linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee)
 	;
-	background-size: calc(var(--vacp-spacing) * 2) calc(var(--vacp-spacing) * 2);
-	background-position: 0 0, var(--vacp-spacing) var(--vacp-spacing);
+	background-size: calc(var(--vacp-spacing, $spacing) * 2) calc(var(--vacp-spacing, $spacing) * 2);
+	background-position: 0 0, var(--vacp-spacing, $spacing) var(--vacp-spacing, $spacing);
 }
 
 /*
@@ -645,36 +644,36 @@ Range input: Tracks
 */
 
 .vacp-range-input::-moz-range-track {
-	box-sizing: content-box;
-	width: var(--vacp-slider-track-width);
+	box-sizing: border-box;
+	width: 100%;
 	height: var(--vacp-slider-track-height);
-	border: var(--vacp-border);
+	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 }
 
 .vacp-range-input::-webkit-slider-runnable-track {
-	box-sizing: content-box;
-	width: var(--vacp-slider-track-width);
+	box-sizing: border-box;
+	width: 100%;
 	height: var(--vacp-slider-track-height);
-	border: var(--vacp-border);
+	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 }
 
 .vacp-range-input::-ms-track {
-	box-sizing: content-box;
-	width: var(--vacp-slider-track-width);
+	box-sizing: border-box;
+	width: 100%;
 	height: var(--vacp-slider-track-height);
-	border: var(--vacp-border);
+	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 }
 
 .vacp-range-input:focus::-moz-range-track {
-	outline: var(--vacp-focus-outline);
+	outline: 2px solid var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-range-input:focus::-webkit-slider-runnable-track {
-	outline: var(--vacp-focus-outline);
+	outline: 2px solid var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-range-input:focus::-ms-track {
-	outline: var(--vacp-focus-outline);
+	outline: 2px solid var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-range-input--alpha::-moz-range-track {
@@ -689,53 +688,64 @@ Range input: Tracks
 	background-image: linear-gradient(to right, transparent, var(--vacp-color));
 }
 
+$hue-gradient: linear-gradient(
+	to right,
+#f00 calc(100% *   0/360),
+#ff0 calc(100% *  60/360),
+#0f0 calc(100% * 120/360),
+#0ff calc(100% * 180/360),
+#00f calc(100% * 240/360),
+#f0f calc(100% * 300/360),
+#f00 calc(100% * 360/360)
+);
+
 .vacp-range-input--hue::-moz-range-track {
-	background-image: linear-gradient(to right, #f00 calc(100% * 0/360), #ff0 calc(100% * 60/360), #0f0 calc(100% * 120/360), #0ff calc(100% * 180/360), #00f calc(100% * 240/360), #f0f calc(100% * 300/360), #f00 calc(100% * 360/360));
+	background-image: $hue-gradient;
 }
 
 .vacp-range-input--hue::-webkit-slider-runnable-track {
-	background-image: linear-gradient(to right, #f00 calc(100% * 0/360), #ff0 calc(100% * 60/360), #0f0 calc(100% * 120/360), #0ff calc(100% * 180/360), #00f calc(100% * 240/360), #f0f calc(100% * 300/360), #f00 calc(100% * 360/360));
+	background-image: $hue-gradient;
 }
 
 .vacp-range-input--hue::-ms-track {
-	background-image: linear-gradient(to right, #f00 calc(100% * 0/360), #ff0 calc(100% * 60/360), #0f0 calc(100% * 120/360), #0ff calc(100% * 180/360), #00f calc(100% * 240/360), #f0f calc(100% * 300/360), #f00 calc(100% * 360/360));
+	background-image: $hue-gradient;
 }
 
 /*
 Range input: thumbs
 */
 .vacp-range-input::-moz-range-thumb {
-	box-sizing: content-box;
-	width: var(--vacp-slider-track-height);
-	height: var(--vacp-slider-track-height);
+	box-sizing: border-box;
+	width: var(--vacp-slider-thumb-size);
+	height: var(--vacp-slider-thumb-size);
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
-	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border);
 	isolation: isolate;
 }
 
 .vacp-range-input::-webkit-slider-thumb {
-	box-sizing: content-box;
-	width: var(--vacp-slider-track-height);
-	height: var(--vacp-slider-track-height);
-	margin-top: calc(-1 * (var(--vacp-spacing) / 2));
+	box-sizing: border-box;
+	width: var(--vacp-slider-thumb-size);
+	height: var(--vacp-slider-thumb-size);
+	margin-top: calc(-1 * (var(--vacp-spacing, $spacing) / 2));
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
-	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border);
 	isolation: isolate;
 }
 
 .vacp-range-input::-ms-thumb {
-	box-sizing: content-box;
-	width: var(--vacp-slider-track-height);
-	height: var(--vacp-slider-track-height);
-	margin-top: calc(-1 * (var(--vacp-spacing) / 2));
+	box-sizing: border-box;
+	width: var(--vacp-slider-thumb-size);
+	height: var(--vacp-slider-thumb-size);
+	margin-top: calc(-1 * (var(--vacp-spacing, $spacing) / 2));
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
-	box-shadow: 0 0 0 var(--vacp-border-width) var(--vacp-border-color);
+	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border);
 	isolation: isolate;
 }
 
@@ -748,11 +758,12 @@ Range input: thumbs
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: calc(var(--vacp-spacing) * 6);
-	height: calc(var(--vacp-spacing) * 6);
-	border: var(--vacp-border-width) solid transparent;
+	width: calc(var(--vacp-spacing, $spacing) * 6);
+	height: calc(var(--vacp-spacing, $spacing) * 6);
+	border: var(--vacp-width-border, $width-border) solid transparent;
 	border-radius: 50%;
-	background-color: #fff;
+	color: var(--vacp-color-text-input, $color-text-input);
+	background-color: var(--vacp-color-background-input, $color-background-input);
 }
 
 /*
@@ -760,8 +771,8 @@ Range input: thumbs
 */
 .vacp-copy-button:enabled:focus {
 	outline: none; /* 1. */
-	border-color: var(--vacp-border-color);
-	box-shadow: 0 0 0 2px var(--vacp-focus-color);
+	border-color: var(--vacp-color-border, $color-border);
+	box-shadow: 0 0 0 2px var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-copy-button:enabled:hover {
@@ -776,14 +787,14 @@ Range input: thumbs
 }
 
 .vacp-color-inputs > :not(:first-child) {
-	margin-left: var(--vacp-spacing);
+	margin-left: var(--vacp-spacing, $spacing);
 }
 
 .vacp-color-input-group {
 	flex-grow: 1;
 	display: grid;
 	grid-auto-flow: column;
-	column-gap: var(--vacp-spacing);
+	column-gap: var(--vacp-spacing, $spacing);
 }
 
 .vacp-color-input-label {
@@ -793,13 +804,14 @@ Range input: thumbs
 .vacp-color-input {
 	width: 100%;
 	margin: 0;
-	margin-top: calc(var(--vacp-spacing) / 2);
-	padding: var(--vacp-spacing);
-	border: var(--vacp-border);
+	margin-top: calc(var(--vacp-spacing, $spacing) / 2);
+	padding: var(--vacp-spacing, $spacing);
+	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 	font: inherit;
 	text-align: center;
 	color: inherit;
-	background-color: #fff;
+	color: var(--vacp-color-text-input, $color-text-input);
+	background-color: var(--vacp-color-background-input, $color-background-input);
 }
 
 .vacp-format-switch-button {
@@ -807,16 +819,17 @@ Range input: thumbs
 	justify-content: center;
 	align-items: center;
 	margin: 0;
-	padding: var(--vacp-spacing);
-	border: var(--vacp-border-width) solid transparent;
+	padding: var(--vacp-spacing, $spacing);
+	border: var(--vacp-width-border, $width-border) solid transparent;
 	border-radius: 50%;
 	font: inherit;
 	color: inherit;
-	background-color: #fff;
+	color: var(--vacp-color-text-input, $color-text-input);
+	background-color: var(--vacp-color-background-input, $color-background-input);
 }
 
 .vacp-format-switch-button:enabled:focus {
-	border-color: var(--vacp-border-color);
+	border-color: var(--vacp-color-border, $color-border);
 }
 
 .vacp-format-switch-button:enabled:hover {

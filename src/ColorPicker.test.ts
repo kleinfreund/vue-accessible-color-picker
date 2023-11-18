@@ -74,10 +74,7 @@ describe('ColorPicker', () => {
 		})
 
 		const colorPicker = wrapper.find<HTMLElement>('.vacp-color-picker').element
-		expect(colorPicker.style.getPropertyValue('--vacp-hsl-h')).toBe('0')
-		expect(colorPicker.style.getPropertyValue('--vacp-hsl-s')).toBe('0')
-		expect(colorPicker.style.getPropertyValue('--vacp-hsl-l')).toBe('100')
-		expect(colorPicker.style.getPropertyValue('--vacp-hsl-a')).toBe('1')
+		expect(colorPicker.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100% / 1)')
 
 		const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb').element
 		expect(thumb.style.left).toBe('0%')
