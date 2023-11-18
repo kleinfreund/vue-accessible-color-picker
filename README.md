@@ -2,7 +2,7 @@
 
 [![Tests passing](https://github.com/kleinfreund/vue-accessible-color-picker/workflows/Tests/badge.svg)](https://github.com/kleinfreund/vue-accessible-color-picker/actions)
 
-A color picker component for Vue.js 3.
+A color picker component for Vue.js.
 
 This package’s files are distributed in the ES module format and have not been transpiled.
 
@@ -22,18 +22,18 @@ Links:
 - [Usage](#usage)
 - [Documentation](#documentation)
 	- [Props](#props)
-		- [`color`](#color)
-		- [`visibleFormats`](#visibleformats)
-		- [`defaultFormat`](#defaultformat)
 		- [`alphaChannel`](#alphachannel)
+		- [`color`](#color)
+		- [`defaultFormat`](#defaultformat)
 		- [`id`](#id)
+		- [`visibleFormats`](#visibleformats)
 	- [Events](#events)
 		- [`color-change`](#color-change)
 	- [Slots](#slots)
-		- [hue-range-input-label](#hue-range-input-label)
 		- [alpha-range-input-label](#alpha-range-input-label)
 		- [copy-button](#copy-button)
 		- [format-switch-button](#format-switch-button)
+		- [hue-range-input-label](#hue-range-input-label)
 	- [Theming](#theming)
 - [Versioning](#versioning)
 - [Design](#design)
@@ -46,9 +46,9 @@ npm install vue-accessible-color-picker
 
 ## Usage
 
-In a Vue single file component, import the `ColorPicker` component.
+In a Vue single file component, import the `ColorPicker` component and its styles (if you want to use them).
 
-When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use the component in the file’s `template` section once you imported it. Also import the styles if you want to make use of them.
+When using [Vue’s composition API](https://vuejs.org/guide/extras/composition-api-faq.html), you can directly use the component in the file’s `template` section once you import it.
 
 ```vue
 <template>
@@ -70,11 +70,23 @@ You can also register the component and import the styles globally.
 
 ### Props
 
+#### `alphaChannel`
+
+- **Description**: Whether to show input controls for a color’s alpha channel. If set to `'hide'`, the alpha range input and the alpha channel input are hidden, the “Copy color” button will copy a CSS color value without alpha channel, and the object emitted in a `color-change` event will have a `cssColor` property value without alpha channel.
+- **Type**: `'show'` or `'hide'`
+- **Required**: No
+- **Default**: `'show'`
+- **Usage**:
+
+	```vue
+	<ColorPicker alpha-channel="hide" />
+	```
+
 #### `color`
 
 - **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HSV, HWB, or RGB color.
 - **Type**: `string`, `ColorHsl`, `ColorHwb`, or `ColorRgb`
-- **Required**: `false`
+- **Required**: No
 - **Default**: `'#ffffffff'`
 - **Usage**:
 
@@ -110,23 +122,11 @@ You can also register the component and import the styles globally.
 	</script>
 	```
 
-#### `visibleFormats`
-
-- **Description**: A list of visible color formats. Controls for which formats the color `input` elements are shown and in which order the formats will be cycled through when activating the format switch button.
-- **Type**: `VisibleColorFormat[]`
-- **Required**: `false`
-- **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
-- **Usage**:
-
-	```vue
-	<ColorPicker :visible-formats="['hsl', 'hwb']" />
-	```
-
 #### `defaultFormat`
 
 - **Description**: The color format to show by default when rendering the color picker. Must be one of the formats specified in `visibleFormats`.
 - **Type**: `VisibleColorFormat`
-- **Required**: `false`
+- **Required**: No
 - **Default**: `'hsl'`
 - **Usage**:
 
@@ -134,28 +134,28 @@ You can also register the component and import the styles globally.
 	<ColorPicker default-format="hwb" />
 	```
 
-#### `alphaChannel`
-
-- **Description**: Whether to show input controls for a color’s alpha channel. If set to `'hide'`, the alpha range input and the alpha channel input are hidden, the “Copy color” button will copy a CSS color value without alpha channel, and the object emitted in a `color-change` event will have a `cssColor` property value without alpha channel.
-- **Type**: `'show'` or `'hide'`
-- **Required**: `false`
-- **Default**: `'show'`
-- **Usage**:
-
-	```vue
-	<ColorPicker alpha-channel="hide" />
-	```
-
 #### `id`
 
 - **Description**: The ID value will be used to prefix all `input` elements’ `id` and `label` elements’ `for` attribute values. Set this prop if you use multiple instances of the `color-picker` component on one page.
 - **Type**: `string`
-- **Required**: `false`
+- **Required**: No
 - **Default**: `'color-picker'`
 - **Usage**:
 
 	```vue
 	<ColorPicker id="color-picker-1" />
+	```
+
+#### `visibleFormats`
+
+- **Description**: A list of visible color formats. Controls for which formats the color `input` elements are shown and in which order the formats will be cycled through when activating the format switch button.
+- **Type**: `VisibleColorFormat[]`
+- **Required**: No
+- **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
+- **Usage**:
+
+	```vue
+	<ColorPicker :visible-formats="['hsl', 'hwb']" />
 	```
 
 ### Events
@@ -199,11 +199,6 @@ You can also register the component and import the styles globally.
 
 ### Slots
 
-#### hue-range-input-label
-
-- **Description**: Overrides the content of the hue range input’s `label` element.
-- **Default content**: Hue
-
 #### alpha-range-input-label
 
 - **Description**: Overrides the content of the alpha range input’s `label` element.
@@ -218,6 +213,11 @@ You can also register the component and import the styles globally.
 
 - **Description**: Overrides the content of the format switch button element.
 - **Default content**: Switch format (and SVG icon)
+
+#### hue-range-input-label
+
+- **Description**: Overrides the content of the hue range input’s `label` element.
+- **Default content**: Hue
 
 ### Theming
 
