@@ -560,7 +560,7 @@ $width-color-space: 300px;
 	grid-column: 1 / -1;
 
 	overflow: hidden;
-	height: calc(var(--vacp-width-color-space, $width-color-space) * 0.6);
+	aspect-ratio: 1 / 0.6;
 }
 
 .vacp-color-space-thumb {
@@ -582,7 +582,7 @@ $width-color-space: 300px;
 */
 .vacp-color-space-thumb:focus {
 	outline-color: transparent; /* 1. */
-	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border), 0 0 0 3px var(--vacp-color-focus, $color-focus);
+	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border), 0 0 0 calc(var(--vacp-width-border, $width-border) + 2px) var(--vacp-color-focus, $color-focus);
 }
 
 .vacp-range-input-label {
