@@ -1,5 +1,5 @@
 import { defineComponent as vt, ref as F, reactive as pt, computed as U, watch as dt, onMounted as mt, onBeforeUnmount as gt, openBlock as w, createElementBlock as y, createElementVNode as h, renderSlot as I, createTextVNode as q, createCommentVNode as X, Fragment as bt, renderList as wt, toDisplayString as yt } from "vue";
-function M(t, e, s) {
+function $(t, e, s) {
   return Math.max(e, Math.min(t, s));
 }
 function xt(t, e) {
@@ -64,7 +64,7 @@ function tt(t) {
     a: t.a
   };
 }
-function T(t) {
+function _(t) {
   return A(Z(t));
 }
 function x(t) {
@@ -93,54 +93,54 @@ function H(t) {
 function V(t) {
   return "#" + Object.values(t).map((e, s) => Math.round(s === 3 ? e * 255 : e).toString(16).padStart(2, "0")).join("");
 }
-function k(t) {
+function M(t) {
   return tt(Q(H(t)));
 }
 const Ct = {
   hex: {
     hex: (t) => t,
     hsl: (t) => H(N(t)),
-    hsv: (t) => x(k(N(t))),
-    hwb: (t) => k(N(t)),
+    hsv: (t) => x(M(N(t))),
+    hwb: (t) => M(N(t)),
     rgb: N
   },
   hsl: {
     hex: (t) => V(A(t)),
     hsl: (t) => t,
     hsv: Q,
-    hwb: (t) => k(A(t)),
+    hwb: (t) => M(A(t)),
     rgb: A
   },
   hsv: {
-    hex: (t) => V(T(t)),
+    hex: (t) => V(_(t)),
     hsl: Z,
     hsv: (t) => t,
     hwb: tt,
-    rgb: T
+    rgb: _
   },
   hwb: {
-    hex: (t) => V(T(x(t))),
-    hsl: (t) => H(T(x(t))),
+    hex: (t) => V(_(x(t))),
+    hsl: (t) => H(_(x(t))),
     hsv: x,
     hwb: (t) => t,
-    rgb: (t) => T(x(t))
+    rgb: (t) => _(x(t))
   },
   rgb: {
     hex: V,
     hsl: H,
-    hsv: (t) => x(k(t)),
-    hwb: k,
+    hsv: (t) => x(M(t)),
+    hwb: M,
     rgb: (t) => t
   }
 };
-function _t(t, e, s) {
+function Tt(t, e, s) {
   return Ct[t][e](s);
 }
-function Tt(t, e) {
+function _t(t, e) {
   const s = t.toFixed(e);
   return s.includes(".") ? s.replace(/\.?0+$/, "") : s;
 }
-const kt = {
+const Mt = {
   deg: 1,
   grad: 0.9,
   rad: 180 / Math.PI,
@@ -158,17 +158,17 @@ const kt = {
     if (e === null)
       return g.from(t);
     const s = e[0];
-    return g.from(t.slice(0, -s.length)) * kt[s];
+    return g.from(t.slice(0, -s.length)) * Mt[s];
   },
   to(t) {
     return g.to(t);
   }
 }, g = {
   from(t, { min: e = Number.NEGATIVE_INFINITY, max: s = Number.POSITIVE_INFINITY } = {}) {
-    return t.endsWith(".") ? NaN : M(Number(t), e, s);
+    return t.endsWith(".") ? NaN : $(Number(t), e, s);
   },
   to(t) {
-    return Tt(t, 2);
+    return _t(t, 2);
   }
 }, C = {
   from(t, { referenceValue: e = 100, min: s = 0, max: o = 100 } = {}) {
@@ -184,7 +184,7 @@ const kt = {
   to(t) {
     return g.to(t);
   }
-}, Mt = {
+}, $t = {
   hsl: {
     h: G,
     s: C,
@@ -205,7 +205,7 @@ const kt = {
   }
 };
 function E(t, e) {
-  return Mt[t][e];
+  return $t[t][e];
 }
 function W({ format: t, color: e }, s) {
   if (t === "hex")
@@ -219,7 +219,7 @@ function W({ format: t, color: e }, s) {
 function et(t) {
   return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(t);
 }
-function $t(t) {
+function kt(t) {
   return "r" in t ? "rgb" : "w" in t ? "hwb" : "v" in t ? "hsv" : "s" in t ? "hsl" : null;
 }
 const J = {
@@ -229,7 +229,7 @@ const J = {
 };
 function Ft(t) {
   if (typeof t != "string") {
-    const p = $t(t);
+    const p = kt(t);
     return p === null ? null : { format: p, color: t };
   }
   if (t.startsWith("#"))
@@ -257,8 +257,8 @@ function Ft(t) {
 function It(t, e, s) {
   const o = t.getBoundingClientRect(), u = e - o.left, f = s - o.top;
   return {
-    x: o.width === 0 ? 0 : M(u / o.width * 100, 0, 100),
-    y: o.height === 0 ? 0 : M((1 - f / o.height) * 100, 0, 100)
+    x: o.width === 0 ? 0 : $(u / o.width * 100, 0, 100),
+    y: o.height === 0 ? 0 : $((1 - f / o.height) * 100, 0, 100)
   };
 }
 const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Ht = ["id", "value"], Et = ["for"], Lt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Pt = ["id", "value"], Ot = /* @__PURE__ */ h("span", { class: "vacp-visually-hidden" }, "Copy color", -1), St = /* @__PURE__ */ h("svg", {
@@ -310,9 +310,9 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
       return o.alphaChannel === "hide" && [5, 9].includes(l.hex.length) ? l.hex.substring(0, l.hex.length - (l.hex.length - 1) / 4) : l.hex;
     });
     dt(() => o.color, z), mt(function() {
-      document.addEventListener("mousemove", L, { passive: !1 }), document.addEventListener("touchmove", P, { passive: !1 }), document.addEventListener("mouseup", $), document.addEventListener("touchend", $), z(o.color);
+      document.addEventListener("mousemove", L, { passive: !1 }), document.addEventListener("touchmove", P, { passive: !1 }), document.addEventListener("mouseup", k), document.addEventListener("touchend", k), z(o.color);
     }), gt(function() {
-      document.removeEventListener("mousemove", L), document.removeEventListener("touchmove", P), document.removeEventListener("mouseup", $), document.removeEventListener("touchend", $);
+      document.removeEventListener("mousemove", L), document.removeEventListener("touchmove", P), document.removeEventListener("mouseup", k), document.removeEventListener("touchend", k);
     });
     function st() {
       const r = (o.visibleFormats.findIndex((a) => a === c.value) + 1) % o.visibleFormats.length;
@@ -324,7 +324,7 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
     function at(n) {
       d = !0, P(n);
     }
-    function $() {
+    function k() {
       d = !1;
     }
     function L(n) {
@@ -345,8 +345,8 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
       if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(n.key))
         return;
       n.preventDefault();
-      const r = ["ArrowLeft", "ArrowDown"].includes(n.key) ? -1 : 1, a = ["ArrowLeft", "ArrowRight"].includes(n.key) ? "s" : "v", i = n.shiftKey ? 10 : 1, m = l.hsv[a] + r * i, _ = Object.assign({}, l.hsv);
-      _[a] = M(m, 0, 100), b("hsv", _);
+      const r = ["ArrowLeft", "ArrowDown"].includes(n.key) ? -1 : 1, a = ["ArrowLeft", "ArrowRight"].includes(n.key) ? "s" : "v", i = n.shiftKey ? 10 : 1, m = l.hsv[a] + r * i, T = Object.assign({}, l.hsv);
+      T[a] = $(m, 0, 100), b("hsv", T);
     }
     function z(n) {
       const r = Ft(n);
@@ -377,7 +377,7 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
       if (!xt(l[n], a)) {
         l[n] = a;
         for (const i of s)
-          i !== n && (l[i] = _t(n, i, a));
+          i !== n && (l[i] = Tt(n, i, a));
         u("color-change", ft());
       }
       f.value instanceof HTMLElement && v.value instanceof HTMLElement && p.value instanceof HTMLElement && ht(f.value, v.value, p.value);
@@ -404,8 +404,8 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
     function B(n) {
       if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(n.key) || !n.shiftKey)
         return;
-      const r = n.currentTarget, a = Number(r.step), i = ["ArrowLeft", "ArrowDown"].includes(n.key) ? -1 : 1, m = Number(r.value) + i * a * 10, _ = M(m, Number(r.min), Number(r.max));
-      r.value = String(_ - i * a);
+      const r = n.currentTarget, a = Number(r.step), i = ["ArrowLeft", "ArrowDown"].includes(n.key) ? -1 : 1, m = Number(r.value) + i * a * 10, T = $(m, Number(r.min), Number(r.max));
+      r.value = String(T - i * a);
     }
     return (n, r) => (w(), y("div", {
       ref_key: "colorPicker",
@@ -529,8 +529,7 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
       ])
     ], 512));
   }
-});
-const Jt = {
+}), Jt = {
   install(t) {
     t.component("ColorPicker", Xt);
   }
