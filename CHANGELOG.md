@@ -1,3 +1,12 @@
+## [5.0.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.0.0...v5.0.1) (2023-11-23)
+
+
+### Bug Fixes
+
+* cannot find module TypeScript error ([577b4b4](https://github.com/kleinfreund/vue-accessible-color-picker/commit/577b4b4286d2d909c87d8b027bb073c6e8a1ae0d))
+
+  Adds the types field back to the package.json file to prevent the "Cannot find module 'vue-accessible-color-picker' or its corresponding type declarations." error.
+
 ## [5.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.4...v5.0.0) (2023-11-23)
 
 

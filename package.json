@@ -1,6 +1,6 @@
 {
 	"name": "vue-accessible-color-picker",
-	"version": "5.0.0",
+	"version": "5.0.1",
 	"license": "MIT",
 	"description": "Color picker component for Vue.js",
 	"author": {
