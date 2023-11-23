@@ -99,7 +99,7 @@ You can also register the component and import the styles globally.
 	```
 
 	```vue
-	<ColorPicker :color="{ h: 0.75, s: 1, l: 0.5, a: 0.8 }" />
+	<ColorPicker :color="{ h: 270, s: 100, l: 50, a: 0.8 }" />
 	```
 
 	```vue
