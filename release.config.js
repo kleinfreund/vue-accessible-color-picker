@@ -12,7 +12,7 @@ const commitPartial = defaultCommitPartial + customCommitPartial
 function finalizeContext (context) {
 	for (const commitGroup of context.commitGroups) {
 		for (const commit of commitGroup.commits) {
-			commit.bodyLines = commit.body.split('\n').filter((line) => line !== '')
+			commit.bodyLines = commit.body?.split('\n').filter((line) => line !== '') ?? []
 		}
 	}
 
