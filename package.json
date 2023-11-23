@@ -30,6 +30,7 @@
 		},
 		"./styles": "./dist/ColorPicker.css"
 	},
+	"types": "./dist/ColorPicker.d.ts",
 	"files": [
 		"dist/ColorPicker.css",
 		"dist/ColorPicker.d.ts",
