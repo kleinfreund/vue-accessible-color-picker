@@ -30,9 +30,6 @@
 		},
 		"./styles": "./dist/ColorPicker.css"
 	},
-	"main": "./dist/ColorPicker.js",
-	"module": "./dist/ColorPicker.js",
-	"types": "./dist/ColorPicker.d.ts",
 	"files": [
 		"dist/ColorPicker.css",
 		"dist/ColorPicker.d.ts",
