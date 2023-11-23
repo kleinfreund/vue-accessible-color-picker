@@ -1,10 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-// Since all I need is to append something to the default commit template, I read the original file and append to it instead of copying its contents. This way, the default template will always be up-to-date.
-// Note: I'm intentionally using a different template here than the conventionalcommits one because there seems to be an issue with adding the commit hash URLs.
-const defaultCommitPartial = readFileSync('./node_modules/conventional-changelog-writer/templates/commit.hbs', { encoding: 'utf-8' })
-const customCommitPartial = readFileSync('./changelog-template-commit.hbs', { encoding: 'utf-8' })
-const commitPartial = defaultCommitPartial + customCommitPartial
+const commitPartial = readFileSync('./changelog-template-commit.hbs', { encoding: 'utf-8' })
 
 /**
  * Adds the commit body line by line so I can add it with the correct indentation in `changelog-template-commit.hbs`.

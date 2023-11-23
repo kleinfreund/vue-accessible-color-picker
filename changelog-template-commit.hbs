@@ -1,11 +1,49 @@
+{{!--
+  Copy of https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/templates/commit.hbs
+
+  The following have been replaced:
+
+  - `commitUrlFormat` with `{{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}})`
+  - `issueUrlFormat` with `{{@root.host}}/{{@root.owner}}/{{@root.repository}}/issues/{{this.id}}`
+
+  As they won't be replaced when overriding the commitPartial
+--}}
+*{{#if scope}} **{{scope}}:**
+{{~/if}} {{#if subject}}
+  {{~subject}}
+{{~else}}
+  {{~header}}
+{{~/if}}
+
+{{~!-- commit link --}}{{~#if hash}} {{#if @root.linkReferences~}}
+  ([{{shortHash}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}}))
+{{~else}}
+  {{~shortHash}}
+{{~/if}}{{~/if}}
+
+{{~!-- commit references --}}
+{{~#if references~}}
+  , closes
+  {{~#each references}} {{#if @root.linkReferences~}}
+    [
+    {{~#if this.owner}}
+      {{~this.owner}}/
+    {{~/if}}
+    {{~this.repository}}{{this.prefix}}{{this.issue}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/issues/{{this.id}})
+  {{~else}}
+    {{~#if this.owner}}
+      {{~this.owner}}/
+    {{~/if}}
+    {{~this.repository}}{{this.prefix}}{{this.issue}}
+  {{~/if}}{{/each}}
+{{~/if}}
+{{!-- End of copy --}}
+
+{{!-- Start of custom additions --}}
 {{#each bodyLines}}
 
   {{this}}
-
-{{/each}}
-
-{{#each notes}}
+{{/each}}{{#each notes}}
 
   **BREAKING CHANGE**: {{text}}
-
 {{/each}}
