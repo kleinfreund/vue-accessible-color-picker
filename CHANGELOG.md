@@ -1,3 +1,64 @@
+## [5.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.4...v5.0.0) (2023-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Renames the following CSS custom properties: `--vacp-border-color` → `--vacp-color-border`, `--vacp-border-width` → `--vacp-width-border`, `--vacp-color-space-width` → `--vacp-width-color-space`, `--vacp-focus-color` → `--vacp-color-focus` (see README.md for the full list of supported custom properties).
+* Removes the following CSS custom properties: `--vacp-border` (direct replacement: `var(--vacp-width-border) solid var(--vacp-color-border)`), `--vacp-focus-outline` (direct replacement: `2px solid var(--vacp-color-focus)`).
+* Changes how color objects provided to the `color` prop are handled. Color objects no longer use values that are constrained to the range [0, 1] (except for any alpha channel values). **How to update**: Multiply any value of objects you pass to the `color` prop by the number in parentheses corresponding to the right color channel: For HSL: h (360), s (100), l (100). For HWB: h (360), w (100), b (100). For RGB: r (255), g (255), b (255).
+* Changes the data emitted by the `color-change` event such that the values on the `colors` object are no longer constrained to the range [0, 1] (except for any alpha channel values). **How to update**: Divide any value of objects from the `colors` object you mkae use of by the number in parentheses corresponding to the right color channel: For HSL: h (360), s (100), l (100). For HWB: h (360), w (100), b (100). For RGB: r (255), g (255), b (255).
+* The component, when imported using the default module specifier `vue-accessible-color-picker`, no longer injects styles into the document. **How to update**: Import the styles either locally inside a Vue single file component's `style` block (using `@import url('vue-accessible-color-picker/styles');`) or globally in your application's entry point (commonly a main.js file somewhere).
+* Removes the module specifier `vue-accessible-color-picker/unstyled`. It's no longer needed because `vue-accessible-color-picker` now resolves to a component without styles. **How to update**: Import from `vue-accessible-color-picker` instead.
+* Removes the module specifier `vue-accessible-color-picker/types/index.d.ts`. **How to update**: Import from `vue-accessible-color-picker` instead.
+* Renames the type `ColorChangeEvent` to `ColorChangeDetail`.
+
+### Features
+
+* make theming using custom properties easier ([e3147aa](https://github.com/kleinfreund/vue-accessible-color-picker/commit/e3147aa944a7e30bbe4256b74f44bb2bb14e2dbe))
+
+  Simplifies theming of the color picker GUI with CSS custom properties by making better use of the CSS cascade. Customizing the custom properties (e.g. `--vacp-focus-color`) can now be done on any ancestor element of `.vacp-color-picker` in addition to `.vacp-color-picker` itself. For example, you can set `--vacp-focus-color: orange` on `:root` and it will work.
+
+  Adds the following CSS custom properties for theming: `--vacp-color-background-input`, `--vacp-color-background`, `--vacp-color-text-input`, `--vacp-color-text`, `--vacp-font-family`, `--vacp-font-size` (see README.md for the full list of supported custom properties).
+
+
+  **BREAKING CHANGE**: Renames the following CSS custom properties: `--vacp-border-color` → `--vacp-color-border`, `--vacp-border-width` → `--vacp-width-border`, `--vacp-color-space-width` → `--vacp-width-color-space`, `--vacp-focus-color` → `--vacp-color-focus` (see README.md for the full list of supported custom properties).
+
+
+  **BREAKING CHANGE**: Removes the following CSS custom properties: `--vacp-border` (direct replacement: `var(--vacp-width-border) solid var(--vacp-color-border)`), `--vacp-focus-outline` (direct replacement: `2px solid var(--vacp-color-focus)`).
+* support all angle values as input ([3fac65e](https://github.com/kleinfreund/vue-accessible-color-picker/commit/3fac65ed1b2fcf8f1c19dbce38410e5ccfae943b))
+
+  Adds support for the angle value units `deg`, `grad`, `rad`, and `turn` when entering hues (see https://www.w3.org/TR/css-values-4/#angle-value).
+
+  Stops normalizing angle values to the range [0, 360) (e.g. a hue value of 450 will no longer be processed, stored, and emitted as 90).
+
+
+### Code Refactoring
+
+* change color channels to not be constrained to the range [0, 1] ([93fce2c](https://github.com/kleinfreund/vue-accessible-color-picker/commit/93fce2cc442f5158b4d3fac7b2f9d13711e785a7))
+
+  Changes how color objects are processed (via the `color` prop), stored, and emitted (via the `color-change` event) such that the representation of the current color doesn't have its values constrained to the range [0, 1] (inclusive) anymore. Instead, the values are now stored as close as possible to the native representation in CSS (e.g. the hue value 270 is now stored as 270 instead of 0.75). Alpha channel values continue to be stored in the range [0, 1].
+
+
+  **BREAKING CHANGE**: Changes how color objects provided to the `color` prop are handled. Color objects no longer use values that are constrained to the range [0, 1] (except for any alpha channel values). **How to update**: Multiply any value of objects you pass to the `color` prop by the number in parentheses corresponding to the right color channel: For HSL: h (360), s (100), l (100). For HWB: h (360), w (100), b (100). For RGB: r (255), g (255), b (255).
+
+
+  **BREAKING CHANGE**: Changes the data emitted by the `color-change` event such that the values on the `colors` object are no longer constrained to the range [0, 1] (except for any alpha channel values). **How to update**: Divide any value of objects from the `colors` object you mkae use of by the number in parentheses corresponding to the right color channel: For HSL: h (360), s (100), l (100). For HWB: h (360), w (100), b (100). For RGB: r (255), g (255), b (255).
+* migrate code base to TypeScript ([18a2a98](https://github.com/kleinfreund/vue-accessible-color-picker/commit/18a2a98d894d859a248031aa9ef950001be8f843))
+
+  Migrates the code base to TypeScript. This required a fundamental change in the build chain as some of the previously used Rollup plugins (`rollup-plugin-vue`, `rollup-plugin-typescript`, `rollup-plugin-typescript2`) are either not being maintained anymore and/or don't work well with the combination of Vue 3 and TypeScript. The project is now built using `vite` and `@vitejs/plugin-vue` (for building the component) and `vue-tsc` and `@microsoft/api-extractor` (for bundling the type definitions).
+
+
+  **BREAKING CHANGE**: The component, when imported using the default module specifier `vue-accessible-color-picker`, no longer injects styles into the document. **How to update**: Import the styles either locally inside a Vue single file component's `style` block (using `@import url('vue-accessible-color-picker/styles');`) or globally in your application's entry point (commonly a main.js file somewhere).
+
+
+  **BREAKING CHANGE**: Removes the module specifier `vue-accessible-color-picker/unstyled`. It's no longer needed because `vue-accessible-color-picker` now resolves to a component without styles. **How to update**: Import from `vue-accessible-color-picker` instead.
+
+
+  **BREAKING CHANGE**: Removes the module specifier `vue-accessible-color-picker/types/index.d.ts`. **How to update**: Import from `vue-accessible-color-picker` instead.
+
+
+  **BREAKING CHANGE**: Renames the type `ColorChangeEvent` to `ColorChangeDetail`.
+
 ## [4.1.4](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v4.1.3...v4.1.4) (2023-08-02)
 
 
