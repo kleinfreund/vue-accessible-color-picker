@@ -10,7 +10,6 @@ Links:
 
 - [demo](https://vue-accessible-color-picker.netlify.app)
 - [**npmjs.com**/package/vue-accessible-color-picker](https://www.npmjs.com/package/vue-accessible-color-picker)
-	- [on BundlePhobia](https://bundlephobia.com/result?p=vue-accessible-color-picker)
 - [**github.com**/kleinfreund/vue-accessible-color-picker](https://github.com/kleinfreund/vue-accessible-color-picker)
 	- [code of conduct](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CODE_OF_CONDUCT.md)
 	- [contributing guidelines](https://github.com/kleinfreund/vue-accessible-color-picker/blob/main/CONTRIBUTING.md)
