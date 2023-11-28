@@ -2,7 +2,7 @@ import { beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { shallowMount, flushPromises, ComponentMountingOptions } from '@vue/test-utils'
 
 import ColorPicker from './ColorPicker.vue'
-import { ColorPickerProps } from './types.js'
+import { ColorChangeDetail, ColorPickerProps } from './types.js'
 
 type MountingOptions = ComponentMountingOptions<ColorPickerProps> & {
 	// Overrides the props in `ComponentMountingOptions` to be more accurate.
@@ -31,7 +31,7 @@ describe('ColorPicker', () => {
 		expect(wrapper.html()).toBeTruthy()
 	})
 
-	test.each([
+	test.each<ColorPickerProps>([
 		{},
 		{
 			color: '#ffffffff',
@@ -65,7 +65,7 @@ describe('ColorPicker', () => {
 			color: 'hsl(0, 0%, 100%, 1)',
 			alphaChannel: 'hide',
 		},
-	] as const)('initializes color space and thumb correctly with default color value', (props: ColorPickerProps) => {
+	])('initializes color space and thumb correctly with default color value', (props) => {
 		const wrapper = createWrapper({
 			props: {
 				defaultFormat: 'hex',
@@ -115,7 +115,7 @@ describe('ColorPicker', () => {
 	})
 
 	describe('props & attributes', () => {
-		test.each([
+		test.each<[ColorPickerProps, string]>([
 			[
 				{ color: '#f00' },
 				'#f00',
@@ -132,7 +132,7 @@ describe('ColorPicker', () => {
 				{ color: { h: 180, w: 33, b: 50, a: 1 } },
 				'#548080ff',
 			],
-		] as const)('mounts correctly with a valid color prop', async (props: ColorPickerProps, expectedHexInputValue) => {
+		])('mounts correctly with a valid color prop', async (props, expectedHexInputValue) => {
 			const wrapper = createWrapper({
 				props: {
 					defaultFormat: 'hex',
@@ -172,7 +172,7 @@ describe('ColorPicker', () => {
 			expect(input.value).toBe('#ffffffff')
 		})
 
-		test.each([
+		test.each<[ColorPickerProps, string[]]>([
 			[
 				{ defaultFormat: undefined },
 				['H', 'S', 'L'],
@@ -193,7 +193,7 @@ describe('ColorPicker', () => {
 				{ defaultFormat: 'rgb' },
 				['R', 'G', 'B'],
 			],
-		] as const)('sets active color format to “%s” when providing default format prop', (props: ColorPickerProps, expectedLabels) => {
+		])('sets active color format to “%s” when providing default format prop', (props, expectedLabels) => {
 			const wrapper = createWrapper({ props })
 
 			const inputGroupMarkup = wrapper.find('.vacp-color-input-group').html()
@@ -261,10 +261,10 @@ describe('ColorPicker', () => {
 			}
 		})
 
-		test.each([
+		test.each<[ColorPickerProps, boolean, string]>([
 			[{ alphaChannel: 'show' }, true, 'hsl(180 0% 100% / 1)'],
 			[{ alphaChannel: 'hide' }, false, 'hsl(180 0% 100%)'],
-		] as const)('shows/hides correct elements when setting alphaChannel', async (props: ColorPickerProps, isElementVisible, expectedCssColor) => {
+		])('shows/hides correct elements when setting alphaChannel', async (props, isElementVisible, expectedCssColor) => {
 			const id = 'test-color-picker'
 			const wrapper = createWrapper({
 				attachTo: document.body,
@@ -525,7 +525,7 @@ describe('ColorPicker', () => {
 			})
 		})
 
-		test.each([
+		test.each<[ColorPickerProps, string]>([
 			[
 				{ defaultFormat: 'rgb', alphaChannel: 'show' },
 				'rgb(255 255 255 / 1)',
@@ -546,7 +546,7 @@ describe('ColorPicker', () => {
 				{ defaultFormat: 'hex', alphaChannel: 'hide' },
 				'#ffffff',
 			],
-		] as const)('copy button copies %s format as %s', async (props: ColorPickerProps, cssColor) => {
+		])('copy button copies %s format as %s', async (props, cssColor) => {
 			vi.spyOn(global.navigator.clipboard, 'writeText').mockImplementation(vi.fn(() => Promise.resolve()))
 
 			const wrapper = createWrapper({ props })
@@ -580,7 +580,7 @@ describe('ColorPicker', () => {
 	})
 
 	describe('color value inputs', () => {
-		test.each([
+		test.each<[ColorPickerProps, string, string]>([
 			[
 				{ id: 'color-picker', defaultFormat: 'rgb' },
 				'r',
@@ -596,7 +596,7 @@ describe('ColorPicker', () => {
 				'b',
 				'25.%',
 			],
-		] as const)('updating a color input with an invalid value does not update the internal color data', async (props: ColorPickerProps, channel, channelValue) => {
+		])('updating a color input with an invalid value does not update the internal color data', async (props, channel, channelValue) => {
 			const wrapper = createWrapper({ props })
 
 			const input = wrapper.find<HTMLInputElement>(`#${props.id}-color-${props.defaultFormat}-${channel}`)
@@ -630,7 +630,7 @@ describe('ColorPicker', () => {
 			expect(emittedColorChangeEvents).toBe(undefined)
 		})
 
-		test.each([
+		test.each<[ColorPickerProps, string, string]>([
 			[
 				{ id: 'color-picker', defaultFormat: 'rgb' },
 				'r',
@@ -646,7 +646,7 @@ describe('ColorPicker', () => {
 				'b',
 				'25.5%',
 			],
-		] as const)('updating a %s color input with a valid value updates the internal color data', async (props: ColorPickerProps, channel, channelValue) => {
+		])('updating a %s color input with a valid value updates the internal color data', async (props, channel, channelValue) => {
 			const wrapper = createWrapper({ props })
 
 			const input = wrapper.find<HTMLInputElement>(`#${props.id}-color-${props.defaultFormat}-${channel}`)
@@ -681,7 +681,7 @@ describe('ColorPicker', () => {
 	})
 
 	describe('color-change event', () => {
-		test.each([
+		test.each<[ColorPickerProps, ColorChangeDetail]>([
 			[
 				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'show' },
 				{
@@ -799,7 +799,7 @@ describe('ColorPicker', () => {
 					},
 				},
 			],
-		] as const)('emits correct data', async (props: ColorPickerProps, expectedData) => {
+		])('emits correct data', async (props, expectedData) => {
 			const wrapper = createWrapper({ props })
 
 			await wrapper.setProps({ color: props.color })
@@ -812,7 +812,7 @@ describe('ColorPicker', () => {
 	})
 
 	describe('color inputs', () => {
-		test.each([
+		test.each<[ColorPickerProps, string]>([
 			[
 				{ color: '#12345678', alphaChannel: 'show' },
 				'#12345678',
@@ -845,7 +845,7 @@ describe('ColorPicker', () => {
 				{ color: '#123', alphaChannel: 'hide' },
 				'#123',
 			],
-		] as const)('shows expected color for hex colors', async (props: ColorPickerProps, expectedHexColor) => {
+		])('shows expected color for hex colors', async (props, expectedHexColor) => {
 			const wrapper = createWrapper({
 				props: {
 					defaultFormat: 'hex',
