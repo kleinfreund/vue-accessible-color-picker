@@ -61,8 +61,8 @@
 	},
 	"devDependencies": {
 		"@babel/types": "^7.25.8",
-		"@commitlint/cli": "^18.6.1",
-		"@commitlint/config-conventional": "^18.6.3",
+		"@commitlint/cli": "19.5.0",
+		"@commitlint/config-conventional": "19.5.0",
 		"@microsoft/api-extractor": "^7.47.11",
 		"@semantic-release/changelog": "^6.0.3",
 		"@semantic-release/commit-analyzer": "^13.0.0",
