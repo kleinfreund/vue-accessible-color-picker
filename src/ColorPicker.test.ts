@@ -520,6 +520,7 @@ describe('ColorPicker', () => {
 		beforeAll(() => {
 			Object.defineProperty(global.navigator, 'clipboard', {
 				value: {
+					// eslint-disable-next-line @typescript-eslint/no-empty-function
 					writeText: () => {},
 				},
 			})

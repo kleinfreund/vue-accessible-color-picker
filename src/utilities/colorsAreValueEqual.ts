@@ -1,7 +1,7 @@
 /**
  * Checks whether two objects are value equal.
  */
-export function colorsAreValueEqual (colorA: string | { [key: string]: number }, colorB: string | { [key: string]: number }): boolean {
+export function colorsAreValueEqual (colorA: string | Record<string, number>, colorB: string | Record<string, number>): boolean {
 	if (typeof colorA === 'string' || typeof colorB === 'string') {
 		return colorA === colorB
 	}

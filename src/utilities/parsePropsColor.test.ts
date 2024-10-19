@@ -50,6 +50,7 @@ describe('parsePropsColor', () => {
 				return '#663399'
 			}
 
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			set fillStyle (_fillStyle) {}
 		}
 		// @ts-ignore
@@ -64,6 +65,7 @@ describe('parsePropsColor', () => {
 				return '#000000'
 			}
 
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			set fillStyle (_fillStyle) {}
 		}
 		// @ts-ignore

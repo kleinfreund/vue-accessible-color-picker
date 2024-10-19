@@ -187,7 +187,7 @@ import {
 } from './types.js'
 import { getNewThumbPosition } from './utilities/getNewThumbPosition.js'
 
-const COLOR_FORMATS = ['hex', 'hsl', 'hsv', 'hwb', 'rgb'] as const satisfies ReadonlyArray<ColorFormat>
+const COLOR_FORMATS = ['hex', 'hsl', 'hsv', 'hwb', 'rgb'] as const satisfies readonly ColorFormat[]
 
 const props = withDefaults(defineProps<ColorPickerProps>(), {
 	color: '#ffffffff',
@@ -197,9 +197,7 @@ const props = withDefaults(defineProps<ColorPickerProps>(), {
 	alphaChannel: 'show',
 })
 
-const emit = defineEmits<{
-	(event: 'color-change', data: ColorChangeDetail): void
-}>()
+const emit = defineEmits<(event: 'color-change', data: ColorChangeDetail) => void>()
 
 /**
  * The root element of the color picker.

@@ -20,7 +20,7 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				// Controls the file name of the CSS file.
-				assetFileNames: `ColorPicker.[ext]`,
+				assetFileNames: 'ColorPicker.[ext]',
 			},
 			// Prevents bundling vue.
 			external: ['vue'],
