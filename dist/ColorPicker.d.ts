@@ -4,6 +4,35 @@ import { DefineComponent } from 'vue';
 import { Plugin as Plugin_2 } from 'vue';
 import { PublicProps } from 'vue';
 
+declare const __VLS_component: DefineComponent<ColorPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
+"color-change": (data: ColorChangeDetail) => any;
+}, string, PublicProps, Readonly<ColorPickerProps> & Readonly<{
+"onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
+}>, {
+id: string;
+color: string | ColorHsl | ColorHwb | ColorRgb;
+visibleFormats: VisibleColorFormat[];
+defaultFormat: VisibleColorFormat;
+alphaChannel: AlphaChannelProp;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
+
+declare function __VLS_template(): {
+    slots: {
+        "hue-range-input-label"?(_: {}): any;
+        "alpha-range-input-label"?(_: {}): any;
+        "copy-button"?(_: {}): any;
+        "format-switch-button"?(_: {}): any;
+    };
+    refs: {
+        colorPicker: HTMLDivElement;
+        colorSpace: HTMLDivElement;
+        thumb: HTMLDivElement;
+    };
+    attrs: Partial<{}>;
+};
+
+declare type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
+
 declare type __VLS_WithTemplateSlots<T, S> = T & {
     new (): {
         $slots: S;
@@ -48,22 +77,7 @@ export declare type ColorMap = {
     rgb: ColorRgb;
 };
 
-export declare const ColorPicker: __VLS_WithTemplateSlots<DefineComponent<ColorPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
-"color-change": (data: ColorChangeDetail) => any;
-}, string, PublicProps, Readonly<ColorPickerProps> & Readonly<{
-"onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
-}>, {
-id: string;
-color: string | ColorHsl | ColorHwb | ColorRgb;
-visibleFormats: VisibleColorFormat[];
-defaultFormat: VisibleColorFormat;
-alphaChannel: AlphaChannelProp;
-}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>, {
-    "hue-range-input-label"?(_: {}): any;
-    "alpha-range-input-label"?(_: {}): any;
-    "copy-button"?(_: {}): any;
-    "format-switch-button"?(_: {}): any;
-}>;
+export declare const ColorPicker: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 
 export declare interface ColorPickerProps {
     /**
