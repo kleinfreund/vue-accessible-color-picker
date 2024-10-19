@@ -53,7 +53,7 @@
 		"lint:package": "publint",
 		"lint:types": "vue-tsc --noEmit",
 		"release": "semantic-release",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"prepublishOnly": "npm run build"
 	},
 	"peerDependencies": {
@@ -79,7 +79,7 @@
 		"eslint": "^8.57.1",
 		"eslint-config-standard": "^17.1.0",
 		"eslint-plugin-vue": "^9.29.0",
-		"husky": "^8.0.3",
+		"husky": "^9.1.6",
 		"jsdom": "^25.0.1",
 		"lockfile-lint": "^4.14.0",
 		"postcss": "^8.4.47",
