@@ -1,32 +1,8 @@
-import { AllowedComponentProps } from 'vue';
-import { ComponentCustomProps } from 'vue';
 import { ComponentOptionsMixin } from 'vue';
+import { ComponentProvideOptions } from 'vue';
 import { DefineComponent } from 'vue';
-import { ExtractPropTypes } from 'vue';
 import { Plugin as Plugin_2 } from 'vue';
-import { PropType } from 'vue';
-import { VNodeProps } from 'vue';
-
-declare type __VLS_NonUndefinedable<T> = T extends undefined ? never : T;
-
-declare type __VLS_Prettify<T> = {
-    [K in keyof T]: T[K];
-} & {};
-
-declare type __VLS_TypePropsToRuntimeProps<T> = {
-    [K in keyof T]-?: {} extends Pick<T, K> ? {
-        type: PropType<__VLS_NonUndefinedable<T[K]>>;
-    } : {
-        type: PropType<T[K]>;
-        required: true;
-    };
-};
-
-declare type __VLS_WithDefaults<P, D> = {
-    [K in keyof Pick<P, keyof P>]: K extends keyof D ? __VLS_Prettify<P[K] & {
-        default: D[K];
-    }> : P[K];
-};
+import { PublicProps } from 'vue';
 
 declare type __VLS_WithTemplateSlots<T, S> = T & {
     new (): {
@@ -72,29 +48,17 @@ export declare type ColorMap = {
     rgb: ColorRgb;
 };
 
-export declare const ColorPicker: __VLS_WithTemplateSlots<DefineComponent<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<ColorPickerProps>, {
-color: string;
-id: string;
-visibleFormats: () => string[];
-defaultFormat: string;
-alphaChannel: string;
-}>, {}, unknown, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
-"color-change": (data: ColorChangeDetail) => void;
-}, string, VNodeProps & AllowedComponentProps & ComponentCustomProps, Readonly<ExtractPropTypes<__VLS_WithDefaults<__VLS_TypePropsToRuntimeProps<ColorPickerProps>, {
-color: string;
-id: string;
-visibleFormats: () => string[];
-defaultFormat: string;
-alphaChannel: string;
-}>>> & {
+export declare const ColorPicker: __VLS_WithTemplateSlots<DefineComponent<ColorPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
+"color-change": (data: ColorChangeDetail) => any;
+}, string, PublicProps, Readonly<ColorPickerProps> & Readonly<{
 "onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
-}, {
+}>, {
 id: string;
 color: string | ColorHsl | ColorHwb | ColorRgb;
 visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
 alphaChannel: AlphaChannelProp;
-}, {}>, {
+}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>, {
     "hue-range-input-label"?(_: {}): any;
     "alpha-range-input-label"?(_: {}): any;
     "copy-button"?(_: {}): any;

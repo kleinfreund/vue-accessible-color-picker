@@ -1,58 +1,58 @@
-import { defineComponent as vt, ref as F, reactive as pt, computed as U, watch as dt, onMounted as mt, onBeforeUnmount as gt, openBlock as w, createElementBlock as y, createElementVNode as h, renderSlot as I, createTextVNode as q, createCommentVNode as X, Fragment as bt, renderList as wt, toDisplayString as yt } from "vue";
-function $(t, e, s) {
-  return Math.max(e, Math.min(t, s));
+import { defineComponent as vt, ref as I, reactive as pt, computed as U, watch as dt, onMounted as mt, onBeforeUnmount as gt, openBlock as w, createElementBlock as y, createElementVNode as h, renderSlot as N, createTextVNode as q, createCommentVNode as X, Fragment as bt, renderList as wt, toDisplayString as yt } from "vue";
+function k(t, n, r) {
+  return Math.max(n, Math.min(t, r));
 }
-function xt(t, e) {
-  if (typeof t == "string" || typeof e == "string")
-    return t === e;
-  for (const s in t)
-    if (t[s] !== e[s])
+function xt(t, n) {
+  if (typeof t == "string" || typeof n == "string")
+    return t === n;
+  for (const r in t)
+    if (t[r] !== n[r])
       return !1;
   return !0;
 }
-function N(t) {
-  const e = [], s = t.length > 5 ? 2 : 1;
-  for (let o = 1; o < t.length; o += s) {
-    const u = t.substring(o, o + s).repeat(s % 2 + 1), f = parseInt(u, 16);
-    e.push(o === 3 * s + 1 ? f / 255 : f);
+function V(t) {
+  const n = [], r = t.length > 5 ? 2 : 1;
+  for (let s = 1; s < t.length; s += r) {
+    const u = t.substring(s, s + r).repeat(r % 2 + 1), f = parseInt(u, 16);
+    n.push(s === 3 * r + 1 ? f / 255 : f);
   }
-  return e.length === 3 && e.push(1), {
-    r: e[0],
-    g: e[1],
-    b: e[2],
-    a: e[3]
+  return n.length === 3 && n.push(1), {
+    r: n[0],
+    g: n[1],
+    b: n[2],
+    a: n[3]
   };
 }
 function Q(t) {
-  const e = t.l / 100, s = e + t.s / 100 * Math.min(e, 1 - e), o = s === 0 ? 0 : 200 * (1 - e / s);
+  const n = t.l / 100, r = n + t.s / 100 * Math.min(n, 1 - n), s = r === 0 ? 0 : 200 * (1 - n / r);
   return {
     h: t.h,
-    s: o,
-    v: s * 100,
+    s,
+    v: r * 100,
     a: t.a
   };
 }
-function A(t) {
-  let e = t.h % 360;
-  e < 0 && (e += 360);
-  const s = t.s / 100, o = t.l / 100;
+function H(t) {
+  let n = t.h % 360;
+  n < 0 && (n += 360);
+  const r = t.s / 100, s = t.l / 100;
   return {
-    r: S(0, e, s, o) * 255,
-    g: S(8, e, s, o) * 255,
-    b: S(4, e, s, o) * 255,
+    r: R(0, n, r, s) * 255,
+    g: R(8, n, r, s) * 255,
+    b: R(4, n, r, s) * 255,
     a: t.a
   };
 }
-function S(t, e, s, o) {
-  const u = (t + e / 30) % 12, f = s * Math.min(o, 1 - o);
-  return o - f * Math.max(-1, Math.min(u - 3, 9 - u, 1));
+function R(t, n, r, s) {
+  const u = (t + n / 30) % 12, f = r * Math.min(s, 1 - s);
+  return s - f * Math.max(-1, Math.min(u - 3, 9 - u, 1));
 }
 function Z(t) {
-  const e = t.s / 100, s = t.v / 100, o = s * (1 - e / 2);
+  const n = t.s / 100, r = t.v / 100, s = r * (1 - n / 2);
   return {
     h: t.h,
-    s: o === 0 || o === 1 ? 0 : (s - o) / Math.min(o, 1 - o) * 100,
-    l: o * 100,
+    s: s === 0 || s === 1 ? 0 : (r - s) / Math.min(s, 1 - s) * 100,
+    l: s * 100,
     a: t.a
   };
 }
@@ -64,24 +64,24 @@ function tt(t) {
     a: t.a
   };
 }
-function _(t) {
-  return A(Z(t));
+function M(t) {
+  return H(Z(t));
 }
 function x(t) {
-  const e = t.w / 100, s = t.b / 100;
-  let o, u;
-  const f = e + s;
-  return f >= 1 ? (o = 0, u = e / f) : (u = 1 - s, o = (1 - e / u) * 100), {
+  const n = t.w / 100, r = t.b / 100;
+  let s, u;
+  const f = n + r;
+  return f >= 1 ? (s = 0, u = n / f) : (u = 1 - r, s = (1 - n / u) * 100), {
     h: t.h,
-    s: o,
+    s,
     v: u * 100,
     a: t.a
   };
 }
-function H(t) {
-  const { r: e, g: s, b: o, a: u } = t, f = Math.min(e, s, o), v = Math.max(e, s, o), p = v - f, d = (v + f) / 2;
+function E(t) {
+  const { r: n, g: r, b: s, a: u } = t, f = Math.min(n, r, s), v = Math.max(n, r, s), p = v - f, d = (v + f) / 2;
   let c = 0;
-  p !== 0 && (v === e ? c = (s - o) / p + (s < o ? 6 : 0) : v === s ? c = (o - e) / p + 2 : v === o && (c = (e - s) / p + 4), c *= 60);
+  p !== 0 && (v === n ? c = (r - s) / p + (r < s ? 6 : 0) : v === r ? c = (s - n) / p + 2 : v === s && (c = (n - r) / p + 4), c *= 60);
   let l = 0;
   return d !== 0 && d !== 255 && (l = (v - d) / Math.min(d, 255 - d)), {
     h: c,
@@ -90,62 +90,62 @@ function H(t) {
     a: u
   };
 }
-function V(t) {
-  return "#" + Object.values(t).map((e, s) => Math.round(s === 3 ? e * 255 : e).toString(16).padStart(2, "0")).join("");
+function A(t) {
+  return "#" + Object.values(t).map((n, r) => Math.round(r === 3 ? n * 255 : n).toString(16).padStart(2, "0")).join("");
 }
-function M(t) {
-  return tt(Q(H(t)));
+function $(t) {
+  return tt(Q(E(t)));
 }
 const Ct = {
   hex: {
     hex: (t) => t,
-    hsl: (t) => H(N(t)),
-    hsv: (t) => x(M(N(t))),
-    hwb: (t) => M(N(t)),
-    rgb: N
+    hsl: (t) => E(V(t)),
+    hsv: (t) => x($(V(t))),
+    hwb: (t) => $(V(t)),
+    rgb: V
   },
   hsl: {
-    hex: (t) => V(A(t)),
+    hex: (t) => A(H(t)),
     hsl: (t) => t,
     hsv: Q,
-    hwb: (t) => M(A(t)),
-    rgb: A
+    hwb: (t) => $(H(t)),
+    rgb: H
   },
   hsv: {
-    hex: (t) => V(_(t)),
+    hex: (t) => A(M(t)),
     hsl: Z,
     hsv: (t) => t,
     hwb: tt,
-    rgb: _
+    rgb: M
   },
   hwb: {
-    hex: (t) => V(_(x(t))),
-    hsl: (t) => H(_(x(t))),
+    hex: (t) => A(M(x(t))),
+    hsl: (t) => E(M(x(t))),
     hsv: x,
     hwb: (t) => t,
-    rgb: (t) => _(x(t))
+    rgb: (t) => M(x(t))
   },
   rgb: {
-    hex: V,
-    hsl: H,
-    hsv: (t) => x(M(t)),
-    hwb: M,
+    hex: A,
+    hsl: E,
+    hsv: (t) => x($(t)),
+    hwb: $,
     rgb: (t) => t
   }
 };
-function Tt(t, e, s) {
-  return Ct[t][e](s);
+function Tt(t, n, r) {
+  return Ct[t][n](r);
 }
-function _t(t, e) {
-  const s = t.toFixed(e);
-  return s.includes(".") ? s.replace(/\.?0+$/, "") : s;
+function Mt(t, n) {
+  const r = t.toFixed(n);
+  return r.includes(".") ? r.replace(/\.?0+$/, "") : r;
 }
-const Mt = {
+const $t = {
   deg: 1,
   grad: 0.9,
   rad: 180 / Math.PI,
   turn: 360
-}, R = {
+}, j = {
   from(t) {
     return t.endsWith("%") ? C.from(t, { referenceValue: 1 }) : g.from(t, { min: 0, max: 1 });
   },
@@ -154,72 +154,72 @@ const Mt = {
   }
 }, G = {
   from(t) {
-    const e = t.match(/deg|g?rad|turn$/);
-    if (e === null)
+    const n = t.match(/deg|g?rad|turn$/);
+    if (n === null)
       return g.from(t);
-    const s = e[0];
-    return g.from(t.slice(0, -s.length)) * Mt[s];
+    const r = n[0];
+    return g.from(t.slice(0, -r.length)) * $t[r];
   },
   to(t) {
     return g.to(t);
   }
 }, g = {
-  from(t, { min: e = Number.NEGATIVE_INFINITY, max: s = Number.POSITIVE_INFINITY } = {}) {
-    return t.endsWith(".") ? NaN : $(Number(t), e, s);
+  from(t, { min: n = Number.NEGATIVE_INFINITY, max: r = Number.POSITIVE_INFINITY } = {}) {
+    return t.endsWith(".") ? NaN : k(Number(t), n, r);
   },
   to(t) {
-    return _t(t, 2);
+    return Mt(t, 2);
   }
 }, C = {
-  from(t, { referenceValue: e = 100, min: s = 0, max: o = 100 } = {}) {
-    return t.endsWith("%") ? g.from(t.slice(0, -1), { min: s, max: o }) * e / 100 : NaN;
+  from(t, { referenceValue: n = 100, min: r = 0, max: s = 100 } = {}) {
+    return t.endsWith("%") ? g.from(t.slice(0, -1), { min: r, max: s }) * n / 100 : NaN;
   },
   to(t) {
     return g.to(t) + "%";
   }
-}, j = {
+}, W = {
   from(t) {
     return t.endsWith("%") ? C.from(t, { referenceValue: 255 }) : g.from(t, { min: 0, max: 255 });
   },
   to(t) {
     return g.to(t);
   }
-}, $t = {
+}, kt = {
   hsl: {
     h: G,
     s: C,
     l: C,
-    a: R
+    a: j
   },
   hwb: {
     h: G,
     w: C,
     b: C,
-    a: R
+    a: j
   },
   rgb: {
-    r: j,
-    g: j,
-    b: j,
-    a: R
+    r: W,
+    g: W,
+    b: W,
+    a: j
   }
 };
-function E(t, e) {
-  return $t[t][e];
+function L(t, n) {
+  return kt[t][n];
 }
-function W({ format: t, color: e }, s) {
+function D({ format: t, color: n }, r) {
   if (t === "hex")
-    return s && [5, 9].includes(e.length) ? e.substring(0, e.length - (e.length - 1) / 4) : e;
-  const o = Object.entries(e).slice(0, s ? 3 : 4).map(([u, f]) => {
-    const v = E(t, u);
+    return r && [5, 9].includes(n.length) ? n.substring(0, n.length - (n.length - 1) / 4) : n;
+  const s = Object.entries(n).slice(0, r ? 3 : 4).map(([u, f]) => {
+    const v = L(t, u);
     return (u === "a" ? "/ " : "") + v.to(f);
   });
-  return `${t}(${o.join(" ")})`;
+  return `${t}(${s.join(" ")})`;
 }
 function et(t) {
   return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(t);
 }
-function kt(t) {
+function Ft(t) {
   return "r" in t ? "rgb" : "w" in t ? "hwb" : "v" in t ? "hsv" : "s" in t ? "hsl" : null;
 }
 const J = {
@@ -227,9 +227,9 @@ const J = {
   hwb: ["h", "w", "b", "a"],
   rgb: ["r", "g", "b", "a"]
 };
-function Ft(t) {
+function It(t) {
   if (typeof t != "string") {
-    const p = kt(t);
+    const p = Ft(t);
     return p === null ? null : { format: p, color: t };
   }
   if (t.startsWith("#"))
@@ -240,51 +240,28 @@ function Ft(t) {
     const d = p.fillStyle;
     return d === "#000000" && t !== "black" ? null : { format: "hex", color: d };
   }
-  const [e, s] = t.split("("), o = e.substring(0, 3);
-  if (!(o in J))
+  const [n, r] = t.split("("), s = n.substring(0, 3);
+  if (!(s in J))
     return null;
-  const u = s.replace(/[,/)]/g, " ").replace(/\s+/g, " ").trim().split(" ");
+  const u = r.replace(/[,/)]/g, " ").replace(/\s+/g, " ").trim().split(" ");
   u.length === 3 && u.push("1");
-  const f = J[o], v = Object.fromEntries(f.map((p, d) => {
-    const c = E(o, p);
+  const f = J[s], v = Object.fromEntries(f.map((p, d) => {
+    const c = L(s, p);
     return [
       p,
       c.from(u[d])
     ];
   }));
-  return { format: o, color: v };
+  return { format: s, color: v };
 }
-function It(t, e, s) {
-  const o = t.getBoundingClientRect(), u = e - o.left, f = s - o.top;
+function Nt(t, n, r) {
+  const s = t.getBoundingClientRect(), u = n - s.left, f = r - s.top;
   return {
-    x: o.width === 0 ? 0 : $(u / o.width * 100, 0, 100),
-    y: o.height === 0 ? 0 : $((1 - f / o.height) * 100, 0, 100)
+    x: s.width === 0 ? 0 : k(u / s.width * 100, 0, 100),
+    y: s.height === 0 ? 0 : k((1 - f / s.height) * 100, 0, 100)
   };
 }
-const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Ht = ["id", "value"], Et = ["for"], Lt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Pt = ["id", "value"], Ot = /* @__PURE__ */ h("span", { class: "vacp-visually-hidden" }, "Copy color", -1), St = /* @__PURE__ */ h("svg", {
-  class: "vacp-icon",
-  xmlns: "http://www.w3.org/2000/svg",
-  "aria-hidden": "true",
-  width: "24",
-  height: "24",
-  viewBox: "0 0 32 32"
-}, [
-  /* @__PURE__ */ h("path", {
-    d: "M25.313 28v-18.688h-14.625v18.688h14.625zM25.313 6.688c1.438 0 2.688 1.188 2.688 2.625v18.688c0 1.438-1.25 2.688-2.688 2.688h-14.625c-1.438 0-2.688-1.25-2.688-2.688v-18.688c0-1.438 1.25-2.625 2.688-2.625h14.625zM21.313 1.313v2.688h-16v18.688h-2.625v-18.688c0-1.438 1.188-2.688 2.625-2.688h16z",
-    fill: "currentColor"
-  })
-], -1), Rt = { class: "vacp-color-inputs" }, jt = { class: "vacp-color-input-group" }, Wt = ["for"], Dt = /* @__PURE__ */ h("span", { class: "vacp-color-input-label-text" }, " Hex ", -1), zt = ["id", "value"], Kt = ["id", "for", "onInput"], Yt = { class: "vacp-color-input-label-text" }, Bt = ["id", "value", "onInput"], Ut = /* @__PURE__ */ h("span", { class: "vacp-visually-hidden" }, "Switch format", -1), qt = /* @__PURE__ */ h("svg", {
-  class: "vacp-icon",
-  "aria-hidden": "true",
-  xmlns: "http://www.w3.org/2000/svg",
-  width: "16",
-  height: "15"
-}, [
-  /* @__PURE__ */ h("path", {
-    d: "M8 15l5-5-1-1-4 2-4-2-1 1zm4-9l1-1-5-5-5 5 1 1 4-2z",
-    fill: "currentColor"
-  })
-], -1), Xt = /* @__PURE__ */ vt({
+const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Et = ["id", "value"], Lt = ["for"], Pt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Ot = ["id", "value"], St = { class: "vacp-color-inputs" }, Rt = { class: "vacp-color-input-group" }, jt = ["for"], Wt = ["id", "value"], Dt = ["id", "for", "onInput"], _t = { class: "vacp-color-input-label-text" }, zt = ["id", "value", "onInput"], Kt = /* @__PURE__ */ vt({
   __name: "ColorPicker",
   props: {
     color: { default: "#ffffffff" },
@@ -294,120 +271,119 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
     alphaChannel: { default: "show" }
   },
   emits: ["color-change"],
-  setup(t, { emit: e }) {
-    const s = ["hex", "hsl", "hsv", "hwb", "rgb"], o = t, u = e, f = F(null), v = F(null), p = F(null);
+  setup(t, { emit: n }) {
+    const r = ["hex", "hsl", "hsv", "hwb", "rgb"], s = t, u = n, f = I(null), v = I(null), p = I(null);
     let d = !1;
-    const c = F(o.visibleFormats.includes(o.defaultFormat) ? o.defaultFormat : o.visibleFormats[0]), l = pt({
+    const c = I(s.visibleFormats.includes(s.defaultFormat) ? s.defaultFormat : s.visibleFormats[0]), l = pt({
       hex: "#ffffffff",
       hsl: { h: 0, s: 0, l: 100, a: 1 },
       hsv: { h: 0, s: 0, v: 100, a: 1 },
       hwb: { h: 0, w: 100, b: 0, a: 1 },
       rgb: { r: 255, g: 255, b: 255, a: 1 }
     }), nt = U(function() {
-      const n = Object.keys(l[c.value]);
-      return c.value !== "hex" && o.alphaChannel === "hide" ? n.slice(0, 3) : n;
+      const o = Object.keys(l[c.value]);
+      return c.value !== "hex" && s.alphaChannel === "hide" ? o.slice(0, 3) : o;
     }), ot = U(function() {
-      return o.alphaChannel === "hide" && [5, 9].includes(l.hex.length) ? l.hex.substring(0, l.hex.length - (l.hex.length - 1) / 4) : l.hex;
+      return s.alphaChannel === "hide" && [5, 9].includes(l.hex.length) ? l.hex.substring(0, l.hex.length - (l.hex.length - 1) / 4) : l.hex;
     });
-    dt(() => o.color, z), mt(function() {
-      document.addEventListener("mousemove", L, { passive: !1 }), document.addEventListener("touchmove", P, { passive: !1 }), document.addEventListener("mouseup", k), document.addEventListener("touchend", k), z(o.color);
+    dt(() => s.color, z), mt(function() {
+      document.addEventListener("mousemove", P, { passive: !1 }), document.addEventListener("touchmove", O, { passive: !1 }), document.addEventListener("mouseup", F), document.addEventListener("touchend", F), z(s.color);
     }), gt(function() {
-      document.removeEventListener("mousemove", L), document.removeEventListener("touchmove", P), document.removeEventListener("mouseup", k), document.removeEventListener("touchend", k);
+      document.removeEventListener("mousemove", P), document.removeEventListener("touchmove", O), document.removeEventListener("mouseup", F), document.removeEventListener("touchend", F);
     });
     function st() {
-      const r = (o.visibleFormats.findIndex((a) => a === c.value) + 1) % o.visibleFormats.length;
-      c.value = o.visibleFormats[r];
+      const e = (s.visibleFormats.findIndex((a) => a === c.value) + 1) % s.visibleFormats.length;
+      c.value = s.visibleFormats[e];
     }
-    function rt(n) {
-      d = !0, L(n);
+    function rt(o) {
+      d = !0, P(o);
     }
-    function at(n) {
-      d = !0, P(n);
+    function at(o) {
+      d = !0, O(o);
     }
-    function k() {
+    function F() {
       d = !1;
     }
-    function L(n) {
-      n.buttons !== 1 || d === !1 || !(v.value instanceof HTMLElement) || D(v.value, n.clientX, n.clientY);
+    function P(o) {
+      o.buttons !== 1 || d === !1 || !(v.value instanceof HTMLElement) || _(v.value, o.clientX, o.clientY);
     }
-    function P(n) {
+    function O(o) {
       if (d === !1 || !(v.value instanceof HTMLElement))
         return;
-      n.preventDefault();
-      const r = n.touches[0];
-      D(v.value, r.clientX, r.clientY);
+      o.preventDefault();
+      const e = o.touches[0];
+      _(v.value, e.clientX, e.clientY);
     }
-    function D(n, r, a) {
-      const i = It(n, r, a), m = Object.assign({}, l.hsv);
+    function _(o, e, a) {
+      const i = Nt(o, e, a), m = Object.assign({}, l.hsv);
       m.s = i.x, m.v = i.y, b("hsv", m);
     }
-    function lt(n) {
-      if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(n.key))
+    function lt(o) {
+      if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(o.key))
         return;
-      n.preventDefault();
-      const r = ["ArrowLeft", "ArrowDown"].includes(n.key) ? -1 : 1, a = ["ArrowLeft", "ArrowRight"].includes(n.key) ? "s" : "v", i = n.shiftKey ? 10 : 1, m = l.hsv[a] + r * i, T = Object.assign({}, l.hsv);
-      T[a] = $(m, 0, 100), b("hsv", T);
+      o.preventDefault();
+      const e = ["ArrowLeft", "ArrowDown"].includes(o.key) ? -1 : 1, a = ["ArrowLeft", "ArrowRight"].includes(o.key) ? "s" : "v", i = o.shiftKey ? 10 : 1, m = l.hsv[a] + e * i, T = Object.assign({}, l.hsv);
+      T[a] = k(m, 0, 100), b("hsv", T);
     }
-    function z(n) {
-      const r = Ft(n);
-      r !== null && b(r.format, r.color);
+    function z(o) {
+      const e = It(o);
+      e !== null && b(e.format, e.color);
     }
-    function K(n, r) {
-      const a = n.currentTarget, i = Object.assign({}, l.hsv);
-      i[r] = Number(a.value), b("hsv", i);
+    function K(o, e) {
+      const a = o.currentTarget, i = Object.assign({}, l.hsv);
+      i[e] = Number(a.value), b("hsv", i);
     }
-    function it(n) {
-      const r = n.target;
-      et(r.value) && b("hex", r.value);
+    function it(o) {
+      const e = o.target;
+      et(e.value) && b("hex", e.value);
     }
-    function Y(n, r) {
-      const a = n.target, i = c.value, m = Object.assign({}, l[i]), O = E(i, r).from(a.value);
-      Number.isNaN(O) || O === void 0 || (m[r] = O, b(i, m));
+    function Y(o, e) {
+      const a = o.target, i = c.value, m = Object.assign({}, l[i]), S = L(i, e).from(a.value);
+      Number.isNaN(S) || S === void 0 || (m[e] = S, b(i, m));
     }
-    function b(n, r) {
-      let a = r;
-      if (o.alphaChannel === "hide")
-        if (typeof r != "string")
-          r.a = 1, a = r;
-        else if ([5, 9].includes(r.length)) {
-          const i = (r.length - 1) / 4;
-          a = r.substring(0, r.length - i) + "f".repeat(i);
-        } else
-          [4, 7].includes(r.length) && (a = r + "f".repeat((r.length - 1) / 3));
-      if (!xt(l[n], a)) {
-        l[n] = a;
-        for (const i of s)
-          i !== n && (l[i] = Tt(n, i, a));
+    function b(o, e) {
+      let a = e;
+      if (s.alphaChannel === "hide")
+        if (typeof e != "string")
+          e.a = 1, a = e;
+        else if ([5, 9].includes(e.length)) {
+          const i = (e.length - 1) / 4;
+          a = e.substring(0, e.length - i) + "f".repeat(i);
+        } else [4, 7].includes(e.length) && (a = e + "f".repeat((e.length - 1) / 3));
+      if (!xt(l[o], a)) {
+        l[o] = a;
+        for (const i of r)
+          i !== o && (l[i] = Tt(o, i, a));
         u("color-change", ft());
       }
       f.value instanceof HTMLElement && v.value instanceof HTMLElement && p.value instanceof HTMLElement && ht(f.value, v.value, p.value);
     }
     async function ut() {
-      const n = l[c.value], r = o.alphaChannel === "hide", a = W({ color: n, format: c.value }, r);
+      const o = l[c.value], e = s.alphaChannel === "hide", a = D({ color: o, format: c.value }, e);
       await window.navigator.clipboard.writeText(a);
     }
-    function ct(n) {
-      const r = c.value;
-      return E(r, n).to(l[r][n]);
+    function ct(o) {
+      const e = c.value;
+      return L(e, o).to(l[e][o]);
     }
-    function ht(n, r, a) {
-      const i = W({ format: "hsl", color: l.hsl }, !1);
-      n.style.setProperty("--vacp-color", i), r.style.position = "relative", r.style.backgroundColor = `hsl(${l.hsl.h} 100% 50%)`, r.style.backgroundImage = "linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)", a.style.boxSizing = "border-box", a.style.position = "absolute", a.style.left = `${l.hsv.s}%`, a.style.bottom = `${l.hsv.v}%`;
+    function ht(o, e, a) {
+      const i = D({ format: "hsl", color: l.hsl }, !1);
+      o.style.setProperty("--vacp-color", i), e.style.position = "relative", e.style.backgroundColor = `hsl(${l.hsl.h} 100% 50%)`, e.style.backgroundImage = "linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)", a.style.boxSizing = "border-box", a.style.position = "absolute", a.style.left = `${l.hsv.s}%`, a.style.bottom = `${l.hsv.v}%`;
     }
     function ft() {
-      const n = o.alphaChannel === "hide", r = W({ color: l[c.value], format: c.value }, n);
+      const o = s.alphaChannel === "hide", e = D({ color: l[c.value], format: c.value }, o);
       return {
         colors: l,
-        cssColor: r
+        cssColor: e
       };
     }
-    function B(n) {
-      if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(n.key) || !n.shiftKey)
+    function B(o) {
+      if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(o.key) || !o.shiftKey)
         return;
-      const r = n.currentTarget, a = Number(r.step), i = ["ArrowLeft", "ArrowDown"].includes(n.key) ? -1 : 1, m = Number(r.value) + i * a * 10, T = $(m, Number(r.min), Number(r.max));
-      r.value = String(T - i * a);
+      const e = o.currentTarget, a = Number(e.step), i = ["ArrowLeft", "ArrowDown"].includes(o.key) ? -1 : 1, m = Number(e.value) + i * a * 10, T = k(m, Number(e.min), Number(e.max));
+      e.value = String(T - i * a);
     }
-    return (n, r) => (w(), y("div", {
+    return (o, e) => (w(), y("div", {
       ref_key: "colorPicker",
       ref: f,
       class: "vacp-color-picker"
@@ -428,18 +404,18 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
           onKeydown: lt
         }, null, 544)
       ], 544),
-      h("div", Nt, [
+      h("div", Vt, [
         h("label", {
           class: "vacp-range-input-label vacp-range-input-label--hue",
-          for: `${n.id}-hue-slider`
+          for: `${o.id}-hue-slider`
         }, [
-          h("span", At, [
-            I(n.$slots, "hue-range-input-label", {}, () => [
-              q("Hue")
+          h("span", Ht, [
+            N(o.$slots, "hue-range-input-label", {}, () => [
+              e[2] || (e[2] = q("Hue"))
             ])
           ]),
           h("input", {
-            id: `${n.id}-hue-slider`,
+            id: `${o.id}-hue-slider`,
             class: "vacp-range-input vacp-range-input--hue",
             value: l.hsv.h,
             type: "range",
@@ -447,21 +423,21 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
             max: "360",
             step: "1",
             onKeydownPassive: B,
-            onInput: r[0] || (r[0] = (a) => K(a, "h"))
-          }, null, 40, Ht)
-        ], 8, Vt),
-        n.alphaChannel === "show" ? (w(), y("label", {
+            onInput: e[0] || (e[0] = (a) => K(a, "h"))
+          }, null, 40, Et)
+        ], 8, At),
+        o.alphaChannel === "show" ? (w(), y("label", {
           key: 0,
           class: "vacp-range-input-label vacp-range-input-label--alpha",
-          for: `${n.id}-alpha-slider`
+          for: `${o.id}-alpha-slider`
         }, [
-          h("span", Lt, [
-            I(n.$slots, "alpha-range-input-label", {}, () => [
-              q("Alpha")
+          h("span", Pt, [
+            N(o.$slots, "alpha-range-input-label", {}, () => [
+              e[3] || (e[3] = q("Alpha"))
             ])
           ]),
           h("input", {
-            id: `${n.id}-alpha-slider`,
+            id: `${o.id}-alpha-slider`,
             class: "vacp-range-input vacp-range-input--alpha",
             value: l.hsv.a,
             type: "range",
@@ -469,72 +445,95 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
             max: "1",
             step: "0.01",
             onKeydownPassive: B,
-            onInput: r[1] || (r[1] = (a) => K(a, "a"))
-          }, null, 40, Pt)
-        ], 8, Et)) : X("", !0)
+            onInput: e[1] || (e[1] = (a) => K(a, "a"))
+          }, null, 40, Ot)
+        ], 8, Lt)) : X("", !0)
       ]),
       h("button", {
         class: "vacp-copy-button",
         type: "button",
         onClick: ut
       }, [
-        I(n.$slots, "copy-button", {}, () => [
-          Ot,
-          St
+        N(o.$slots, "copy-button", {}, () => [
+          e[4] || (e[4] = h("span", { class: "vacp-visually-hidden" }, "Copy color", -1)),
+          e[5] || (e[5] = h("svg", {
+            class: "vacp-icon",
+            xmlns: "http://www.w3.org/2000/svg",
+            "aria-hidden": "true",
+            width: "24",
+            height: "24",
+            viewBox: "0 0 32 32"
+          }, [
+            h("path", {
+              d: "M25.313 28v-18.688h-14.625v18.688h14.625zM25.313 6.688c1.438 0 2.688 1.188 2.688 2.625v18.688c0 1.438-1.25 2.688-2.688 2.688h-14.625c-1.438 0-2.688-1.25-2.688-2.688v-18.688c0-1.438 1.25-2.625 2.688-2.625h14.625zM21.313 1.313v2.688h-16v18.688h-2.625v-18.688c0-1.438 1.188-2.688 2.625-2.688h16z",
+              fill: "currentColor"
+            })
+          ], -1))
         ])
       ]),
-      h("div", Rt, [
-        h("div", jt, [
+      h("div", St, [
+        h("div", Rt, [
           c.value === "hex" ? (w(), y("label", {
             key: 0,
             class: "vacp-color-input-label",
-            for: `${n.id}-color-hex`
+            for: `${o.id}-color-hex`
           }, [
-            Dt,
+            e[6] || (e[6] = h("span", { class: "vacp-color-input-label-text" }, " Hex ", -1)),
             h("input", {
-              id: `${n.id}-color-hex`,
+              id: `${o.id}-color-hex`,
               class: "vacp-color-input",
               type: "text",
               value: ot.value,
               onInput: it
-            }, null, 40, zt)
-          ], 8, Wt)) : (w(!0), y(bt, { key: 1 }, wt(nt.value, (a) => (w(), y("label", {
-            id: `${n.id}-color-${c.value}-${a}-label`,
-            key: `${n.id}-color-${c.value}-${a}-label`,
+            }, null, 40, Wt)
+          ], 8, jt)) : (w(!0), y(bt, { key: 1 }, wt(nt.value, (a) => (w(), y("label", {
+            id: `${o.id}-color-${c.value}-${a}-label`,
+            key: `${o.id}-color-${c.value}-${a}-label`,
             class: "vacp-color-input-label",
-            for: `${n.id}-color-${c.value}-${a}`,
+            for: `${o.id}-color-${c.value}-${a}`,
             onInput: (i) => Y(i, a)
           }, [
-            h("span", Yt, yt(a.toUpperCase()), 1),
+            h("span", _t, yt(a.toUpperCase()), 1),
             h("input", {
-              id: `${n.id}-color-${c.value}-${a}`,
+              id: `${o.id}-color-${c.value}-${a}`,
               class: "vacp-color-input",
               type: "text",
               value: ct(a),
               onInput: (i) => Y(i, a)
-            }, null, 40, Bt)
-          ], 40, Kt))), 128))
+            }, null, 40, zt)
+          ], 40, Dt))), 128))
         ]),
-        n.visibleFormats.length > 1 ? (w(), y("button", {
+        o.visibleFormats.length > 1 ? (w(), y("button", {
           key: 0,
           class: "vacp-format-switch-button",
           type: "button",
           onClick: st
         }, [
-          I(n.$slots, "format-switch-button", {}, () => [
-            Ut,
-            qt
+          N(o.$slots, "format-switch-button", {}, () => [
+            e[7] || (e[7] = h("span", { class: "vacp-visually-hidden" }, "Switch format", -1)),
+            e[8] || (e[8] = h("svg", {
+              class: "vacp-icon",
+              "aria-hidden": "true",
+              xmlns: "http://www.w3.org/2000/svg",
+              width: "16",
+              height: "15"
+            }, [
+              h("path", {
+                d: "M8 15l5-5-1-1-4 2-4-2-1 1zm4-9l1-1-5-5-5 5 1 1 4-2z",
+                fill: "currentColor"
+              })
+            ], -1))
           ])
         ])) : X("", !0)
       ])
     ], 512));
   }
-}), Jt = {
+}), Bt = {
   install(t) {
-    t.component("ColorPicker", Xt);
+    t.component("ColorPicker", Kt);
   }
 };
 export {
-  Xt as ColorPicker,
-  Jt as default
+  Kt as ColorPicker,
+  Bt as default
 };
