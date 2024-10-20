@@ -805,10 +805,38 @@ describe('ColorPicker', () => {
 
 			await wrapper.setProps({ color: props.color })
 
-			const emittedColorChangeEvents = wrapper.emitted('color-change')
+			const emittedEvents = wrapper.emitted('color-change')
 			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
-			const colorChangeData = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0]
-			expect(colorChangeData).toEqual(expectedData)
+			const data = emittedEvents[emittedEvents.length - 1][0]
+			expect(data).toEqual(expectedData)
+		})
+	})
+
+	describe('color-copy event', () => {
+		test.each<[ColorPickerProps, ColorChangeDetail]>([
+			[
+				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'show' },
+				{
+					cssColor: 'hsl(350 100% 80% / 0.8)',
+					colors: {
+						hex: '#ff99aacc',
+						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
+						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
+						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
+						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
+					},
+				},
+			],
+		])('emits correct data', async (props, expectedData) => {
+			const wrapper = createWrapper({ props })
+
+			const copyButton = wrapper.find('.vacp-copy-button')
+			await copyButton.trigger('click')
+
+			const emittedEvents = wrapper.emitted('color-copy')
+			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
+			const data = emittedEvents[emittedEvents.length - 1][0]
+			expect(data).toEqual(expectedData)
 		})
 	})
 

@@ -1,4 +1,4 @@
-import { defineComponent as vt, ref as I, reactive as pt, computed as U, watch as dt, onMounted as mt, onBeforeUnmount as gt, openBlock as w, createElementBlock as y, createElementVNode as h, renderSlot as N, createTextVNode as q, createCommentVNode as X, Fragment as bt, renderList as wt, toDisplayString as yt } from "vue";
+import { defineComponent as pt, ref as I, reactive as vt, computed as q, watch as dt, onMounted as mt, onBeforeUnmount as gt, openBlock as w, createElementBlock as y, createElementVNode as h, renderSlot as N, createTextVNode as X, createCommentVNode as G, Fragment as bt, renderList as wt, toDisplayString as yt } from "vue";
 function k(t, n, r) {
   return Math.max(n, Math.min(t, r));
 }
@@ -23,7 +23,7 @@ function V(t) {
     a: n[3]
   };
 }
-function Q(t) {
+function Z(t) {
   const n = t.l / 100, r = n + t.s / 100 * Math.min(n, 1 - n), s = r === 0 ? 0 : 200 * (1 - n / r);
   return {
     h: t.h,
@@ -47,7 +47,7 @@ function R(t, n, r, s) {
   const u = (t + n / 30) % 12, f = r * Math.min(s, 1 - s);
   return s - f * Math.max(-1, Math.min(u - 3, 9 - u, 1));
 }
-function Z(t) {
+function tt(t) {
   const n = t.s / 100, r = t.v / 100, s = r * (1 - n / 2);
   return {
     h: t.h,
@@ -56,7 +56,7 @@ function Z(t) {
     a: t.a
   };
 }
-function tt(t) {
+function et(t) {
   return {
     h: t.h,
     w: t.v * (100 - t.s) / 100,
@@ -65,7 +65,7 @@ function tt(t) {
   };
 }
 function M(t) {
-  return H(Z(t));
+  return H(tt(t));
 }
 function x(t) {
   const n = t.w / 100, r = t.b / 100;
@@ -79,11 +79,11 @@ function x(t) {
   };
 }
 function E(t) {
-  const { r: n, g: r, b: s, a: u } = t, f = Math.min(n, r, s), v = Math.max(n, r, s), p = v - f, d = (v + f) / 2;
+  const { r: n, g: r, b: s, a: u } = t, f = Math.min(n, r, s), p = Math.max(n, r, s), v = p - f, d = (p + f) / 2;
   let c = 0;
-  p !== 0 && (v === n ? c = (r - s) / p + (r < s ? 6 : 0) : v === r ? c = (s - n) / p + 2 : v === s && (c = (n - r) / p + 4), c *= 60);
+  v !== 0 && (p === n ? c = (r - s) / v + (r < s ? 6 : 0) : p === r ? c = (s - n) / v + 2 : p === s && (c = (n - r) / v + 4), c *= 60);
   let l = 0;
-  return d !== 0 && d !== 255 && (l = (v - d) / Math.min(d, 255 - d)), {
+  return d !== 0 && d !== 255 && (l = (p - d) / Math.min(d, 255 - d)), {
     h: c,
     s: l * 100,
     l: d / 255 * 100,
@@ -94,7 +94,7 @@ function A(t) {
   return "#" + Object.values(t).map((n, r) => Math.round(r === 3 ? n * 255 : n).toString(16).padStart(2, "0")).join("");
 }
 function $(t) {
-  return tt(Q(E(t)));
+  return et(Z(E(t)));
 }
 const Ct = {
   hex: {
@@ -107,15 +107,15 @@ const Ct = {
   hsl: {
     hex: (t) => A(H(t)),
     hsl: (t) => t,
-    hsv: Q,
+    hsv: Z,
     hwb: (t) => $(H(t)),
     rgb: H
   },
   hsv: {
     hex: (t) => A(M(t)),
-    hsl: Z,
+    hsl: tt,
     hsv: (t) => t,
-    hwb: tt,
+    hwb: et,
     rgb: M
   },
   hwb: {
@@ -152,7 +152,7 @@ const $t = {
   to(t) {
     return g.to(t);
   }
-}, G = {
+}, J = {
   from(t) {
     const n = t.match(/deg|g?rad|turn$/);
     if (n === null)
@@ -186,13 +186,13 @@ const $t = {
   }
 }, kt = {
   hsl: {
-    h: G,
+    h: J,
     s: C,
     l: C,
     a: j
   },
   hwb: {
-    h: G,
+    h: J,
     w: C,
     b: C,
     a: j
@@ -211,48 +211,48 @@ function D({ format: t, color: n }, r) {
   if (t === "hex")
     return r && [5, 9].includes(n.length) ? n.substring(0, n.length - (n.length - 1) / 4) : n;
   const s = Object.entries(n).slice(0, r ? 3 : 4).map(([u, f]) => {
-    const v = L(t, u);
-    return (u === "a" ? "/ " : "") + v.to(f);
+    const p = L(t, u);
+    return (u === "a" ? "/ " : "") + p.to(f);
   });
   return `${t}(${s.join(" ")})`;
 }
-function et(t) {
+function nt(t) {
   return /^#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(t);
 }
 function Ft(t) {
   return "r" in t ? "rgb" : "w" in t ? "hwb" : "v" in t ? "hsv" : "s" in t ? "hsl" : null;
 }
-const J = {
+const Q = {
   hsl: ["h", "s", "l", "a"],
   hwb: ["h", "w", "b", "a"],
   rgb: ["r", "g", "b", "a"]
 };
 function It(t) {
   if (typeof t != "string") {
-    const p = Ft(t);
-    return p === null ? null : { format: p, color: t };
+    const v = Ft(t);
+    return v === null ? null : { format: v, color: t };
   }
   if (t.startsWith("#"))
-    return et(t) ? { format: "hex", color: t } : null;
+    return nt(t) ? { format: "hex", color: t } : null;
   if (!t.includes("(")) {
-    const p = document.createElement("canvas").getContext("2d");
-    p.fillStyle = t;
-    const d = p.fillStyle;
+    const v = document.createElement("canvas").getContext("2d");
+    v.fillStyle = t;
+    const d = v.fillStyle;
     return d === "#000000" && t !== "black" ? null : { format: "hex", color: d };
   }
   const [n, r] = t.split("("), s = n.substring(0, 3);
-  if (!(s in J))
+  if (!(s in Q))
     return null;
   const u = r.replace(/[,/)]/g, " ").replace(/\s+/g, " ").trim().split(" ");
   u.length === 3 && u.push("1");
-  const f = J[s], v = Object.fromEntries(f.map((p, d) => {
-    const c = L(s, p);
+  const f = Q[s], p = Object.fromEntries(f.map((v, d) => {
+    const c = L(s, v);
     return [
-      p,
+      v,
       c.from(u[d])
     ];
   }));
-  return { format: s, color: v };
+  return { format: s, color: p };
 }
 function Nt(t, n, r) {
   const s = t.getBoundingClientRect(), u = n - s.left, f = r - s.top;
@@ -261,7 +261,7 @@ function Nt(t, n, r) {
     y: s.height === 0 ? 0 : k((1 - f / s.height) * 100, 0, 100)
   };
 }
-const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Et = ["id", "value"], Lt = ["for"], Pt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Ot = ["id", "value"], St = { class: "vacp-color-inputs" }, Rt = { class: "vacp-color-input-group" }, jt = ["for"], Wt = ["id", "value"], Dt = ["id", "for", "onInput"], _t = { class: "vacp-color-input-label-text" }, zt = ["id", "value", "onInput"], Kt = /* @__PURE__ */ vt({
+const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Et = ["id", "value"], Lt = ["for"], Pt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Ot = ["id", "value"], St = { class: "vacp-color-inputs" }, Rt = { class: "vacp-color-input-group" }, jt = ["for"], Wt = ["id", "value"], Dt = ["id", "for", "onInput"], _t = { class: "vacp-color-input-label-text" }, zt = ["id", "value", "onInput"], Kt = /* @__PURE__ */ pt({
   __name: "ColorPicker",
   props: {
     color: { default: "#ffffffff" },
@@ -270,20 +270,20 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
     defaultFormat: { default: "hsl" },
     alphaChannel: { default: "show" }
   },
-  emits: ["color-change"],
+  emits: ["color-change", "color-copy"],
   setup(t, { emit: n }) {
-    const r = ["hex", "hsl", "hsv", "hwb", "rgb"], s = t, u = n, f = I(null), v = I(null), p = I(null);
+    const r = ["hex", "hsl", "hsv", "hwb", "rgb"], s = t, u = n, f = I(null), p = I(null), v = I(null);
     let d = !1;
-    const c = I(s.visibleFormats.includes(s.defaultFormat) ? s.defaultFormat : s.visibleFormats[0]), l = pt({
+    const c = I(s.visibleFormats.includes(s.defaultFormat) ? s.defaultFormat : s.visibleFormats[0]), l = vt({
       hex: "#ffffffff",
       hsl: { h: 0, s: 0, l: 100, a: 1 },
       hsv: { h: 0, s: 0, v: 100, a: 1 },
       hwb: { h: 0, w: 100, b: 0, a: 1 },
       rgb: { r: 255, g: 255, b: 255, a: 1 }
-    }), nt = U(function() {
+    }), ot = q(function() {
       const o = Object.keys(l[c.value]);
       return c.value !== "hex" && s.alphaChannel === "hide" ? o.slice(0, 3) : o;
-    }), ot = U(function() {
+    }), st = q(function() {
       return s.alphaChannel === "hide" && [5, 9].includes(l.hex.length) ? l.hex.substring(0, l.hex.length - (l.hex.length - 1) / 4) : l.hex;
     });
     dt(() => s.color, z), mt(function() {
@@ -291,34 +291,34 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
     }), gt(function() {
       document.removeEventListener("mousemove", P), document.removeEventListener("touchmove", O), document.removeEventListener("mouseup", F), document.removeEventListener("touchend", F);
     });
-    function st() {
+    function rt() {
       const e = (s.visibleFormats.findIndex((a) => a === c.value) + 1) % s.visibleFormats.length;
       c.value = s.visibleFormats[e];
     }
-    function rt(o) {
+    function at(o) {
       d = !0, P(o);
     }
-    function at(o) {
+    function lt(o) {
       d = !0, O(o);
     }
     function F() {
       d = !1;
     }
     function P(o) {
-      o.buttons !== 1 || d === !1 || !(v.value instanceof HTMLElement) || _(v.value, o.clientX, o.clientY);
+      o.buttons !== 1 || d === !1 || !(p.value instanceof HTMLElement) || _(p.value, o.clientX, o.clientY);
     }
     function O(o) {
-      if (d === !1 || !(v.value instanceof HTMLElement))
+      if (d === !1 || !(p.value instanceof HTMLElement))
         return;
       o.preventDefault();
       const e = o.touches[0];
-      _(v.value, e.clientX, e.clientY);
+      _(p.value, e.clientX, e.clientY);
     }
     function _(o, e, a) {
       const i = Nt(o, e, a), m = Object.assign({}, l.hsv);
       m.s = i.x, m.v = i.y, b("hsv", m);
     }
-    function lt(o) {
+    function it(o) {
       if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(o.key))
         return;
       o.preventDefault();
@@ -333,9 +333,9 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
       const a = o.currentTarget, i = Object.assign({}, l.hsv);
       i[e] = Number(a.value), b("hsv", i);
     }
-    function it(o) {
+    function ut(o) {
       const e = o.target;
-      et(e.value) && b("hex", e.value);
+      nt(e.value) && b("hex", e.value);
     }
     function Y(o, e) {
       const a = o.target, i = c.value, m = Object.assign({}, l[i]), S = L(i, e).from(a.value);
@@ -354,30 +354,30 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
         l[o] = a;
         for (const i of r)
           i !== o && (l[i] = Tt(o, i, a));
-        u("color-change", ft());
+        u("color-change", B());
       }
-      f.value instanceof HTMLElement && v.value instanceof HTMLElement && p.value instanceof HTMLElement && ht(f.value, v.value, p.value);
+      f.value instanceof HTMLElement && p.value instanceof HTMLElement && v.value instanceof HTMLElement && ft(f.value, p.value, v.value);
     }
-    async function ut() {
+    async function ct() {
       const o = l[c.value], e = s.alphaChannel === "hide", a = D({ color: o, format: c.value }, e);
-      await window.navigator.clipboard.writeText(a);
+      await window.navigator.clipboard.writeText(a), u("color-copy", B());
     }
-    function ct(o) {
+    function ht(o) {
       const e = c.value;
       return L(e, o).to(l[e][o]);
     }
-    function ht(o, e, a) {
+    function ft(o, e, a) {
       const i = D({ format: "hsl", color: l.hsl }, !1);
       o.style.setProperty("--vacp-color", i), e.style.position = "relative", e.style.backgroundColor = `hsl(${l.hsl.h} 100% 50%)`, e.style.backgroundImage = "linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)", a.style.boxSizing = "border-box", a.style.position = "absolute", a.style.left = `${l.hsv.s}%`, a.style.bottom = `${l.hsv.v}%`;
     }
-    function ft() {
+    function B() {
       const o = s.alphaChannel === "hide", e = D({ color: l[c.value], format: c.value }, o);
       return {
         colors: l,
         cssColor: e
       };
     }
-    function B(o) {
+    function U(o) {
       if (!["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"].includes(o.key) || !o.shiftKey)
         return;
       const e = o.currentTarget, a = Number(e.step), i = ["ArrowLeft", "ArrowDown"].includes(o.key) ? -1 : 1, m = Number(e.value) + i * a * 10, T = k(m, Number(e.min), Number(e.max));
@@ -390,18 +390,18 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
     }, [
       h("div", {
         ref_key: "colorSpace",
-        ref: v,
+        ref: p,
         class: "vacp-color-space",
-        onMousedown: rt,
-        onTouchstart: at
+        onMousedown: at,
+        onTouchstart: lt
       }, [
         h("div", {
           ref_key: "thumb",
-          ref: p,
+          ref: v,
           class: "vacp-color-space-thumb",
           tabindex: "0",
           "aria-label": "Color space thumb",
-          onKeydown: lt
+          onKeydown: it
         }, null, 544)
       ], 544),
       h("div", Vt, [
@@ -411,7 +411,7 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
         }, [
           h("span", Ht, [
             N(o.$slots, "hue-range-input-label", {}, () => [
-              e[2] || (e[2] = q("Hue"))
+              e[2] || (e[2] = X("Hue"))
             ])
           ]),
           h("input", {
@@ -422,7 +422,7 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
             min: "0",
             max: "360",
             step: "1",
-            onKeydownPassive: B,
+            onKeydownPassive: U,
             onInput: e[0] || (e[0] = (a) => K(a, "h"))
           }, null, 40, Et)
         ], 8, At),
@@ -433,7 +433,7 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
         }, [
           h("span", Pt, [
             N(o.$slots, "alpha-range-input-label", {}, () => [
-              e[3] || (e[3] = q("Alpha"))
+              e[3] || (e[3] = X("Alpha"))
             ])
           ]),
           h("input", {
@@ -444,15 +444,15 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
             min: "0",
             max: "1",
             step: "0.01",
-            onKeydownPassive: B,
+            onKeydownPassive: U,
             onInput: e[1] || (e[1] = (a) => K(a, "a"))
           }, null, 40, Ot)
-        ], 8, Lt)) : X("", !0)
+        ], 8, Lt)) : G("", !0)
       ]),
       h("button", {
         class: "vacp-copy-button",
         type: "button",
-        onClick: ut
+        onClick: ct
       }, [
         N(o.$slots, "copy-button", {}, () => [
           e[4] || (e[4] = h("span", { class: "vacp-visually-hidden" }, "Copy color", -1)),
@@ -483,10 +483,10 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
               id: `${o.id}-color-hex`,
               class: "vacp-color-input",
               type: "text",
-              value: ot.value,
-              onInput: it
+              value: st.value,
+              onInput: ut
             }, null, 40, Wt)
-          ], 8, jt)) : (w(!0), y(bt, { key: 1 }, wt(nt.value, (a) => (w(), y("label", {
+          ], 8, jt)) : (w(!0), y(bt, { key: 1 }, wt(ot.value, (a) => (w(), y("label", {
             id: `${o.id}-color-${c.value}-${a}-label`,
             key: `${o.id}-color-${c.value}-${a}-label`,
             class: "vacp-color-input-label",
@@ -498,7 +498,7 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
               id: `${o.id}-color-${c.value}-${a}`,
               class: "vacp-color-input",
               type: "text",
-              value: ct(a),
+              value: ht(a),
               onInput: (i) => Y(i, a)
             }, null, 40, zt)
           ], 40, Dt))), 128))
@@ -507,7 +507,7 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
           key: 0,
           class: "vacp-format-switch-button",
           type: "button",
-          onClick: st
+          onClick: rt
         }, [
           N(o.$slots, "format-switch-button", {}, () => [
             e[7] || (e[7] = h("span", { class: "vacp-visually-hidden" }, "Switch format", -1)),
@@ -524,7 +524,7 @@ const Vt = { class: "vacp-range-input-group" }, At = ["for"], Ht = { class: "vac
               })
             ], -1))
           ])
-        ])) : X("", !0)
+        ])) : G("", !0)
       ])
     ], 512));
   }

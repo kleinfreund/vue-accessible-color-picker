@@ -197,7 +197,7 @@ const props = withDefaults(defineProps<ColorPickerProps>(), {
 	alphaChannel: 'show',
 })
 
-const emit = defineEmits<(event: 'color-change', data: ColorChangeDetail) => void>()
+const emit = defineEmits<(event: 'color-change' | 'color-copy', data: ColorChangeDetail) => void>()
 
 /**
  * The root element of the color picker.
@@ -443,6 +443,8 @@ async function copyColor (): Promise<void> {
 
 	// Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
 	await window.navigator.clipboard.writeText(cssColor)
+
+	emit('color-copy', getColorChangeDetail())
 }
 
 /**

@@ -183,14 +183,37 @@ You can also register the component and import the styles globally.
 	<template>
 		<ColorPicker
 			color="hsl(270 100% 50% / 0.8)"
-			@color-change="updateColor"
+			@color-change="colorChanged"
 		/>
 	</template>
 
 	<script setup>
 	import { ColorPicker } from 'vue-accessible-color-picker'
 
-	function updateColor (eventData) {
+	function colorChanged (eventData) {
+		console.log(eventData)
+	}
+	</script>
+	```
+
+#### `color-copy`
+
+- **Description**: The `color-copy` event is fired once a copy operation succeeded.
+- **Data**: Emits the same event data as [the `color-change` event](#color-change).
+- **Usage**:
+
+	```vue
+	<template>
+		<ColorPicker
+			color="hsl(270 100% 50% / 0.8)"
+			@color-copy="colorCopied"
+		/>
+	</template>
+
+	<script setup>
+	import { ColorPicker } from 'vue-accessible-color-picker'
+
+	function colorCopied (eventData) {
 		console.log(eventData)
 	}
 	</script>

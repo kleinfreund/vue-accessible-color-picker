@@ -6,8 +6,10 @@ import { PublicProps } from 'vue';
 
 declare const __VLS_component: DefineComponent<ColorPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
 "color-change": (data: ColorChangeDetail) => any;
+"color-copy": (data: ColorChangeDetail) => any;
 }, string, PublicProps, Readonly<ColorPickerProps> & Readonly<{
 "onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
+"onColor-copy"?: ((data: ColorChangeDetail) => any) | undefined;
 }>, {
 id: string;
 color: string | ColorHsl | ColorHwb | ColorRgb;
