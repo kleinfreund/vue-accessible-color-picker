@@ -1,3 +1,11 @@
+## [5.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.0.1...v5.1.0) (2024-10-20)
+
+### Features
+
+* add color-copy event ([910f12c](https://github.com/kleinfreund/vue-accessible-color-picker/commit/910f12c5f48d9a8475a8dd73e46792248d2bf214))
+
+  Add a new event `copy-color` that is fired once a copy operation succeeded. Its event data is the same as that of the `color-change` event.
+
 ## [5.0.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.0.0...v5.0.1) (2023-11-23)
 
 
