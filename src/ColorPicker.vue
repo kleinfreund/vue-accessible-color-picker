@@ -467,7 +467,7 @@ async function copyColor (): Promise<void> {
  */
 function setCssProps (colorPicker: HTMLElement, colorSpace: HTMLElement, thumb: HTMLElement) {
 	// Use the current color as the *opaque* end of the the alpha channel slider. For this purpose, we use the current color with its alpha channel set to 1.
-	const opaqueColor = formatAsCssColor({ format: 'hsl', color: colors.hsl }, false)
+	const opaqueColor = formatAsCssColor({ format: 'hsl', color: colors.hsl }, true)
 	colorPicker.style.setProperty('--vacp-color', opaqueColor)
 
 	// Allows the color space thumb to be positioned relative to this element.

@@ -74,7 +74,7 @@ describe('ColorPicker', () => {
 		})
 
 		const colorPicker = wrapper.find<HTMLElement>('.vacp-color-picker').element
-		expect(colorPicker.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100% / 1)')
+		expect(colorPicker.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
 
 		const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb').element
 		expect(thumb.style.left).toBe('0%')
@@ -288,6 +288,20 @@ describe('ColorPicker', () => {
 			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
 			const emittedCssColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].cssColor
 			expect(emittedCssColor).toEqual(expectedCssColor)
+		})
+
+		test('sets fully-opaque “--vacp-color” custom property', async () => {
+			const wrapper = createWrapper({
+				attachTo: document.body,
+			})
+			await flushPromises()
+			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
+
+			wrapper.setProps({
+				color: '#f60c',
+			})
+			await flushPromises()
+			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(24 100% 50%)')
 		})
 	})
 
