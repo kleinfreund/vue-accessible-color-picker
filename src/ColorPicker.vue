@@ -769,7 +769,7 @@ Range input: thumbs
 /*
 1. Justification for removing the outline: The focus styles are maintained using a solid border style. This maintains a focus style in Windows’ high contrast mode which would be lost with a combination of `outline: none` and a box shadow because box shadows are removed in high contrast mode.
 */
-.vacp-copy-button:enabled:focus {
+.vacp-copy-button:focus {
 	outline: none; /* 1. */
 	border-color: var(--vacp-color-border, $color-border);
 	box-shadow: 0 0 0 2px var(--vacp-color-focus, $color-focus);
@@ -828,7 +828,7 @@ Range input: thumbs
 	background-color: var(--vacp-color-background-input, $color-background-input);
 }
 
-.vacp-format-switch-button:enabled:focus {
+.vacp-format-switch-button:focus {
 	border-color: var(--vacp-color-border, $color-border);
 }
 
