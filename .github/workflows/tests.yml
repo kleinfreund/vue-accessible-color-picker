@@ -30,8 +30,5 @@ jobs:
       - if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm clean-install
       - run: npm audit signatures
-      - run: npm run lint:lockfile
-      - run: npm run lint:package
-      - run: npm run lint:code
-      - run: npm run lint:types
+      - run: npm run lint
       - run: npm run test
