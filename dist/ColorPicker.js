@@ -371,7 +371,7 @@ const Nt = { class: "vacp-range-input-group" }, Vt = ["for"], At = { class: "vac
       await window.navigator.clipboard.writeText(a), u("color-copy", B());
     }
     function ht(r, e, a) {
-      const l = D({ format: "hsl", color: i.hsl }, !1);
+      const l = D({ format: "hsl", color: i.hsl }, !0);
       r.style.setProperty("--vacp-color", l), e.style.position = "relative", e.style.backgroundColor = `hsl(${i.hsl.h} 100% 50%)`, e.style.backgroundImage = "linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent)", a.style.boxSizing = "border-box", a.style.position = "absolute", a.style.left = `${i.hsv.s}%`, a.style.bottom = `${i.hsv.v}%`;
     }
     function B() {
