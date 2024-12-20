@@ -1,3 +1,9 @@
+## [5.1.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.1.0...v5.1.1) (2024-12-20)
+
+### Bug Fixes
+
+* not using fully opaque color for alpha slider ([cd0772b](https://github.com/kleinfreund/vue-accessible-color-picker/commit/cd0772b76375679d65f6834f92879a9d56dd4e1c))
+
 ## [5.1.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.0.1...v5.1.0) (2024-10-20)
 
 ### Features
