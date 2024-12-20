@@ -27,10 +27,10 @@ interface CssValuePercentageFromOptions extends CssValueNumberFromOptions {
 	referenceValue?: number
 }
 
-type CssValue<
+interface CssValue<
 	FromOptions = Record<string, never>,
 	ToOptions = Record<string, never>,
-> = {
+> {
 	from: (value: string, options?: FromOptions) => number
 	to: (value: number, options?: ToOptions) => string
 }
@@ -140,19 +140,16 @@ const colorChannels: Record<Exclude<VisibleColorFormat, 'hex'>, Record<string, C
 		h: angle,
 		s: percentage,
 		l: percentage,
-		a: alpha,
 	},
 	hwb: {
 		h: angle,
 		w: percentage,
 		b: percentage,
-		a: alpha,
 	},
 	rgb: {
 		r: rgbNumber,
 		g: rgbNumber,
 		b: rgbNumber,
-		a: alpha,
 	},
 }
 

@@ -1,5 +1,5 @@
 import { VisibleColorPair } from '../types.js'
-import { getCssValue } from './CssValues.js'
+import { alpha, getCssValue } from './CssValues.js'
 
 /**
  * Formats a given color object as a CSS color string.
@@ -14,7 +14,7 @@ export function formatAsCssColor ({ format, color }: VisibleColorPair, excludeAl
 	const parameters = Object.entries(color)
 		.slice(0, excludeAlphaChannel ? 3 : 4)
 		.map(([channel, value]) => {
-			const cssValue = getCssValue(format, channel)
+			const cssValue = channel === 'a' ? alpha : getCssValue(format, channel)
 			return (channel === 'a' ? '/ ' : '') + cssValue.to(value)
 		})
 

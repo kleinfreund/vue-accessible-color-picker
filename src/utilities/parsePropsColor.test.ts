@@ -41,6 +41,7 @@ describe('parsePropsColor', () => {
 		['#123456789', null],
 		['bla(1 1 1 / 1)', null],
 	])('parses “%s” correctly', (cssColor, rgbColorString) => {
+		// @ts-expect-error because we're deliberately testing invalid inputs
 		expect(parsePropsColor(cssColor)).toEqual(rgbColorString)
 	})
 

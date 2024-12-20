@@ -109,7 +109,7 @@
 				</label>
 
 				<label
-					v-for="channel in visibleChannels"
+					v-for="{ value, channel, label } in visibleChannels"
 					v-else
 					:id="`${id}-color-${activeFormat}-${channel}-label`"
 					:key="`${id}-color-${activeFormat}-${channel}-label`"
@@ -118,14 +118,14 @@
 					@input="updateColorValue($event, channel)"
 				>
 					<span class="vacp-color-input-label-text">
-						{{ channel.toUpperCase() }}
+						{{ label }}
 					</span>
 
 					<input
 						:id="`${id}-color-${activeFormat}-${channel}`"
 						class="vacp-color-input"
 						type="text"
-						:value="getChannelAsCssValue(channel)"
+						:value="value"
 						@input="updateColorValue($event, channel)"
 					>
 				</label>
@@ -171,7 +171,7 @@ import {
 import { clamp } from './utilities/clamp.js'
 import { colorsAreValueEqual } from './utilities/colorsAreValueEqual.js'
 import { convert } from './utilities/convert.js'
-import { getCssValue } from './utilities/CssValues.js'
+import { alpha, getCssValue } from './utilities/CssValues.js'
 import { formatAsCssColor } from './utilities/formatAsCssColor.js'
 import { isValidHexColor } from './utilities/isValidHexColor.js'
 import { parsePropsColor } from './utilities/parsePropsColor.js'
@@ -242,10 +242,25 @@ const colors = reactive<any>({
  * A list of color channels rendered as part of the color picker.
  */
 const visibleChannels = computed(function () {
-	const allChannels = Object.keys(colors[activeFormat.value])
-	return activeFormat.value !== 'hex' && props.alphaChannel === 'hide'
-		? allChannels.slice(0, 3)
-		: allChannels
+	const format = activeFormat.value as Exclude<VisibleColorFormat, 'hex'>
+	const color = colors[format]
+	return format.split('')
+		.map((channel) => {
+			const internalValue = color[channel]
+			const cssValue = getCssValue(format, channel)
+			const value = cssValue.to(internalValue)
+
+			return {
+				value,
+				channel,
+				label: channel.toUpperCase(),
+			}
+		})
+		.concat(props.alphaChannel === 'show' ? [{
+			value: alpha.to(color.a),
+			channel: 'a',
+			label: 'Alpha',
+		}] : [])
 })
 
 /**
@@ -378,7 +393,7 @@ function updateColorValue (event: Event, channel: string) {
 
 	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
 	const color = Object.assign({}, colors[format])
-	const cssValue = getCssValue(format, channel)
+	const cssValue = channel === 'a' ? alpha : getCssValue(format, channel)
 	const value = cssValue.from(input.value)
 
 	if (Number.isNaN(value) || value === undefined) {
@@ -445,15 +460,6 @@ async function copyColor (): Promise<void> {
 	await window.navigator.clipboard.writeText(cssColor)
 
 	emit('color-copy', getColorChangeDetail())
-}
-
-/**
- * Wrapper function. Converts a color channel’s value into its CSS value representation.
- */
-function getChannelAsCssValue (channel: string): string {
-	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
-	const cssValue = getCssValue(format, channel)
-	return cssValue.to(colors[format][channel])
 }
 
 /**

@@ -410,7 +410,7 @@ describe('ColorPicker', () => {
 
 			const wrapper = createWrapper({
 				props: {
-					color: 'hwb(180, 25%, 50%, 1)',
+					color: 'hwb(180 25% 50% / 1)',
 				},
 			})
 			expect(keydownEvent.preventDefault).not.toHaveBeenCalled()

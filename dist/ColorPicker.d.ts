@@ -16,9 +16,10 @@ color: string | ColorHsl | ColorHwb | ColorRgb;
 visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
 alphaChannel: AlphaChannelProp;
-}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
 
 declare function __VLS_template(): {
+    attrs: Partial<{}>;
     slots: {
         "hue-range-input-label"?(_: {}): any;
         "alpha-range-input-label"?(_: {}): any;
@@ -30,7 +31,7 @@ declare function __VLS_template(): {
         colorSpace: HTMLDivElement;
         thumb: HTMLDivElement;
     };
-    attrs: Partial<{}>;
+    rootEl: HTMLDivElement;
 };
 
 declare type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
