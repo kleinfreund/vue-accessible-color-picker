@@ -10,7 +10,7 @@
 	"homepage": "https://vue-accessible-color-picker.netlify.app",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/kleinfreund/vue-accessible-color-picker.git"
+		"url": "git+https://github.com/kleinfreund/vue-accessible-color-picker.git"
 	},
 	"bugs": {
 		"url": "https://github.com/kleinfreund/vue-accessible-color-picker/issues"
