@@ -58,11 +58,11 @@ describe('ColorPicker', () => {
 			alphaChannel: 'hide',
 		},
 		{
-			color: 'hsl(0, 0%, 100%, 1)',
+			color: 'hsl(0 0% 100% / 1)',
 			alphaChannel: 'show',
 		},
 		{
-			color: 'hsl(0, 0%, 100%, 1)',
+			color: 'hsl(0 0% 100% / 1)',
 			alphaChannel: 'hide',
 		},
 	])('initializes color space and thumb correctly with default color value', (props) => {
