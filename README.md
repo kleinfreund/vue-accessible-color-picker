@@ -23,6 +23,7 @@ Links:
 	- [Props](#props)
 		- [`alphaChannel`](#alphachannel)
 		- [`color`](#color)
+		- [`copy`](#copy)
 		- [`defaultFormat`](#defaultformat)
 		- [`id`](#id)
 		- [`visibleFormats`](#visibleformats)
@@ -119,6 +120,17 @@ You can also register the component and import the styles globally.
 		color.value = eventData.cssColor
 	}
 	</script>
+	```
+#### `copy`
+
+- **Description**: A function that will be used in place of `window.navigator.clipboard.writeText` to
+- **Type**: `(cssString: string) => Promise<void> | void`
+- **Required**: No
+- **Default**: `window.navigator.clipboard.writeText`
+- **Usage**:
+
+	```vue
+	<ColorPicker :copy="customCopyFunction" />
 	```
 
 #### `defaultFormat`

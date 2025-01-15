@@ -4,7 +4,9 @@ import { DefineComponent } from 'vue';
 import { Plugin as Plugin_2 } from 'vue';
 import { PublicProps } from 'vue';
 
-declare const __VLS_component: DefineComponent<ColorPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
+declare const __VLS_component: DefineComponent<ColorPickerProps, {
+copyColor: typeof copyColor;
+}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
 "color-change": (data: ColorChangeDetail) => any;
 "color-copy": (data: ColorChangeDetail) => any;
 }, string, PublicProps, Readonly<ColorPickerProps> & Readonly<{
@@ -13,6 +15,7 @@ declare const __VLS_component: DefineComponent<ColorPickerProps, {}, {}, {}, {},
 }>, {
 id: string;
 color: string | ColorHsl | ColorHwb | ColorRgb;
+copy: (cssColor: string) => Promise<void> | void;
 visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
 alphaChannel: AlphaChannelProp;
@@ -88,6 +91,10 @@ export declare interface ColorPickerProps {
      */
     color?: string | ColorHsl | ColorHwb | ColorRgb;
     /**
+     * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
+     */
+    copy?: (cssColor: string) => Promise<void> | void;
+    /**
      * The prefix for all ID attribute values used by the color picker.
      */
     id?: string;
@@ -116,6 +123,15 @@ export declare type ColorRgb = {
     b: number;
     a: number;
 };
+
+/**
+ * Copies the current color (determined by the active color format).
+ *
+ * For example, if the active color format is HSL, the copied text will be a valid CSS color in HSL format.
+ *
+ * Only works in secure browsing contexts (i.e. HTTPS).
+ */
+declare function copyColor(): Promise<void>;
 
 declare const plugin: Plugin_2;
 export default plugin;

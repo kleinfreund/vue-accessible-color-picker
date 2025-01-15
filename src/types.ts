@@ -60,6 +60,11 @@ export interface ColorPickerProps {
 	color?: string | ColorHsl | ColorHwb | ColorRgb
 
 	/**
+	 * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
+	 */
+	copy?: (cssColor: string) => Promise<void> | void
+
+	/**
 	 * The prefix for all ID attribute values used by the color picker.
 	 */
 	id?: string

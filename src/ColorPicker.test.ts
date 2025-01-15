@@ -571,6 +571,18 @@ describe('ColorPicker', () => {
 
 			expect(global.navigator.clipboard.writeText).toHaveBeenCalledWith(cssColor)
 		})
+
+		test('works with alternative copy function', async () => {
+			const spy = vi.fn()
+			const wrapper = createWrapper({
+				props: {
+					copy: spy,
+				},
+			})
+
+			await wrapper.vm.copyColor()
+			expect(spy).toHaveBeenCalledTimes(1)
+		})
 	})
 
 	describe('switch format button', () => {
