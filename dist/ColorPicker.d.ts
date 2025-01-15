@@ -1,3 +1,4 @@
+import { AlphaChannelProp as AlphaChannelProp_2 } from './types.js';
 import { ComponentOptionsMixin } from 'vue';
 import { ComponentProvideOptions } from 'vue';
 import { DefineComponent } from 'vue';
@@ -18,16 +19,20 @@ color: string | ColorHsl | ColorHwb | ColorRgb;
 copy: (cssColor: string) => Promise<void> | void;
 visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
-alphaChannel: AlphaChannelProp;
-}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
+alphaChannel: AlphaChannelProp_2;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {
+colorPicker: HTMLDivElement;
+colorSpace: HTMLDivElement;
+thumb: HTMLDivElement;
+}, HTMLDivElement>;
 
 declare function __VLS_template(): {
     attrs: Partial<{}>;
     slots: {
-        "hue-range-input-label"?(_: {}): any;
-        "alpha-range-input-label"?(_: {}): any;
-        "copy-button"?(_: {}): any;
-        "format-switch-button"?(_: {}): any;
+        'hue-range-input-label'?(_: {}): any;
+        'alpha-range-input-label'?(_: {}): any;
+        'copy-button'?(_: {}): any;
+        'format-switch-button'?(_: {}): any;
     };
     refs: {
         colorPicker: HTMLDivElement;
