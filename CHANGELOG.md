@@ -1,3 +1,11 @@
+## [5.2.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.1.1...v5.2.0) (2025-01-15)
+
+### Features
+
+* add copy prop to customize copy function ([0c2bcde](https://github.com/kleinfreund/vue-accessible-color-picker/commit/0c2bcdec018668f2375912af10226d9bc92600e7)), closes [#29](https://github.com/kleinfreund/vue-accessible-color-picker/issues/)
+
+  Add the optional prop `copy` that allows customization of the copy function used by the color picker's copy interactions. This can be useful if `window.navigator.clipboard.writeText` isn't available/usable.
+
 ## [5.1.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.1.0...v5.1.1) (2024-12-20)
 
 ### Bug Fixes
