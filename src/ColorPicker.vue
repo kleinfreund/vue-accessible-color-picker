@@ -165,6 +165,7 @@ import {
 	onMounted,
 	reactive,
 	ref,
+	useTemplateRef,
 	watch,
 } from 'vue'
 
@@ -207,17 +208,17 @@ defineExpose({
 /**
  * The root element of the color picker.
  */
-const colorPicker = ref<HTMLElement | null>(null)
+const colorPicker = useTemplateRef('colorPicker')
 
 /**
  * The color space. It represents the saturation and lightness or the current color’s hue.
  */
-const colorSpace = ref<HTMLElement | null>(null)
+const colorSpace = useTemplateRef('colorSpace')
 
 /**
  * The color space thumb. Can be dragged around within the color space to change a color’s saturation and lightness.
  */
-const thumb = ref<HTMLElement | null>(null)
+const thumb = useTemplateRef('thumb')
 
 /**
  * Tracks whether a pointer originated from within the color space.
