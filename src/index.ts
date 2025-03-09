@@ -13,14 +13,7 @@ export { ColorPicker }
 export default plugin
 
 export type {
-	AlphaChannelProp,
 	ColorChangeDetail,
 	ColorFormat,
-	ColorHsl,
-	ColorHsv,
-	ColorHwb,
-	ColorMap,
 	ColorPickerProps,
-	ColorRgb,
-	VisibleColorFormat,
 } from './types.js'

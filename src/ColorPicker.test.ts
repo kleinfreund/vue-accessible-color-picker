@@ -3,13 +3,12 @@ import { shallowMount, flushPromises, ComponentMountingOptions, enableAutoUnmoun
 
 import ColorPicker from './ColorPicker.vue'
 import { ColorChangeDetail, ColorPickerProps } from './types.js'
+import { CHANNEL_DEFINITIONS } from './constants.js'
 
-type MountingOptions = ComponentMountingOptions<ColorPickerProps> & {
-	// Overrides the props in `ComponentMountingOptions` to be more accurate.
-	props?: ColorPickerProps
-}
-
-function createWrapper (options: MountingOptions = {}) {
+function createWrapper (options: ComponentMountingOptions<typeof ColorPicker, ColorPickerProps> = {}) {
+	options.props = options.props ?? {}
+	options.props.id = options.props.id ?? 'color-picker'
+	options.props.visibleFormats = options.props.visibleFormats ?? ['hex', 'hsl', 'hwb', 'rgb']
 	return shallowMount(ColorPicker, options)
 }
 
@@ -78,9 +77,22 @@ describe('ColorPicker', () => {
 		const colorPicker = wrapper.find<HTMLElement>('.vacp-color-picker').element
 		expect(colorPicker.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
 
-		const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb').element
-		expect(thumb.style.left).toBe('0%')
-		expect(thumb.style.bottom).toBe('100%')
+		const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb')
+		expect(thumb.element.style.left).toBe('0%')
+		expect(thumb.element.style.bottom).toBe('100%')
+	})
+
+	test('thumb is inside the color space for out-of-gamut colors', () => {
+		const wrapper = createWrapper({
+			props: {
+				color: 'oklab(88% 0.145 -0.392)',
+			},
+		})
+
+		const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb')
+		// Without converting the color to be in-gamut, the thumb coordinates for the color “oklab(88% 0.145 -0.392)” are at left 75.37% and bottom 181.00% which puts the thumb “off screen”. With the color being converted to be in-gamut, the coordinates are as expected below.
+		expect(thumb.element.style.left).toBe('21.028102086240466%')
+		expect(thumb.element.style.bottom).toBe('100%')
 	})
 
 	test('removes event listeners on unmount', () => {
@@ -120,30 +132,27 @@ describe('ColorPicker', () => {
 		test.each<[ColorPickerProps, string]>([
 			[
 				{ color: '#f00' },
-				'#f00',
+				'#f00f',
 			],
 			[
-				{ color: { r: 255, g: 127.5, b: 0, a: 0.5 } },
+				{ color: 'rgb(255 127.5 0 / 0.5)' },
 				'#ff800080',
 			],
 			[
-				{ color: { h: 0, s: 100, l: 50, a: 1 } },
-				'#ff0000ff',
+				{ color: 'hsl(0 100% 50% / 1)' },
+				'#f00f',
 			],
 			[
-				{ color: { h: 180, w: 33, b: 50, a: 1 } },
+				{ color: 'hwb(180 33% 50% / 1)' },
 				'#548080ff',
 			],
-		])('mounts correctly with a valid color prop', async (props, expectedHexInputValue) => {
+		])('mounts correctly with a valid color prop', (props, expectedHexInputValue) => {
 			const wrapper = createWrapper({
 				props: {
 					defaultFormat: 'hex',
 					...props,
 				},
 			})
-
-			// We need to wait one tick before Vue will have re-rendered the component.
-			await flushPromises()
 
 			const input = wrapper.find<HTMLInputElement>('.vacp-color-input').element
 			expect(input.value).toBe(expectedHexInputValue)
@@ -158,7 +167,7 @@ describe('ColorPicker', () => {
 			})
 
 			const input = wrapper.find<HTMLInputElement>('.vacp-color-input').element
-			expect(input.value).toBe('#ffffffff')
+			expect(input.value).toBe('#ffff')
 		})
 
 		test('falls back to visible color format when defaultFormat isn\'t a visible format', () => {
@@ -171,7 +180,7 @@ describe('ColorPicker', () => {
 			})
 
 			const input = wrapper.find<HTMLInputElement>('.vacp-color-input').element
-			expect(input.value).toBe('#ffffffff')
+			expect(input.value).toBe('#ffff')
 		})
 
 		test.each<[ColorPickerProps, string[]]>([
@@ -207,20 +216,20 @@ describe('ColorPicker', () => {
 		test.each([
 			[
 				'#f80c',
-				{ r: 255, g: 136, b: 0, a: 0.8 },
+				'rgb(100% 53.333% 0% / 0.8)',
 			],
 			[
-				{ h: 180, s: 50, l: 50, a: 1 },
-				{ r: 63.75, g: 191.25, b: 191.25, a: 1 },
+				'hsl(180 50% 50% / 1)',
+				'rgb(25% 75% 75% / 1)',
 			],
 		])('recomputes colors when color prop changes', async (colorProp, expectedColorChangePayload) => {
 			const wrapper = createWrapper()
 
 			await wrapper.setProps({ color: colorProp })
-			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].colors.rgb).toEqual(expectedColorChangePayload)
+			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color.to('srgb').toString({ alpha: true })).toEqual(expectedColorChangePayload)
 
 			await wrapper.setProps({ color: '#fffc' })
-			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].colors.rgb).toEqual({ r: 255, g: 255, b: 255, a: 0.8 })
+			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color.to('srgb').toString({ alpha: true })).toEqual('rgb(100% 100% 100% / 0.8)')
 		})
 
 		test('id attributes are set correctly', async () => {
@@ -237,29 +246,31 @@ describe('ColorPicker', () => {
 			const alphaInput = wrapper.find(`#${id}-alpha-slider`)
 			expect(alphaInput.exists()).toBe(true)
 
-			const formats = ['hsl', 'hwb', 'rgb']
+			for (const [format, channels] of Object.entries(CHANNEL_DEFINITIONS)) {
+				const attributePrefix = `${id}-color-${format}`
 
-			for (const format of formats) {
-				const channels = format.split('')
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]!}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]!}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-${channels[0]!}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]!}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]!}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-${channels[1]!}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]!}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]!}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-${channels[2]!}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-a"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-a"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${attributePrefix}-${channels[0].channel}-label"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${attributePrefix}-${channels[0].channel}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${attributePrefix}-${channels[0].channel}"]`).exists()).toBe(true)
+
+				expect(wrapper.find(`[id="${attributePrefix}-${channels[1].channel}-label"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${attributePrefix}-${channels[1].channel}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${attributePrefix}-${channels[1].channel}"]`).exists()).toBe(true)
+
+				expect(wrapper.find(`[id="${attributePrefix}-${channels[2].channel}-label"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${attributePrefix}-${channels[2].channel}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${attributePrefix}-${channels[2].channel}"]`).exists()).toBe(true)
+
+				expect(wrapper.find(`[id="${attributePrefix}-alpha"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${attributePrefix}-alpha"]`).exists()).toBe(true)
 
 				await formatSwitchButton.trigger('click')
 			}
 		})
 
 		test.each<[ColorPickerProps, boolean, string]>([
-			[{ alphaChannel: 'show' }, true, 'hsl(180 0% 100% / 1)'],
-			[{ alphaChannel: 'hide' }, false, 'hsl(180 0% 100%)'],
+			[{ alphaChannel: 'show' }, true, 'hsl(0 0% 50% / 1)'],
+			[{ alphaChannel: 'hide' }, false, 'hsl(0 0% 50%)'],
 		])('shows/hides correct elements when setting alphaChannel', async (props, isElementVisible, expectedCssColor) => {
 			const id = 'test-color-picker'
 			const wrapper = createWrapper({
@@ -272,23 +283,23 @@ describe('ColorPicker', () => {
 			const alphaInput = wrapper.find(`#${id}-alpha-slider`)
 			expect(alphaInput.exists()).toBe(isElementVisible)
 
-			const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-a`)
+			const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-alpha`)
 			expect(colorHslAlphaInput.exists()).toBe(isElementVisible)
 
-			const input = wrapper.find<HTMLInputElement>(`#${id}-color-hsl-h`)
-			await input.setValue('180')
-			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].cssColor).toEqual(expectedCssColor)
+			const input = wrapper.find<HTMLInputElement>(`#${id}-color-hsl-l`)
+			await input.setValue('50%')
+			expect(
+				(wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].cssColor,
+			).toEqual(expectedCssColor)
 		})
 
 		test('sets fully-opaque “--vacp-color” custom property', async () => {
 			const wrapper = createWrapper()
-			await flushPromises()
 			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
 
 			await wrapper.setProps({
 				color: '#f60c',
 			})
-			await flushPromises()
 			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(24 100% 50%)')
 		})
 	})
@@ -304,7 +315,6 @@ describe('ColorPicker', () => {
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).length).toBe(1)
 
 			const colorSpace = wrapper.find('.vacp-color-space')
-
 			colorSpace.element.getBoundingClientRect = vi.fn(() => ({
 				width: 200,
 				height: 200,
@@ -422,11 +432,7 @@ describe('ColorPicker', () => {
 				shiftKey: false,
 			}
 
-			const wrapper = createWrapper({
-				props: {
-					id: 'color-picker',
-				},
-			})
+			const wrapper = createWrapper()
 			const hueRangeInput = wrapper.find<HTMLInputElement>('#color-picker-hue-slider')
 			const hueRangeInputElement = hueRangeInput.element
 			const originalInputValue = hueRangeInputElement.value
@@ -444,11 +450,7 @@ describe('ColorPicker', () => {
 			['increment', 1, 'ArrowRight', '9'],
 			['increment', 3, 'ArrowRight', '27'],
 		])('can %s range inputs %dx in big steps with %s', async (_, numberOfPresses, key, expectedValue) => {
-			const wrapper = createWrapper({
-				props: {
-					id: 'color-picker',
-				},
-			})
+			const wrapper = createWrapper()
 			const hueRangeInput = wrapper.find<HTMLInputElement>('#color-picker-hue-slider')
 			const hueRangeInputElement = hueRangeInput.element
 			const keydownEvent = {
@@ -469,7 +471,6 @@ describe('ColorPicker', () => {
 			const wrapper = createWrapper({
 				props: {
 					color: '#f00',
-					id: 'color-picker',
 				},
 			})
 
@@ -510,11 +511,11 @@ describe('ColorPicker', () => {
 			],
 			[
 				{ defaultFormat: 'hex', alphaChannel: 'show' },
-				'#ffffffff',
+				'#ffff',
 			],
 			[
 				{ defaultFormat: 'hex', alphaChannel: 'hide' },
-				'#ffffff',
+				'#fff',
 			],
 		])('copy button copies %s format as %s', async (props, cssColor) => {
 			vi.spyOn(global.navigator.clipboard, 'writeText').mockImplementation(vi.fn(() => Promise.resolve()))
@@ -574,17 +575,17 @@ describe('ColorPicker', () => {
 	describe('color value inputs', () => {
 		test.each<[ColorPickerProps, string, string]>([
 			[
-				{ id: 'color-picker', defaultFormat: 'rgb' },
+				{ defaultFormat: 'rgb' },
 				'r',
 				'127.',
 			],
 			[
-				{ id: 'color-picker', defaultFormat: 'hsl' },
+				{ defaultFormat: 'hsl' },
 				's',
 				'a',
 			],
 			[
-				{ id: 'color-picker', defaultFormat: 'hwb' },
+				{ defaultFormat: 'hwb' },
 				'b',
 				'25.%',
 			],
@@ -601,7 +602,6 @@ describe('ColorPicker', () => {
 		])('updating a hex color input with an invalid value does not update the internal color data', async (invalidHexColorString) => {
 			const wrapper = createWrapper({
 				props: {
-					id: 'color-picker',
 					defaultFormat: 'hex',
 				},
 			})
@@ -612,17 +612,17 @@ describe('ColorPicker', () => {
 
 		test.each<[ColorPickerProps, string, string]>([
 			[
-				{ id: 'color-picker', defaultFormat: 'rgb' },
+				{ defaultFormat: 'rgb' },
 				'r',
 				'127.5',
 			],
 			[
-				{ id: 'color-picker', defaultFormat: 'hsl' },
-				's',
+				{ defaultFormat: 'hsl' },
+				'l',
 				'75%',
 			],
 			[
-				{ id: 'color-picker', defaultFormat: 'hwb' },
+				{ defaultFormat: 'hwb' },
 				'b',
 				'25.5%',
 			],
@@ -638,7 +638,6 @@ describe('ColorPicker', () => {
 		])('updating a %s color input with a valid value updates the internal color data', async (channelValue) => {
 			const wrapper = createWrapper({
 				props: {
-					id: 'color-picker',
 					defaultFormat: 'hex',
 				},
 			})
@@ -646,160 +645,7 @@ describe('ColorPicker', () => {
 			await wrapper.find<HTMLInputElement>('#color-picker-color-hex').setValue(channelValue)
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).length).toBe(1)
 		})
-	})
 
-	describe('color-change event', () => {
-		test.each<[ColorPickerProps, ColorChangeDetail]>([
-			[
-				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'show' },
-				{
-					cssColor: 'hsl(350 100% 80% / 0.8)',
-					colors: {
-						hex: '#ff99aacc',
-						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
-						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
-					},
-				},
-			],
-			[
-				{ color: '#f9ac', defaultFormat: 'hsl', alphaChannel: 'show' },
-				{
-					cssColor: 'hsl(350 100% 80% / 0.8)',
-					colors: {
-						hex: '#f9ac',
-						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
-						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
-					},
-				},
-			],
-			[
-				{ color: '#ff99aacc', defaultFormat: 'hex', alphaChannel: 'show' },
-				{
-					cssColor: '#ff99aacc',
-					colors: {
-						hex: '#ff99aacc',
-						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
-						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
-					},
-				},
-			],
-			[
-				{ color: '#f9ac', defaultFormat: 'hex', alphaChannel: 'show' },
-				{
-					cssColor: '#f9ac',
-					colors: {
-						hex: '#f9ac',
-						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
-						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
-					},
-				},
-			],
-			[
-				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'hide' },
-				{
-					cssColor: 'hsl(350 100% 80%)',
-					colors: {
-						hex: '#ff99aaff',
-						hsl: { h: 350, s: 100, l: 80, a: 1 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
-						rgb: { r: 255, g: 153, b: 170, a: 1 },
-					},
-				},
-			],
-			[
-				{ color: '#f9ac', defaultFormat: 'hsl', alphaChannel: 'hide' },
-				{
-					cssColor: 'hsl(350 100% 80%)',
-					colors: {
-						hex: '#f9af',
-						hsl: { h: 350, s: 100, l: 80, a: 1 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
-						rgb: { r: 255, g: 153, b: 170, a: 1 },
-					},
-				},
-			],
-			[
-				{ color: '#ff99aacc', defaultFormat: 'hex', alphaChannel: 'hide' },
-				{
-					cssColor: '#ff99aa',
-					colors: {
-						hex: '#ff99aaff',
-						hsl: { h: 350, s: 100, l: 80, a: 1 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
-						rgb: { r: 255, g: 153, b: 170, a: 1 },
-					},
-				},
-			],
-			[
-				{ color: '#f9ac', defaultFormat: 'hex', alphaChannel: 'hide' },
-				{
-					cssColor: '#f9a',
-					colors: {
-						hex: '#f9af',
-						hsl: { h: 350, s: 100, l: 80, a: 1 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 1 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 1 },
-						rgb: { r: 255, g: 153, b: 170, a: 1 },
-					},
-				},
-			],
-			[
-				{ color: '#23a96a', defaultFormat: 'hex', alphaChannel: 'hide' },
-				{
-					cssColor: '#23a96a',
-					colors: {
-						hex: '#23a96aff',
-						hsl: { h: 151.7910447761194, s: 65.68627450980392, l: 40, a: 1 },
-						hsv: { h: 151.7910447761194, s: 79.28994082840237, v: 66.27450980392157, a: 1 },
-						hwb: { h: 151.7910447761194, w: 13.725490196078432, b: 33.725490196078425, a: 1 },
-						rgb: { r: 35, g: 169, b: 106, a: 1 },
-					},
-				},
-			],
-		])('emits correct data', async (props, expectedData) => {
-			const wrapper = createWrapper({ props })
-
-			await wrapper.setProps({ color: props.color })
-			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0]).toEqual(expectedData)
-		})
-	})
-
-	describe('color-copy event', () => {
-		test.each<[ColorPickerProps, ColorChangeDetail]>([
-			[
-				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'show' },
-				{
-					cssColor: 'hsl(350 100% 80% / 0.8)',
-					colors: {
-						hex: '#ff99aacc',
-						hsl: { h: 350, s: 100, l: 80, a: 0.8 },
-						hsv: { h: 350, s: 39.99999999999999, v: 100, a: 0.8 },
-						hwb: { h: 350, w: 60.00000000000001, b: 0, a: 0.8 },
-						rgb: { r: 255, g: 153, b: 170, a: 0.8 },
-					},
-				},
-			],
-		])('emits correct data', async (props, expectedData) => {
-			const wrapper = createWrapper({ props })
-
-			const copyButton = wrapper.find('.vacp-copy-button')
-			await copyButton.trigger('click')
-			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0]).toEqual(expectedData)
-		})
-	})
-
-	describe('color inputs', () => {
 		test.each<[ColorPickerProps, string]>([
 			[
 				{ color: '#12345678', alphaChannel: 'show' },
@@ -811,7 +657,7 @@ describe('ColorPicker', () => {
 			],
 			[
 				{ color: '#123456', alphaChannel: 'show' },
-				'#123456',
+				'#123456ff',
 			],
 			[
 				{ color: '#123456', alphaChannel: 'hide' },
@@ -827,13 +673,13 @@ describe('ColorPicker', () => {
 			],
 			[
 				{ color: '#123', alphaChannel: 'show' },
-				'#123',
+				'#123f',
 			],
 			[
 				{ color: '#123', alphaChannel: 'hide' },
 				'#123',
 			],
-		])('shows expected color for hex colors', async (props, expectedHexColor) => {
+		])('shows expected color for hex colors', (props, expectedHexColor) => {
 			const wrapper = createWrapper({
 				props: {
 					defaultFormat: 'hex',
@@ -841,10 +687,261 @@ describe('ColorPicker', () => {
 				},
 			})
 
-			await flushPromises()
+			const input = wrapper.find<HTMLInputElement>('#color-picker-color-hex')
+			expect(input.element.value).toBe(expectedHexColor)
+		})
 
-			const input = wrapper.find<HTMLInputElement>('#color-picker-color-hex').element
-			expect(input.value).toBe(expectedHexColor)
+		test.each<[ColorPickerProps, Record<string, string>]>([
+			[
+				{
+					defaultFormat: 'hsl',
+					color: 'hsl(270 50% 25% / 0.5)',
+				},
+				{
+					h: '270',
+					s: '50%',
+					l: '25%',
+					alpha: '0.5',
+				},
+			],
+			[
+				{
+					defaultFormat: 'hwb',
+					color: 'hwb(180 25% 50% / 100%)',
+				},
+				{
+					h: '180',
+					w: '25%',
+					b: '50%',
+					alpha: '1',
+				},
+			],
+			[
+				{
+					defaultFormat: 'rgb',
+					color: 'rgb(255 127.5 63.75 / .2)',
+				},
+				{
+					r: '255',
+					g: '127.5',
+					b: '63.75',
+					alpha: '0.2',
+				},
+			],
+			[
+				{
+					defaultFormat: 'rgb',
+					// Use `rgba` because `rgb` with percentages isn't parsed by colorjs.io.
+					color: 'rgba(100% 50% 25% / 0)',
+				},
+				{
+					r: '255',
+					g: '127.5',
+					b: '63.75',
+					alpha: '0',
+				},
+			],
+		])('have correct value per channel', (props, expectedInputValues) => {
+			const wrapper = createWrapper({ props })
+
+			for (const [channel, expectedValue] of Object.entries(expectedInputValues)) {
+				const input = wrapper.find<HTMLInputElement>(`#color-picker-color-${props.defaultFormat!}-${channel}`)
+				expect(input.element.value).toBe(expectedValue)
+			}
+		})
+
+		test('outputs in-gamut color', () => {
+			const wrapper = createWrapper({
+				props: {
+					color: 'oklab(88% 0.145 -0.392)',
+					defaultFormat: 'hsl',
+				},
+			})
+
+			const input = wrapper.find<HTMLInputElement>('#color-picker-color-hsl-h')
+			expect(input.element.value).toBe('247.16')
+		})
+	})
+
+	describe('color-change event', () => {
+		test.each<[
+			ColorPickerProps,
+			{
+				cssColor: ColorChangeDetail['cssColor'],
+				color: { alpha: number, coords: [number, number, number] },
+			},
+		]>([
+			[
+				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'show' },
+				{
+					cssColor: 'hsl(350 100% 80% / 0.8)',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#f9ac', defaultFormat: 'hsl', alphaChannel: 'show' },
+				{
+					cssColor: 'hsl(350 100% 80% / 0.8)',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#ff99aacc', defaultFormat: 'hex', alphaChannel: 'show' },
+				{
+					cssColor: '#f9ac',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#f9ac', defaultFormat: 'hex', alphaChannel: 'show' },
+				{
+					cssColor: '#f9ac',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'hide' },
+				{
+					cssColor: 'hsl(350 100% 80%)',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#f9ac', defaultFormat: 'hsl', alphaChannel: 'hide' },
+				{
+					cssColor: 'hsl(350 100% 80%)',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#ff99aacc', defaultFormat: 'hex', alphaChannel: 'hide' },
+				{
+					cssColor: '#f9a',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#f9ac', defaultFormat: 'hex', alphaChannel: 'hide' },
+				{
+					cssColor: '#f9a',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+			[
+				{ color: '#23a96a', defaultFormat: 'hex', alphaChannel: 'hide' },
+				{
+					cssColor: '#23a96a',
+					color: {
+						alpha: 1,
+						coords: [0.13725490196078433, 0.6627450980392157, 0.41568627450980394],
+					},
+				},
+			],
+		])('emits correct data', async (props, expectedData) => {
+			const wrapper = createWrapper({ props })
+
+			await wrapper.setProps({ color: props.color })
+			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].cssColor).toEqual(expectedData.cssColor)
+			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color).toEqual(expect.objectContaining(expectedData.color))
+		})
+	})
+
+	describe('color-copy event', () => {
+		test.each<[
+			ColorPickerProps,
+			{
+				cssColor: ColorChangeDetail['cssColor'],
+				color: { alpha: number, coords: [number, number, number] },
+			},
+		]>([
+			[
+				{ color: '#ff99aacc', defaultFormat: 'hsl', alphaChannel: 'show' },
+				{
+					cssColor: 'hsl(350 100% 80% / 0.8)',
+					color: {
+						alpha: 0.8,
+						coords: [1, 0.6, 0.6666666666666666],
+					},
+				},
+			],
+		])('emits correct data', async (props, expectedData) => {
+			const wrapper = createWrapper({ props })
+
+			const copyButton = wrapper.find('.vacp-copy-button')
+			await copyButton.trigger('click')
+			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].cssColor).toEqual(expectedData.cssColor)
+			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color).toEqual(expect.objectContaining(expectedData.color))
+		})
+	})
+
+	describe('color inputs', () => {
+		test.each<[ColorPickerProps, string]>([
+			[
+				{ color: '#12345678', alphaChannel: 'show' },
+				'#12345678',
+			],
+			[
+				{ color: '#12345678', alphaChannel: 'hide' },
+				'#123456',
+			],
+			[
+				{ color: '#123456', alphaChannel: 'show' },
+				'#123456ff',
+			],
+			[
+				{ color: '#123456', alphaChannel: 'hide' },
+				'#123456',
+			],
+			[
+				{ color: '#123a', alphaChannel: 'show' },
+				'#123a',
+			],
+			[
+				{ color: '#123a', alphaChannel: 'hide' },
+				'#123',
+			],
+			[
+				{ color: '#123', alphaChannel: 'show' },
+				'#123f',
+			],
+			[
+				{ color: '#123', alphaChannel: 'hide' },
+				'#123',
+			],
+		])('shows expected color for hex colors', (props, expectedHexColor) => {
+			const wrapper = createWrapper({
+				props: {
+					defaultFormat: 'hex',
+					...props,
+				},
+			})
+
+			const input = wrapper.find<HTMLInputElement>('#color-picker-color-hex')
+			expect(input.element.value).toBe(expectedHexColor)
 		})
 	})
 })

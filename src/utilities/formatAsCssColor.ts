@@ -1,22 +1,26 @@
-import { VisibleColorPair } from '../types.js'
-import { alpha, getCssValue } from './CssValues.js'
+import Color from 'colorjs.io'
+
+import type { ColorFormat } from '../types.js'
 
 /**
  * Formats a given color object as a CSS color string.
  */
-export function formatAsCssColor ({ format, color }: VisibleColorPair, excludeAlphaChannel: boolean): string {
-	if (format === 'hex') {
-		return excludeAlphaChannel && [5, 9].includes(color.length)
-			? color.substring(0, color.length - (color.length - 1)/4)
-			: color
+export function format (color: Color, { format = 'rgb', alpha = true, collapse = true }: { format?: ColorFormat, alpha?: boolean, collapse?: boolean } = { format: 'rgb', alpha: true, collapse: true }): string {
+	const options: Parameters<typeof color.toString>[0] = {
+		alpha,
 	}
 
-	const parameters = Object.entries(color)
-		.slice(0, excludeAlphaChannel ? 3 : 4)
-		.map(([channel, value]) => {
-			const cssValue = channel === 'a' ? alpha : getCssValue(format, channel)
-			return (channel === 'a' ? '/ ' : '') + cssValue.to(value)
-		})
+	if (format === 'rgb') {
+		// colorjs.io serializes RGB colors using percentage values by default
+		options.format = {
+			name: 'rgb',
+			coords: ['<number>[0, 255]', '<number>[0, 255]', '<number>[0, 255]'],
+		}
+	} else if (format === 'hex') {
+		options.format = 'hex'
+		options.collapse = collapse
+	}
 
-	return `${format}(${parameters.join(' ')})`
+	const spaceId = ['rgb', 'hex'].includes(format) ? 'srgb' : format
+	return color.to(spaceId).toString(options).replace(/none/g, '0')
 }

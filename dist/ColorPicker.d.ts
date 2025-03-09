@@ -1,6 +1,6 @@
-import { AlphaChannelProp as AlphaChannelProp_2 } from './types.js';
 import { ComponentOptionsMixin } from 'vue';
 import { ComponentProvideOptions } from 'vue';
+import { default as default_2 } from 'colorjs.io';
 import { DefineComponent } from 'vue';
 import { Plugin as Plugin_2 } from 'vue';
 import { PublicProps } from 'vue';
@@ -15,13 +15,14 @@ switchFormat: typeof switchFormat;
 "onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
 "onColor-copy"?: ((data: ColorChangeDetail) => any) | undefined;
 }>, {
-color: string | ColorHsl | ColorHwb | ColorRgb;
+color: string | default_2;
 copy: (cssColor: string) => Promise<void> | void;
 id: string;
-visibleFormats: VisibleColorFormat[];
-defaultFormat: VisibleColorFormat;
-alphaChannel: AlphaChannelProp_2;
+visibleFormats: ColorFormat[];
+defaultFormat: ColorFormat;
+alphaChannel: "show" | "hide";
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
+colorPicker: HTMLDivElement;
 colorSpaceRef: HTMLDivElement;
 thumb: HTMLDivElement;
 }, HTMLDivElement>;
@@ -36,6 +37,7 @@ declare function __VLS_template(): {
         'format-switch-button'?(_: {}): any;
     };
     refs: {
+        colorPicker: HTMLDivElement;
         colorSpaceRef: HTMLDivElement;
         thumb: HTMLDivElement;
     };
@@ -50,43 +52,18 @@ declare type __VLS_WithTemplateSlots<T, S> = T & {
     };
 };
 
-export declare type AlphaChannelProp = 'show' | 'hide';
-
 export declare type ColorChangeDetail = {
-    colors: ColorMap;
+    /**
+     * The [colorjs.io `Color` object](https://colorjs.io/docs/the-color-object) representing the currently selected color.
+     */
+    color: default_2;
+    /**
+     * The currently selected color as a CSS color string formatted based on the active format.
+     */
     cssColor: string;
 };
 
-export declare type ColorFormat = 'hex' | 'hsl' | 'hsv' | 'hwb' | 'rgb';
-
-export declare type ColorHsl = {
-    h: number;
-    s: number;
-    l: number;
-    a: number;
-};
-
-export declare type ColorHsv = {
-    h: number;
-    s: number;
-    v: number;
-    a: number;
-};
-
-export declare type ColorHwb = {
-    h: number;
-    w: number;
-    b: number;
-    a: number;
-};
-
-export declare type ColorMap = {
-    hex: string;
-    hsl: ColorHsl;
-    hsv: ColorHsv;
-    hwb: ColorHwb;
-    rgb: ColorRgb;
-};
+export declare type ColorFormat = 'hex' | 'hsl' | 'hwb' | 'rgb';
 
 export declare const ColorPicker: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 
@@ -94,7 +71,7 @@ export declare interface ColorPickerProps {
     /**
      * The initially rendered color.
      */
-    color?: string | ColorHsl | ColorHwb | ColorRgb;
+    color?: string | default_2;
     /**
      * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
      */
@@ -106,11 +83,11 @@ export declare interface ColorPickerProps {
     /**
      * The list of visible color formats.
      */
-    visibleFormats?: VisibleColorFormat[];
+    visibleFormats?: ColorFormat[];
     /**
      * The initially visible color format.
      */
-    defaultFormat?: VisibleColorFormat;
+    defaultFormat?: ColorFormat;
     /**
      * Controls whether the control related to a color’s alpha channel are rendered in the color picker.
      *
@@ -119,15 +96,8 @@ export declare interface ColorPickerProps {
      * - **show**: Default. The alpha channel range input and the alpha channel value input are rendered.
      * - **hide**: The alpha channel range input and the alpha channel value input are not rendered. The `color-change` event emits a `cssColor` property without the alpha channel part.
      */
-    alphaChannel?: AlphaChannelProp;
+    alphaChannel?: 'show' | 'hide';
 }
-
-export declare type ColorRgb = {
-    r: number;
-    g: number;
-    b: number;
-    a: number;
-};
 
 /**
  * Copies the current color (determined by the active color format).
@@ -145,7 +115,5 @@ export default plugin;
  * Sets the next active color format by cycling through the visible color formats.
  */
 declare function switchFormat(): void;
-
-export declare type VisibleColorFormat = Exclude<ColorFormat, 'hsv'>;
 
 export { }

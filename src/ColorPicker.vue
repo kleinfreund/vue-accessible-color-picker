@@ -1,7 +1,8 @@
 <template>
 	<div
+		ref="colorPicker"
 		class="vacp-color-picker"
-		:style="`--vacp-color: ${formatAsCssColor({ format: 'hsl', color: colors.hsl }, true)}`"
+		:style="`--vacp-color: ${format(currentColor, { format: 'hsl', alpha: false })}`"
 	>
 		<div
 			ref="colorSpaceRef"
@@ -33,13 +34,13 @@
 				<input
 					:id="`${id}-hue-slider`"
 					class="vacp-range-input vacp-range-input--hue"
-					:value="colors.hsv.h"
+					:value="currentColor.to('hsl').toGamut().h ?? 0"
 					type="range"
 					min="0"
 					max="360"
 					step="1"
-					@keydown.passive="changeInputValue"
-					@input="handleSliderInput($event, 'h')"
+					@keydown="changeInputValue"
+					@input="handleSliderChange($event, 'h')"
 				>
 			</label>
 
@@ -55,13 +56,13 @@
 				<input
 					:id="`${id}-alpha-slider`"
 					class="vacp-range-input vacp-range-input--alpha"
-					:value="colors.hsv.a"
+					:value="currentColor.alpha"
 					type="range"
 					min="0"
 					max="1"
 					step="0.01"
-					@keydown.passive="changeInputValue"
-					@input="handleSliderInput($event, 'a')"
+					@keydown="changeInputValue"
+					@input="handleSliderChange($event, 'alpha')"
 				>
 			</label>
 		</div>
@@ -110,7 +111,7 @@
 						class="vacp-color-input"
 						type="text"
 						:value="hexInputValue"
-						@input="updateHexColorValue"
+						@change="updateHexColorValue"
 					>
 				</label>
 
@@ -121,7 +122,6 @@
 					:key="`${id}-color-${activeFormat}-${channel}-label`"
 					class="vacp-color-input-label"
 					:for="`${id}-color-${activeFormat}-${channel}`"
-					@input="updateColorValue($event, channel)"
 				>
 					<span class="vacp-color-input-label-text">
 						{{ label }}
@@ -132,7 +132,7 @@
 						class="vacp-color-input"
 						type="text"
 						:value="value"
-						@input="updateColorValue($event, channel)"
+						@change="updateColorValue"
 					>
 				</label>
 			</div>
@@ -165,36 +165,25 @@
 </template>
 
 <script lang="ts" setup>
+import Color from 'colorjs.io'
 import {
 	computed,
 	onBeforeUnmount,
 	onMounted,
-	reactive,
 	ref,
 	useTemplateRef,
 	watch,
 } from 'vue'
 
 import { clamp } from './utilities/clamp.js'
-import { colorsAreValueEqual } from './utilities/colorsAreValueEqual.js'
-import { convert } from './utilities/convert.js'
-import { alpha, getCssValue } from './utilities/CssValues.js'
-import { formatAsCssColor } from './utilities/formatAsCssColor.js'
-import { isValidHexColor } from './utilities/isValidHexColor.js'
-import { parsePropsColor } from './utilities/parsePropsColor.js'
+import { format } from './utilities/formatAsCssColor.js'
 import {
 	ColorChangeDetail,
 	ColorFormat,
-	ColorHsl,
-	ColorHsv,
-	ColorHwb,
 	ColorPickerProps,
-	ColorRgb,
-	VisibleColorFormat,
 } from './types.js'
 import { getNewThumbPosition } from './utilities/getNewThumbPosition.js'
-
-const COLOR_FORMATS = ['hex', 'hsl', 'hsv', 'hwb', 'rgb'] as const satisfies readonly ColorFormat[]
+import { ALPHA_DEFINITION, CHANNEL_DEFINITIONS, PRECISION } from './constants.js'
 
 const props = withDefaults(defineProps<ColorPickerProps>(), {
 	color: '#ffffffff',
@@ -212,6 +201,8 @@ defineExpose({
 	switchFormat,
 })
 
+const colorPicker = useTemplateRef('colorPicker')
+
 /**
  * The color space. It represents the saturation and lightness or the current color’s hue.
  */
@@ -227,70 +218,61 @@ let pointerOriginatedInColorSpace = false
 /**
  * The currently visible color format (i.e. what’s cycled through using the “Switch format” button).
  */
-const activeFormat = ref<VisibleColorFormat>(props.visibleFormats.includes(props.defaultFormat) ? props.defaultFormat : props.visibleFormats[0] as VisibleColorFormat)
+const activeFormat = ref<ColorFormat>(props.visibleFormats.includes(props.defaultFormat) ? props.defaultFormat : props.visibleFormats[0]!)
 
 /**
  * The current color represented in all supported color formats.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const colors = reactive<any>({
-	hex: '#ffffffff',
-	hsl: { h: 0, s: 0, l: 100, a: 1 },
-	hsv: { h: 0, s: 0, v: 100, a: 1 },
-	hwb: { h: 0, w: 100, b: 0, a: 1 },
-	rgb: { r: 255, g: 255, b: 255, a: 1 },
-})
+const currentColor = ref(new Color('srgb', [1, 1, 1], 1))
 
 /**
  * A list of color channels rendered as part of the color picker.
  */
 const visibleChannels = computed(function () {
-	const format = activeFormat.value as Exclude<VisibleColorFormat, 'hex'>
-	const color = colors[format]
-	return format.split('')
-		.map((channel) => {
-			const internalValue = color[channel]
-			const cssValue = getCssValue(format, channel)
-			const value = cssValue.to(internalValue)
+	const format = activeFormat.value as Exclude<ColorFormat, 'hex'>
+	const typesByCoord = currentColor.value.space.getFormat('default')!.coords
 
-			return {
-				value,
-				channel,
-				label: channel.toUpperCase(),
-			}
+	return CHANNEL_DEFINITIONS[format]
+		.map(({ channel, label, preferredType }, index) => {
+			const color = currentColor.value.to(format === 'rgb' ? 'srgb' : format)
+			// Mutates `color` so it's in gamut.
+			color.toGamut()
+			const types = typesByCoord[index]!
+			const type = types.find(({ type }) => type === preferredType) ?? types.at(0)!
+			const value = type.serialize(color.coords[index] ?? 0, PRECISION)
+
+			return { value, channel, label }
 		})
 		.concat(props.alphaChannel === 'show' ? [{
-			value: alpha.to(color.a),
-			channel: 'a',
-			label: 'Alpha',
+			value: currentColor.value.alpha.toPrecision(PRECISION).replace(/\.?0+$/, ''),
+			channel: ALPHA_DEFINITION.channel,
+			label: ALPHA_DEFINITION.label,
 		}] : [])
 })
 
 /**
  * Input value of the color `input` element for the hexadecimal representation of the current color.
  */
-const hexInputValue = computed<string>(function () {
-	return props.alphaChannel === 'hide' && [5, 9].includes(colors.hex.length)
-		? colors.hex.substring(0, colors.hex.length - (colors.hex.length - 1) / 4)
-		: colors.hex
+const hexInputValue = computed(function () {
+	return format(currentColor.value, { format: 'hex', alpha: props.alphaChannel === 'show' })
 })
 
 /**
- * Sets the X and Y coordinates of the color space thumb. Having chosen the color space to be a slice through the HSV cylinder allows us to map the saturation and value of the current color in HSV representation directly to the thumb's coordinates. In other words: the thumb controls the saturation (X coordinate) and value (Y coordinate) linearly.
+ * The background color of the color space. The color space shows a *slice* through the HSV color cylinder's center. The slice's angle represents the color's *hue* (i.e. rotating the angle of the HSV slice changes the color's hue). We want this color at 100% *saturation* and 100% *value* (which is the same as 50% lightness of the corresponding HSL color).
  */
 const currentHsv = computed(function () {
-	return colors.hsv
+	const hsv = currentColor.value.to('hsv')
+	hsv.toGamut()
+	return hsv
 })
 
-watch(() => props.color, setColorFromProp)
+watch(() => props.color, parseAndSetColor, { immediate: true })
 
 onMounted(function () {
 	document.addEventListener('pointermove', moveThumbWithPointer, { passive: false })
 	document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
 	document.addEventListener('pointerup', stopMovingThumb)
 	document.addEventListener('touchend', stopMovingThumb)
-
-	setColorFromProp(props.color)
 })
 
 onBeforeUnmount(function () {
@@ -306,7 +288,7 @@ onBeforeUnmount(function () {
 function switchFormat () {
 	const activeFormatIndex = props.visibleFormats.findIndex((format) => format === activeFormat.value)
 	const newFormatIndex = (activeFormatIndex + 1) % props.visibleFormats.length
-	activeFormat.value = props.visibleFormats[newFormatIndex] as VisibleColorFormat
+	activeFormat.value = props.visibleFormats[newFormatIndex]!
 }
 
 function startMovingThumbWithPointer (event: PointerEvent) {
@@ -332,7 +314,7 @@ function moveThumbWithPointer (event: PointerEvent) {
 		return
 	}
 
-	moveThumb(colorSpace.value, event.clientX, event.clientY)
+	moveThumb(getNewThumbPosition(colorSpace.value, event.clientX, event.clientY))
 }
 
 function moveThumbWithTouch (event: TouchEvent) {
@@ -346,17 +328,14 @@ function moveThumbWithTouch (event: TouchEvent) {
 	// Prevents touch events from dragging the page.
 	event.preventDefault()
 
-	const touchPoint = event.touches[0] as Touch
-	moveThumb(colorSpace.value, touchPoint.clientX, touchPoint.clientY)
+	const touchPoint = event.touches[0]!
+	moveThumb(getNewThumbPosition(colorSpace.value, touchPoint.clientX, touchPoint.clientY))
 }
 
-function moveThumb (colorSpace: HTMLElement, clientX: number, clientY: number) {
-	const newThumbPosition = getNewThumbPosition(colorSpace, clientX, clientY)
-	const hsvColor = Object.assign({}, colors.hsv)
-	hsvColor.s = newThumbPosition.x
-	hsvColor.v = newThumbPosition.y
-
-	setColor('hsv', hsvColor)
+function moveThumb ({ x: s, y: v }: { x: number, y: number }) {
+	const hsv = currentColor.value.to('hsv')
+	hsv.toGamut()
+	setColor(new Color('hsv', [hsv.h ?? 0, s, v], currentColor.value.alpha))
 }
 
 function moveThumbWithArrows (event: KeyboardEvent) {
@@ -368,82 +347,83 @@ function moveThumbWithArrows (event: KeyboardEvent) {
 	const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
 	const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
 	const step = event.shiftKey ? 10 : 1
-	const newColorValue = colors.hsv[channel] as number + direction * step
-	const hsvColor = Object.assign({}, colors.hsv)
-	hsvColor[channel] = clamp(newColorValue, 0, 100)
 
-	setColor('hsv', hsvColor)
+	const hsv = currentColor.value.to('hsv')
+	hsv.toGamut()
+	const s = hsv.s ?? 0
+	const v = hsv.v ?? 0
+	const x = channel === 's' ? clamp(s + direction * step, 0, 100) : s
+	const y = channel === 'v' ? clamp(v + direction * step, 0, 100) : v
+
+	moveThumb({ x, y })
 }
 
-function setColorFromProp (propsColor: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb) {
-	const result = parsePropsColor(propsColor)
-	if (result !== null) {
-		setColor(result.format, result.color)
+function parseAndSetColor (propsColor: string | Color) {
+	let newColor: Color
+	try {
+		newColor = propsColor instanceof Color ? propsColor: new Color(propsColor)
+	} catch (error) {
+		if (error instanceof TypeError) {
+			// An error here means colorjs.io couldn't parse the input. We catch and ignore this error to mirror how native form controls generally behave. There's a difference to the native `input[type="color"]` though: on an invalid `value`, it continues as if `#000000` was the input which I don't think is desirable.
+			return
+		} else {
+			throw error
+		}
 	}
+
+	setColor(newColor)
 }
 
-function handleSliderInput (event: Event, channel: 'h' | 'a') {
+function handleSliderChange (event: Event, channel: 'h' | 'alpha') {
 	const input = event.currentTarget as HTMLInputElement
-	const hsvColor = Object.assign({}, colors.hsv)
-	hsvColor[channel] = Number(input.value)
+	const alpha = channel === 'alpha' ? Number(input.value) : currentColor.value.alpha
+	const hsl = currentColor.value.to('hsl')
+	hsl.toGamut()
+	const hue = channel === 'h' ? Number(input.value) : hsl.h ?? 0
 
-	setColor('hsv', hsvColor)
+	setColor(new Color('hsl', [hue, hsl.s ?? 0, hsl.l ?? 0], alpha))
 }
 
 function updateHexColorValue (event: Event) {
 	const input = event.target as HTMLInputElement
 
-	if (isValidHexColor(input.value)) {
-		setColor('hex', input.value)
+	if (/^#(([A-F0-9]{2}){3,4}|[A-F0-9]{3,4})$/i.test(input.value)) {
+		parseAndSetColor(input.value)
 	}
 }
 
-function updateColorValue (event: Event, channel: string) {
-	const input = event.target as HTMLInputElement
+function updateColorValue () {
+	const format = activeFormat.value as Exclude<ColorFormat, 'hex'>
+	const values = CHANNEL_DEFINITIONS[format]
+		.concat(props.alphaChannel === 'show' ? [ALPHA_DEFINITION] : [])
+		.map(({ channel, from }) => {
+			const input = colorPicker.value!.querySelector<HTMLInputElement>(`input[id="${props.id}-color-${format}-${channel}"]`)!
 
-	const format = activeFormat.value as Exclude<ColorFormat, 'hex' | 'hsv'>
-	const color = Object.assign({}, colors[format])
-	const cssValue = channel === 'a' ? alpha : getCssValue(format, channel)
-	const value = cssValue.from(input.value)
+			return from(input.value)
+		})
 
-	if (Number.isNaN(value)) {
-		// This means that the input value does not result in a valid CSS value.
+	if (values.some((value) => Number.isNaN(value))) {
+		// A `NaN` value is used as a signal for an invalid or incomplete user input. In either case, we don't want to continue updating the processing color value and risk overriding the input element's value while the user is still inputting data.
 		return
 	}
 
-	color[channel] = value
+	const space = format === 'rgb' ? 'srgb' : format
+	const coords = values.slice(0, 3).map((value) => space === 'srgb' ? value / 255 : value) as [number, number, number]
 
-	setColor(format, color)
+	setColor(new Color(space, coords, values[3]))
 }
 
-/**
- * May mutate `color`.
- */
-function setColor (format: ColorFormat, color: string | ColorHsl | ColorHsv | ColorHwb | ColorRgb) {
-	let normalizedColor = color
-	if (props.alphaChannel === 'hide') {
-		if (typeof color !== 'string') {
-			color.a = 1
-			normalizedColor = color
-		} else if ([5, 9].includes(color.length)) {
-			const alphaChannelLength = (color.length - 1) / 4
-			normalizedColor = color.substring(0, color.length - alphaChannelLength) + 'f'.repeat(alphaChannelLength)
-		} else if ([4, 7].includes(color.length)) {
-			normalizedColor = color + 'f'.repeat((color.length - 1) / 3)
-		}
+function setColor (newColor: Color) {
+	// If the color hasn't changed, don't do anything further.
+	if (
+		Math.abs(currentColor.value.distance(newColor)) < Number.EPSILON &&
+		currentColor.value.alpha === newColor.alpha
+	) {
+		return
 	}
 
-	if (!colorsAreValueEqual(colors[format], normalizedColor)) {
-		colors[format] = normalizedColor
-
-		for (const targetFormat of COLOR_FORMATS) {
-			if (targetFormat !== format) {
-				colors[targetFormat] = convert(format, targetFormat, normalizedColor)
-			}
-		}
-
-		emit('color-change', getColorChangeDetail())
-	}
+	currentColor.value = newColor
+	emit('color-change', getColorChangeDetail())
 }
 
 /**
@@ -454,9 +434,7 @@ function setColor (format: ColorFormat, color: string | ColorHsl | ColorHsv | Co
  * Only works in secure browsing contexts (i.e. HTTPS).
  */
 async function copyColor (): Promise<void> {
-	const activeColor = colors[activeFormat.value]
-	const excludeAlphaChannel = props.alphaChannel === 'hide'
-	const cssColor = formatAsCssColor({ color: activeColor, format: activeFormat.value }, excludeAlphaChannel)
+	const cssColor = format(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' })
 
 	// Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
 	const copyFunction = props.copy ? props.copy : (data: string) => window.navigator.clipboard.writeText(data)
@@ -466,12 +444,9 @@ async function copyColor (): Promise<void> {
 }
 
 function getColorChangeDetail (): ColorChangeDetail {
-	const excludeAlphaChannel = props.alphaChannel === 'hide'
-	const cssColor = formatAsCssColor({ color: colors[activeFormat.value], format: activeFormat.value }, excludeAlphaChannel)
-
 	return {
-		colors,
-		cssColor,
+		color: currentColor.value,
+		cssColor: format(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' }),
 	}
 }
 

@@ -7,6 +7,7 @@ A color picker component for Vue.js.
 - Distributed in ES module format
 - Not transpiled
 - Uses [vue](https://www.npmjs.com/package/vue) (as a peer dependency)
+- Uses [colorjs.io](https://www.npmjs.com/package/colorjs.io) (as a peer dependency) for color parsing, serialization, comparison, and conversion
 
 Links:
 
@@ -49,10 +50,10 @@ Links:
 Install the package (and its peer dependencies).
 
 ```sh
-npm install vue-accessible-color-picker
+npm install vue-accessible-color-picker vue@^3.2.0
 ```
 
-Note: this custom element uses vue under the hood. This dependency is a _peer_ dependency and will have to be installed as well.
+Note: this custom element uses colorjs.io and vue under the hood. These dependencies are _peer_ dependencies and will have to be installed as well.
 
 ## Usage
 
@@ -95,7 +96,7 @@ You can also register the component and import the styles globally.
 #### `color`
 
 - **Description**: Sets the color of the color picker. You can pass any valid CSS color string or an object matching the internal color representation for an HSL, HSV, HWB, or RGB color.
-- **Type**: `string`, `ColorHsl`, `ColorHwb`, or `ColorRgb`
+- **Type**: `string` or `Color` (see [colorjs.io: The Color Object](https://colorjs.io/docs/the-color-object))
 - **Required**: No
 - **Default**: `'#ffffffff'`
 - **Usage**:
@@ -109,7 +110,7 @@ You can also register the component and import the styles globally.
 	```
 
 	```vue
-	<ColorPicker :color="{ h: 270, s: 100, l: 50, a: 0.8 }" />
+	<ColorPicker :color="new Color('hsl', [270, 100, 50], 0.8)" />
 	```
 
 	```vue
@@ -146,7 +147,7 @@ You can also register the component and import the styles globally.
 #### `defaultFormat`
 
 - **Description**: The color format to show by default when rendering the color picker. Must be one of the formats specified in `visibleFormats`.
-- **Type**: `VisibleColorFormat`
+- **Type**: `ColorFormat`
 - **Required**: No
 - **Default**: `'hsl'`
 - **Usage**:
@@ -170,7 +171,7 @@ You can also register the component and import the styles globally.
 #### `visibleFormats`
 
 - **Description**: A list of visible color formats. Controls for which formats the color `input` elements are shown and in which order the formats will be cycled through when activating the format switch button.
-- **Type**: `VisibleColorFormat[]`
+- **Type**: `ColorFormat[]`
 - **Required**: No
 - **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
 - **Usage**:
@@ -213,18 +214,12 @@ Methods that are exposed on the Vue component instance.
 
 #### `color-change`
 
-- **Description**: The event that is emitted each time the internal colors object is updated.
-- **Data**: The event emits an object containing both the internal colors object and a CSS color value as a string based on the currently active format. The `cssColor` property will respect `alphaChannel`.
+- **Description**: Fired every time the color is changed.
+- **Data**: The event emits an object containing both the internal `Color` object and a CSS color value as a string based on the currently active format. The `cssColor` property will respect `alphaChannel`.
 
 	```ts
 	{
-		colors: {
-			hex: string
-			hsl: { h: number, s: number, l: number, a: number }
-			hsv: { h: number, s: number, v: number, a: number }
-			hwb: { h: number, w: number, b: number, a: number }
-			rgb: { r: number, g: number, b: number, a: number }
-		}
+		color: Color
 		cssColor: string
 	}
 	```
