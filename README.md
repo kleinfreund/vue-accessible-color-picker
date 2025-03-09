@@ -4,7 +4,9 @@
 
 A color picker component for Vue.js.
 
-This package’s files are distributed in the ES module format and have not been transpiled.
+- Distributed is ES module format
+- Not transpiled
+- Uses [vue](https://www.npmjs.com/package/vue) (as a peer dependency)
 
 Links:
 
@@ -40,9 +42,13 @@ Links:
 
 ## Installation
 
+Install the package (and its peer dependencies).
+
 ```sh
 npm install vue-accessible-color-picker
 ```
+
+Note: this custom element uses vue under the hood. This dependency is a _peer_ dependency and will have to be installed as well.
 
 ## Usage
 
