@@ -539,10 +539,10 @@ $font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif;
 $font-size: 0.8em;
 $spacing: 6px;
 $width-border: 1px;
-$width-color-space: 300px;
+$inline-size-color-space: 300px;
 
 .vacp-color-picker {
-	max-width: var(--vacp-width-color-space, $width-color-space);
+	max-inline-size: var(--vacp-width-color-space, $inline-size-color-space);
 	padding: var(--vacp-spacing, $spacing);
 	display: grid;
 	grid-gap: var(--vacp-spacing, $spacing);
@@ -579,10 +579,10 @@ $width-color-space: 300px;
 .vacp-color-space-thumb {
 	--vacp-thumb-size: calc(var(--vacp-spacing, #{$spacing}) * 4);
 
-	width: var(--vacp-thumb-size);
-	height: var(--vacp-thumb-size);
-	margin-left: calc(-1 * var(--vacp-thumb-size) / 2);
-	margin-bottom: calc(-1 * var(--vacp-thumb-size) / 2);
+	inline-size: var(--vacp-thumb-size);
+	block-size: var(--vacp-thumb-size);
+	margin-inline-start: calc(-1 * var(--vacp-thumb-size) / 2);
+	margin-block-end: calc(-1 * var(--vacp-thumb-size) / 2);
 	border: 3px solid #fff;
 	border-radius: 50%;
 	box-shadow: 0 0 0 var(--vacp-width-border, $width-border) var(--vacp-color-border, $color-border);
@@ -612,7 +612,7 @@ $width-color-space: 300px;
 }
 
 .vacp-range-input-group > :not(:first-child) {
-	margin-top: var(--vacp-spacing, $spacing);
+	margin-block-start: var(--vacp-spacing, $spacing);
 }
 
 .vacp-range-input,
@@ -622,12 +622,10 @@ $width-color-space: 300px;
 
 .vacp-range-input {
 	display: block;
-	width: 100%;
-	height: var(--vacp-slider-track-height);
-	margin-right: 0;
-	margin-left: 0;
-	margin-top: calc(var(--vacp-spacing, $spacing) / 2 + 1px);
-	margin-bottom: calc(var(--vacp-spacing, $spacing) / 2 + 1px);
+	inline-size: 100%;
+	block-size: var(--vacp-slider-track-height);
+	margin-inline: 0;
+	margin-block: calc(var(--vacp-spacing, $spacing) / 2 + 1px);
 	padding: 0;
 	border: none;
 	background: none;
@@ -658,22 +656,22 @@ Range input: Tracks
 
 .vacp-range-input::-moz-range-track {
 	box-sizing: border-box;
-	width: 100%;
-	height: var(--vacp-slider-track-height);
+	inline-size: 100%;
+	block-size: var(--vacp-slider-track-height);
 	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 }
 
 .vacp-range-input::-webkit-slider-runnable-track {
 	box-sizing: border-box;
-	width: 100%;
-	height: var(--vacp-slider-track-height);
+	inline-size: 100%;
+	block-size: var(--vacp-slider-track-height);
 	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 }
 
 .vacp-range-input::-ms-track {
 	box-sizing: border-box;
-	width: 100%;
-	height: var(--vacp-slider-track-height);
+	inline-size: 100%;
+	block-size: var(--vacp-slider-track-height);
 	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 }
 
@@ -729,8 +727,8 @@ Range input: thumbs
 */
 .vacp-range-input::-moz-range-thumb {
 	box-sizing: border-box;
-	width: var(--vacp-slider-thumb-size);
-	height: var(--vacp-slider-thumb-size);
+	inline-size: var(--vacp-slider-thumb-size);
+	block-size: var(--vacp-slider-thumb-size);
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
@@ -740,9 +738,9 @@ Range input: thumbs
 
 .vacp-range-input::-webkit-slider-thumb {
 	box-sizing: border-box;
-	width: var(--vacp-slider-thumb-size);
-	height: var(--vacp-slider-thumb-size);
-	margin-top: calc(-1 * (var(--vacp-spacing, $spacing) / 2));
+	inline-size: var(--vacp-slider-thumb-size);
+	block-size: var(--vacp-slider-thumb-size);
+	margin-block-start: calc(-1 * (var(--vacp-spacing, $spacing) / 2));
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
@@ -752,9 +750,9 @@ Range input: thumbs
 
 .vacp-range-input::-ms-thumb {
 	box-sizing: border-box;
-	width: var(--vacp-slider-thumb-size);
-	height: var(--vacp-slider-thumb-size);
-	margin-top: calc(-1 * (var(--vacp-spacing, $spacing) / 2));
+	inline-size: var(--vacp-slider-thumb-size);
+	block-size: var(--vacp-slider-thumb-size);
+	margin-block-start: calc(-1 * (var(--vacp-spacing, $spacing) / 2));
 	border: 3px solid #fff;
 	border-radius: 50%;
 	background-color: transparent;
@@ -771,8 +769,8 @@ Range input: thumbs
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: calc(var(--vacp-spacing, $spacing) * 6);
-	height: calc(var(--vacp-spacing, $spacing) * 6);
+	inline-size: calc(var(--vacp-spacing, $spacing) * 6);
+	block-size: calc(var(--vacp-spacing, $spacing) * 6);
 	border: var(--vacp-width-border, $width-border) solid transparent;
 	border-radius: 50%;
 	color: var(--vacp-color-text-input, $color-text-input);
@@ -800,7 +798,7 @@ Range input: thumbs
 }
 
 .vacp-color-inputs > :not(:first-child) {
-	margin-left: var(--vacp-spacing, $spacing);
+	margin-inline-start: var(--vacp-spacing, $spacing);
 }
 
 .vacp-color-input-group {
@@ -817,7 +815,7 @@ Range input: thumbs
 .vacp-color-input {
 	width: 100%;
 	margin: 0;
-	margin-top: calc(var(--vacp-spacing, $spacing) / 2);
+	margin-block-start: calc(var(--vacp-spacing, $spacing) / 2);
 	padding: var(--vacp-spacing, $spacing);
 	border: var(--vacp-width-border, $width-border) solid var(--vacp-color-border, $color-border);
 	font: inherit;
@@ -853,8 +851,8 @@ Range input: thumbs
 	position: absolute;
 	overflow: hidden;
 	clip: rect(0 0 0 0);
-	width: 1px;
-	height: 1px;
+	inline-size: 1px;
+	block-size: 1px;
 	margin: -1px;
 	padding: 0;
 	border: 0;
