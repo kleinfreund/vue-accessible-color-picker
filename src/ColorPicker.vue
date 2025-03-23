@@ -205,6 +205,7 @@ const emit = defineEmits<(event: 'color-change' | 'color-copy', data: ColorChang
 
 defineExpose({
 	copyColor,
+	switchFormat,
 })
 
 /**

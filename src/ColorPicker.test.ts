@@ -601,6 +601,16 @@ describe('ColorPicker', () => {
 			await formatSwitchButton.trigger('click')
 			expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
 		})
+
+		test('exposes switchFormat method', async () => {
+			const wrapper = createWrapper()
+
+			expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
+
+			wrapper.vm.switchFormat()
+			await flushPromises()
+			expect(wrapper.find('#color-picker-color-hwb-w').exists()).toBe(true)
+		})
 	})
 
 	describe('color value inputs', () => {

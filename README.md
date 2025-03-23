@@ -29,6 +29,9 @@ Links:
 		- [`defaultFormat`](#defaultformat)
 		- [`id`](#id)
 		- [`visibleFormats`](#visibleformats)
+	- [Exposed methods](#exposed-methods)
+		- [`copyColor()`](#copycolor)
+		- [`switchFormat()`](#switchformat)
 	- [Events](#events)
 		- [`color-change`](#color-change)
 		- [`color-copy`](#color-copy)
@@ -174,6 +177,36 @@ You can also register the component and import the styles globally.
 
 	```vue
 	<ColorPicker :visible-formats="['hsl', 'hwb']" />
+	```
+
+### Exposed methods
+
+Methods that are exposed on the Vue component instance.
+
+#### copyColor
+
+- **Description**: Copies the current color (determined by the active color format).
+
+  This method behaves the same as activating the “Copy color” button.
+
+  **Only works in secure browsing contexts (i.e. HTTPS) unless a `props.copy` is provided**.
+- **Return type**: `Promise<void>`
+- **Usage**:
+
+	Vue:
+	```vue
+	colorPicker.vm.copyColor()
+	```
+
+#### switchFormat
+
+- **Description**: Sets the next active color format by cycling through `colorPicker.visibleFormats`. This method behaves the same as activating the “Switch format” button. To set a specific color format, use the [`format` property](#format).
+- **Return type**: `void`
+- **Usage**:
+
+	Vue:
+	```vue
+	colorPicker.vm.switchFormat()
 	```
 
 ### Events
