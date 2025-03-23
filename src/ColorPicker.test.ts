@@ -267,7 +267,6 @@ describe('ColorPicker', () => {
 		])('shows/hides correct elements when setting alphaChannel', async (props, isElementVisible, expectedCssColor) => {
 			const id = 'test-color-picker'
 			const wrapper = createWrapper({
-				attachTo: document.body,
 				props: {
 					id,
 					...props,
@@ -291,9 +290,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('sets fully-opaque “--vacp-color” custom property', async () => {
-			const wrapper = createWrapper({
-				attachTo: document.body,
-			})
+			const wrapper = createWrapper()
 			await flushPromises()
 			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
 
@@ -308,7 +305,6 @@ describe('ColorPicker', () => {
 	describe('color space thumb interactions', () => {
 		test('can initiate moving the color space thumb with a mouse', async () => {
 			const wrapper = createWrapper({
-				attachTo: document.body,
 				props: {
 					color: '#f80c',
 				},
@@ -337,14 +333,10 @@ describe('ColorPicker', () => {
 			})
 
 			expect(wrapper.emitted('color-change')?.length).toBe(2)
-
-			// Remove test HTML injected via the `attachTo` option during mount.
-			wrapper.unmount()
 		})
 
 		test('can initiate moving the color space thumb with a touch-based device', async () => {
 			const wrapper = createWrapper({
-				attachTo: document.body,
 				props: {
 					color: '#f80c',
 				},
@@ -372,24 +364,21 @@ describe('ColorPicker', () => {
 			})
 			await colorSpace.trigger('touchmove', {
 				preventDefault: vi.fn(),
+				touches: [{ clientX: 0, clientY: 0 }],
+			})
+
+			expect(wrapper.emitted('color-change')?.length).toBe(2)
+
+			await colorSpace.trigger('touchstart', {
+				preventDefault: vi.fn(),
+				touches: [{ clientX: 1, clientY: 0 }],
+			})
+			await colorSpace.trigger('touchmove', {
+				preventDefault: vi.fn(),
 				touches: [{ clientX: 1, clientY: 0 }],
 			})
 
 			expect(wrapper.emitted('color-change')?.length).toBe(3)
-
-			await colorSpace.trigger('touchstart', {
-				preventDefault: vi.fn(),
-				touches: [{ clientX: 2, clientY: 0 }],
-			})
-			await colorSpace.trigger('touchmove', {
-				preventDefault: vi.fn(),
-				touches: [{ clientX: 3, clientY: 0 }],
-			})
-
-			expect(wrapper.emitted('color-change')?.length).toBe(5)
-
-			// Remove test HTML injected via the `attachTo` option during mount.
-			wrapper.unmount()
 		})
 
 		test('can not move the color space thumb with the wrong key', async () => {
