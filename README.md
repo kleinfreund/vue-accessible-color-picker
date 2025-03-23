@@ -31,6 +31,7 @@ Links:
 		- [`visibleFormats`](#visibleformats)
 	- [Events](#events)
 		- [`color-change`](#color-change)
+		- [`color-copy`](#color-copy)
 	- [Slots](#slots)
 		- [alpha-range-input-label](#alpha-range-input-label)
 		- [copy-button](#copy-button)
