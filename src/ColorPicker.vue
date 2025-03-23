@@ -6,7 +6,7 @@
 		<div
 			ref="colorSpace"
 			class="vacp-color-space"
-			@mousedown="startMovingThumbWithMouse"
+			@pointerdown="startMovingThumbWithPointer"
 			@touchstart="startMovingThumbWithTouch"
 		>
 			<!-- Accessibility remark: I don’t know of a better, semantic HTML element that would be adequate for the job of a planar range thumb. -->
@@ -281,18 +281,18 @@ const hexInputValue = computed<string>(function () {
 watch(() => props.color, setColorFromProp)
 
 onMounted(function () {
-	document.addEventListener('mousemove', moveThumbWithMouse, { passive: false })
+	document.addEventListener('pointermove', moveThumbWithPointer, { passive: false })
 	document.addEventListener('touchmove', moveThumbWithTouch, { passive: false })
-	document.addEventListener('mouseup', stopMovingThumb)
+	document.addEventListener('pointerup', stopMovingThumb)
 	document.addEventListener('touchend', stopMovingThumb)
 
 	setColorFromProp(props.color)
 })
 
 onBeforeUnmount(function () {
-	document.removeEventListener('mousemove', moveThumbWithMouse)
+	document.removeEventListener('pointermove', moveThumbWithPointer)
 	document.removeEventListener('touchmove', moveThumbWithTouch)
-	document.removeEventListener('mouseup', stopMovingThumb)
+	document.removeEventListener('pointerup', stopMovingThumb)
 	document.removeEventListener('touchend', stopMovingThumb)
 })
 
@@ -305,9 +305,9 @@ function switchFormat () {
 	activeFormat.value = props.visibleFormats[newFormatIndex] as VisibleColorFormat
 }
 
-function startMovingThumbWithMouse (event: MouseEvent) {
+function startMovingThumbWithPointer (event: PointerEvent) {
 	pointerOriginatedInColorSpace = true
-	moveThumbWithMouse(event)
+	moveThumbWithPointer(event)
 }
 
 function startMovingThumbWithTouch (event: TouchEvent) {
@@ -319,7 +319,7 @@ function stopMovingThumb () {
 	pointerOriginatedInColorSpace = false
 }
 
-function moveThumbWithMouse (event: MouseEvent) {
+function moveThumbWithPointer (event: PointerEvent) {
 	if (
 		event.buttons !== 1 ||
 		pointerOriginatedInColorSpace === false ||

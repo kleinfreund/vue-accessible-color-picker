@@ -98,18 +98,18 @@ describe('ColorPicker', () => {
 			toJSON: vi.fn(),
 		}))
 
-		// await colorSpace.trigger('mousedown', { buttons: 1, clientX: 0 })
-		await colorSpace.element.dispatchEvent(new MouseEvent('mousedown', { buttons: 1, clientX: 0 }))
+		await colorSpace.element.dispatchEvent(new MouseEvent('pointerdown', { buttons: 1, clientX: 0 }))
+		expect(wrapper.emitted<[ColorChangeDetail]>('color-change')?.length ?? 0).toBe(0)
 
-		document.dispatchEvent(new MouseEvent('mousemove', { buttons: 1, clientX: 0 }))
-		expect(wrapper.emitted('color-change')).toBe(undefined)
+		document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 0 }))
+		expect(wrapper.emitted<[ColorChangeDetail]>('color-change')?.length ?? 0).toBe(0)
 
-		document.dispatchEvent(new MouseEvent('mousemove', { buttons: 1, clientX: 1 }))
-		expect(wrapper.emitted('color-change')?.length).toBe(1)
+		document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 1 }))
+		expect(wrapper.emitted<[ColorChangeDetail]>('color-change')?.length ?? 0).toBe(1)
 
 		wrapper.unmount()
 
-		document.dispatchEvent(new MouseEvent('mousemove', { buttons: 1, clientX: 2 }))
+		document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 2 }))
 		// Note that we assert here that the method hasn’t been called *again*.
 		expect(wrapper.emitted('color-change')).toBe(undefined)
 	})
@@ -303,7 +303,7 @@ describe('ColorPicker', () => {
 	})
 
 	describe('color space thumb interactions', () => {
-		test('can initiate moving the color space thumb with a mouse', async () => {
+		test('can initiate moving the color space thumb with a pointer device', async () => {
 			const wrapper = createWrapper({
 				props: {
 					color: '#f80c',
@@ -326,10 +326,18 @@ describe('ColorPicker', () => {
 				toJSON: vi.fn(),
 			}))
 
-			await colorSpace.trigger('mousedown', { buttons: 1 })
-			colorSpace.trigger('mousemove', {
+			await colorSpace.trigger('pointerdown', {
+				buttons: 1,
+				// Remove these once pointer events are implemented in JSDOM: https://github.com/jsdom/jsdom/issues/2527
+				clientX: 0,
+				clientY: 0,
+			})
+			await colorSpace.trigger('pointermove', {
 				buttons: 1,
 				preventDefault: vi.fn(),
+				// Remove these once pointer events are implemented in JSDOM: https://github.com/jsdom/jsdom/issues/2527
+				clientX: 0,
+				clientY: 0,
 			})
 
 			expect(wrapper.emitted('color-change')?.length).toBe(2)
