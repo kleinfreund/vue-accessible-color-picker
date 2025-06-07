@@ -93,7 +93,6 @@
 		"rimraf": "^6.0.1",
 		"sass": "^1.89.1",
 		"semantic-release": "^24.2.5",
-		"standard": "^17.1.2",
 		"typescript": "~5.8.3",
 		"typescript-eslint": "^8.33.1",
 		"vite": "^6.3.5",
