@@ -322,7 +322,7 @@ function stopMovingThumb () {
 function moveThumbWithPointer (event: PointerEvent) {
 	if (
 		event.buttons !== 1 ||
-		pointerOriginatedInColorSpace === false ||
+		!pointerOriginatedInColorSpace ||
 		!(colorSpace.value instanceof HTMLElement)
 	) {
 		return
@@ -333,7 +333,7 @@ function moveThumbWithPointer (event: PointerEvent) {
 
 function moveThumbWithTouch (event: TouchEvent) {
 	if (
-		pointerOriginatedInColorSpace === false ||
+		!pointerOriginatedInColorSpace ||
 		!(colorSpace.value instanceof HTMLElement)
 	) {
 		return
@@ -364,7 +364,7 @@ function moveThumbWithArrows (event: KeyboardEvent) {
 	const direction = ['ArrowLeft', 'ArrowDown'].includes(event.key) ? -1 : 1
 	const channel = ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 's' : 'v'
 	const step = event.shiftKey ? 10 : 1
-	const newColorValue = colors.hsv[channel] + direction * step
+	const newColorValue = colors.hsv[channel] as number + direction * step
 	const hsvColor = Object.assign({}, colors.hsv)
 	hsvColor[channel] = clamp(newColorValue, 0, 100)
 
@@ -402,7 +402,7 @@ function updateColorValue (event: Event, channel: string) {
 	const cssValue = channel === 'a' ? alpha : getCssValue(format, channel)
 	const value = cssValue.from(input.value)
 
-	if (Number.isNaN(value) || value === undefined) {
+	if (Number.isNaN(value)) {
 		// This means that the input value does not result in a valid CSS value.
 		return
 	}
@@ -455,7 +455,7 @@ async function copyColor (): Promise<void> {
 	const cssColor = formatAsCssColor({ color: activeColor, format: activeFormat.value }, excludeAlphaChannel)
 
 	// Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
-	const copyFunction = props.copy ? props.copy : window.navigator.clipboard.writeText
+	const copyFunction = props.copy ? props.copy : (data: string) => window.navigator.clipboard.writeText(data)
 	await copyFunction(cssColor)
 
 	emit('color-copy', getColorChangeDetail())

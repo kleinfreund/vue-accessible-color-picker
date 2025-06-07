@@ -1,21 +1,22 @@
 import eslint from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
-import vueTsEslintConfig from '@vue/eslint-config-typescript'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
+import { globalIgnores } from 'eslint/config'
 import pluginVue from 'eslint-plugin-vue'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+export default defineConfigWithVueTs(
 	{
-		ignores: ['coverage/', 'dist/', 'temp/'],
+		files: ['**/*.ts', '**/*.vue'],
 	},
+	globalIgnores(['coverage/', 'dist/', 'temp/']),
 	eslint.configs.recommended,
-	...tseslint.configs.strict,
-	...tseslint.configs.stylistic,
-	...pluginVue.configs['flat/recommended'],
-	...vueTsEslintConfig(),
+	tseslint.configs.strict,
+	tseslint.configs.stylistic,
+	pluginVue.configs['flat/recommended'],
+	vueTsConfigs.strictTypeChecked,
 	{
-		files: ['**/*.{js,ts,vue}'],
 		languageOptions: {
 			globals: {
 				...globals.browser,
@@ -41,9 +42,10 @@ export default tseslint.config(
 		},
 	},
 	{
-		files: ['**/*.test.{js,ts}'],
+		files: ['**/*.test.ts'],
 		rules: {
 			'@typescript-eslint/ban-ts-comment': 'off',
+			'@typescript-eslint/unbound-method': 'off',
 		},
 	},
 )

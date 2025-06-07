@@ -81,7 +81,7 @@ describe('ColorPicker', () => {
 		expect(thumb.style.bottom).toBe('100%')
 	})
 
-	test('removes event listeners on unmount', async () => {
+	test('removes event listeners on unmount', () => {
 		const wrapper = createWrapper()
 
 		const colorSpace = wrapper.find('.vacp-color-space')
@@ -98,7 +98,7 @@ describe('ColorPicker', () => {
 			toJSON: vi.fn(),
 		}))
 
-		await colorSpace.element.dispatchEvent(new MouseEvent('pointerdown', { buttons: 1, clientX: 0 }))
+		colorSpace.element.dispatchEvent(new MouseEvent('pointerdown', { buttons: 1, clientX: 0 }))
 		expect(wrapper.emitted<[ColorChangeDetail]>('color-change')?.length ?? 0).toBe(0)
 
 		document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 0 }))
@@ -245,15 +245,15 @@ describe('ColorPicker', () => {
 
 			for (const format of formats) {
 				const channels = format.split('')
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-${channels[0]}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-${channels[1]}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${id}-color-${format}-${channels[2]}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]!}-label"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[0]!}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-${channels[0]!}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]!}-label"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[1]!}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-${channels[1]!}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]!}-label"]`).exists()).toBe(true)
+				expect(wrapper.find(`[id="${id}-color-${format}-${channels[2]!}"]`).exists()).toBe(true)
+				expect(wrapper.find(`[for="${id}-color-${format}-${channels[2]!}"]`).exists()).toBe(true)
 				expect(wrapper.find(`[id="${id}-color-${format}-a"]`).exists()).toBe(true)
 				expect(wrapper.find(`[for="${id}-color-${format}-a"]`).exists()).toBe(true)
 
@@ -264,7 +264,7 @@ describe('ColorPicker', () => {
 		test.each<[ColorPickerProps, boolean, string]>([
 			[{ alphaChannel: 'show' }, true, 'hsl(180 0% 100% / 1)'],
 			[{ alphaChannel: 'hide' }, false, 'hsl(180 0% 100%)'],
-		])('shows/hides correct elements when setting alphaChannel', async (props, isElementVisible, expectedCssColor) => {
+		])('shows/hides correct elements when setting alphaChannel', (props, isElementVisible, expectedCssColor) => {
 			const id = 'test-color-picker'
 			const wrapper = createWrapper({
 				props: {
@@ -294,7 +294,7 @@ describe('ColorPicker', () => {
 			await flushPromises()
 			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
 
-			wrapper.setProps({
+			await wrapper.setProps({
 				color: '#f60c',
 			})
 			await flushPromises()
@@ -488,7 +488,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('hue slider updates internal colors', async () => {
-			const expectedHueValue = 30
+			const expectedHueValue = '30'
 
 			const wrapper = createWrapper({
 				props: {
@@ -497,7 +497,7 @@ describe('ColorPicker', () => {
 			})
 			const hueRangeInput = wrapper.find<HTMLInputElement>('#color-picker-hue-slider')
 			const hueRangeInputElement = hueRangeInput.element
-			hueRangeInputElement.value = String(expectedHueValue)
+			hueRangeInputElement.value = expectedHueValue
 			const hueInputEvent = { currentTarget: hueRangeInputElement }
 
 			await hueRangeInput.trigger('input', hueInputEvent)
@@ -509,11 +509,11 @@ describe('ColorPicker', () => {
 			let emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
 			expect(emittedHsvColor.h).toEqual(expectedHueValue)
 
-			const expectedAlphaValue = 0.9
+			const expectedAlphaValue = '0.9'
 
 			const alphaRangeInput = wrapper.find<HTMLInputElement>('#color-picker-alpha-slider')
 			const alphaRangeInputElement = alphaRangeInput.element
-			alphaRangeInputElement.value = String(expectedAlphaValue)
+			alphaRangeInputElement.value = expectedAlphaValue
 			const alphaInputEvent = { currentTarget: alphaRangeInputElement }
 
 			await alphaRangeInput.trigger('input', alphaInputEvent)
@@ -633,7 +633,7 @@ describe('ColorPicker', () => {
 		])('updating a color input with an invalid value does not update the internal color data', async (props, channel, channelValue) => {
 			const wrapper = createWrapper({ props })
 
-			const input = wrapper.find<HTMLInputElement>(`#${props.id}-color-${props.defaultFormat}-${channel}`)
+			const input = wrapper.find<HTMLInputElement>(`#${props.id!}-color-${props.defaultFormat!}-${channel}`)
 			const inputElement = input.element
 			inputElement.value = channelValue
 
@@ -683,7 +683,7 @@ describe('ColorPicker', () => {
 		])('updating a %s color input with a valid value updates the internal color data', async (props, channel, channelValue) => {
 			const wrapper = createWrapper({ props })
 
-			const input = wrapper.find<HTMLInputElement>(`#${props.id}-color-${props.defaultFormat}-${channel}`)
+			const input = wrapper.find<HTMLInputElement>(`#${props.id!}-color-${props.defaultFormat!}-${channel}`)
 			const inputElement = input.element
 			inputElement.value = channelValue
 

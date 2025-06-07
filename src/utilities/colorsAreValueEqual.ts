@@ -6,6 +6,7 @@ export function colorsAreValueEqual<T extends string | Record<string, number>> (
 		return colorA === colorB
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-for-in-array
 	for (const channelA in colorA) {
 		if (colorA[channelA] !== colorB[channelA]) {
 			return false
