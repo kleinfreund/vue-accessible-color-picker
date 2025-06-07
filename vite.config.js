@@ -1,20 +1,21 @@
-/// <reference types="vitest/config" />
-
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
+
 import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vitest/config'
+import dts from 'vite-plugin-dts'
+
+import pkg from './package.json' with { type: 'json' }
 
 export default defineConfig({
 	plugins: [
 		vue(),
+		dts({ rollupTypes: true }),
 	],
 
 	build: {
-		emptyOutDir: false,
 		lib: {
 			entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
 			fileName: 'ColorPicker',
-			// Only emits an ESM bundle.
 			formats: ['es'],
 		},
 		rollupOptions: {
@@ -22,8 +23,8 @@ export default defineConfig({
 				// Controls the file name of the CSS file.
 				assetFileNames: 'ColorPicker.[ext]',
 			},
-			// Prevents bundling vue.
-			external: ['vue'],
+			// Prevents bundling peer dependencies.
+			external: Object.keys(pkg.peerDependencies),
 		},
 	},
 
