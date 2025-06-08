@@ -58,6 +58,9 @@
 		"prepare": "husky",
 		"prepublishOnly": "npm run build"
 	},
+	"engines": {
+		"node": "22.12.0"
+	},
 	"peerDependencies": {
 		"vue": "^3.2.x"
 	},
