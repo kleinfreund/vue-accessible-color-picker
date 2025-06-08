@@ -17,18 +17,12 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # https://github.com/actions/checkout
-      - uses: actions/setup-node@v4 # https://github.com/actions/setup-node
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
         with:
           node-version-file: .nvmrc
-      - uses: actions/cache@v4 # https://github.com/actions/cache
-        id: node-modules-cache
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: npm clean-install
+          cache: npm
+      - run: npm clean-install
       - run: npm audit signatures
       - run: npm run lint
       - run: npm run test
