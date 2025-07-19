@@ -507,7 +507,7 @@ describe('ColorPicker', () => {
 
 			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
 			let emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
-			expect(emittedHsvColor.h).toEqual(expectedHueValue)
+			expect(String(emittedHsvColor.h)).toEqual(expectedHueValue)
 
 			const expectedAlphaValue = '0.9'
 
@@ -523,7 +523,7 @@ describe('ColorPicker', () => {
 
 			// @ts-ignore because `unknown` is clearly not a correct type for emitted records.
 			emittedHsvColor = emittedColorChangeEvents[emittedColorChangeEvents.length - 1][0].colors.hsv
-			expect(emittedHsvColor.a).toEqual(expectedAlphaValue)
+			expect(String(emittedHsvColor.a)).toEqual(expectedAlphaValue)
 		})
 	})
 
