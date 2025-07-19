@@ -670,13 +670,13 @@ Range input: Tracks
 
 $hue-gradient: linear-gradient(
 	to right,
-#f00 calc(100% *   0/360),
-#ff0 calc(100% *  60/360),
-#0f0 calc(100% * 120/360),
-#0ff calc(100% * 180/360),
-#00f calc(100% * 240/360),
-#f0f calc(100% * 300/360),
-#f00 calc(100% * 360/360)
+	#f00 calc(100% *   0/360),
+	#ff0 calc(100% *  60/360),
+	#0f0 calc(100% * 120/360),
+	#0ff calc(100% * 180/360),
+	#00f calc(100% * 240/360),
+	#f0f calc(100% * 300/360),
+	#f00 calc(100% * 360/360)
 );
 
 .vacp-range-input--hue::-moz-range-track {
