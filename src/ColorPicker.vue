@@ -66,29 +66,33 @@
 			</label>
 		</div>
 
-		<button
-			class="vacp-copy-button"
-			type="button"
-			@click="copyColor"
-		>
-			<slot name="copy-button">
-				<span class="vacp-visually-hidden">Copy color</span>
+		<div class="vacp-actions">
+			<button
+				class="vacp-copy-button"
+				type="button"
+				@click="copyColor"
+			>
+				<slot name="copy-button">
+					<span class="vacp-visually-hidden">Copy color</span>
 
-				<svg
-					class="vacp-icon"
-					xmlns="http://www.w3.org/2000/svg"
-					aria-hidden="true"
-					width="24"
-					height="24"
-					viewBox="0 0 32 32"
-				>
-					<path
-						d="M25.313 28v-18.688h-14.625v18.688h14.625zM25.313 6.688c1.438 0 2.688 1.188 2.688 2.625v18.688c0 1.438-1.25 2.688-2.688 2.688h-14.625c-1.438 0-2.688-1.25-2.688-2.688v-18.688c0-1.438 1.25-2.625 2.688-2.625h14.625zM21.313 1.313v2.688h-16v18.688h-2.625v-18.688c0-1.438 1.188-2.688 2.625-2.688h16z"
-						fill="currentColor"
-					/>
-				</svg>
-			</slot>
-		</button>
+					<svg
+						class="vacp-icon"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
+						width="24"
+						height="24"
+						viewBox="0 0 32 32"
+					>
+						<path
+							d="M25.313 28v-18.688h-14.625v18.688h14.625zM25.313 6.688c1.438 0 2.688 1.188 2.688 2.625v18.688c0 1.438-1.25 2.688-2.688 2.688h-14.625c-1.438 0-2.688-1.25-2.688-2.688v-18.688c0-1.438 1.25-2.625 2.688-2.625h14.625zM21.313 1.313v2.688h-16v18.688h-2.625v-18.688c0-1.438 1.188-2.688 2.625-2.688h16z"
+							fill="currentColor"
+						/>
+					</svg>
+				</slot>
+			</button>
+
+			<slot name="actions" />
+		</div>
 
 		<div class="vacp-color-inputs">
 			<div class="vacp-color-input-group">
@@ -529,13 +533,36 @@ $inline-size-color-space: 300px;
 	box-sizing: border-box;
 }
 
+.vacp-color-picker :focus {
+	outline: 2px solid var(--vacp-color-focus, $color-focus);
+}
+
 .vacp-color-picker button::-moz-focus-inner {
 	border: none;
 	padding: 0;
 }
 
-.vacp-color-picker :focus {
-	outline: 2px solid var(--vacp-color-focus, $color-focus);
+:where(.vacp-color-picker) button {
+	inline-size: calc(var(--vacp-spacing, $spacing) * 6);
+	block-size: calc(var(--vacp-spacing, $spacing) * 6);
+	margin: 0;
+	padding: var(--vacp-spacing, $spacing);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: var(--vacp-width-border, $width-border) solid transparent;
+	border-radius: 50%;
+	font: inherit;
+	color: var(--vacp-color-text-input, $color-text-input);
+	background-color: var(--vacp-color-background-input, $color-background-input);
+}
+
+:where(.vacp-color-picker) button:focus {
+	border-color: var(--vacp-color-border, $color-border);
+}
+
+:where(.vacp-color-picker) button:enabled:hover {
+	background-color: #0002;
 }
 
 .vacp-color-space {
@@ -729,34 +756,13 @@ Range input: thumbs
 	isolation: isolate;
 }
 
-.vacp-copy-button {
+.vacp-actions {
 	justify-self: center;
 	align-self: center;
 
-	position: relative;
-	overflow: hidden;
 	display: flex;
+	gap: var(--vacp-spacing, $spacing);
 	align-items: center;
-	justify-content: center;
-	inline-size: calc(var(--vacp-spacing, $spacing) * 6);
-	block-size: calc(var(--vacp-spacing, $spacing) * 6);
-	border: var(--vacp-width-border, $width-border) solid transparent;
-	border-radius: 50%;
-	color: var(--vacp-color-text-input, $color-text-input);
-	background-color: var(--vacp-color-background-input, $color-background-input);
-}
-
-/*
-1. Justification for removing the outline: The focus styles are maintained using a solid border style. This maintains a focus style in Windows’ high contrast mode which would be lost with a combination of `outline: none` and a box shadow because box shadows are removed in high contrast mode.
-*/
-.vacp-copy-button:focus {
-	outline: none; /* 1. */
-	border-color: var(--vacp-color-border, $color-border);
-	box-shadow: 0 0 0 2px var(--vacp-color-focus, $color-focus);
-}
-
-.vacp-copy-button:enabled:hover {
-	background-color: #0002;
 }
 
 .vacp-color-inputs {
@@ -795,25 +801,7 @@ Range input: thumbs
 }
 
 .vacp-format-switch-button {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin: 0;
-	padding: var(--vacp-spacing, $spacing);
-	border: var(--vacp-width-border, $width-border) solid transparent;
-	border-radius: 50%;
-	font: inherit;
-	color: inherit;
-	color: var(--vacp-color-text-input, $color-text-input);
-	background-color: var(--vacp-color-background-input, $color-background-input);
-}
-
-.vacp-format-switch-button:focus {
-	border-color: var(--vacp-color-border, $color-border);
-}
-
-.vacp-format-switch-button:enabled:hover {
-	background-color: #0002;
+	flex-shrink: 0;
 }
 
 .vacp-visually-hidden {

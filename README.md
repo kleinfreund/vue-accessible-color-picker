@@ -273,24 +273,34 @@ Methods that are exposed on the Vue component instance.
 
 ### Slots
 
+#### actions
+
+- **Description**: Add additional content following the copy button.
+- **Required**: No.
+- **Default content**: _None._
+
 #### alpha-range-input-label
 
 - **Description**: Overrides the content of the alpha range input’s `label` element.
+- **Required**: No.
 - **Default content**: Alpha
 
 #### copy-button
 
 - **Description**: Overrides the content of the copy button element.
+- **Required**: No.
 - **Default content**: Copy color (and SVG icon)
 
 #### format-switch-button
 
 - **Description**: Overrides the content of the format switch button element.
+- **Required**: No.
 - **Default content**: Switch format (and SVG icon)
 
 #### hue-range-input-label
 
 - **Description**: Overrides the content of the hue range input’s `label` element.
+- **Required**: No.
 - **Default content**: Hue
 
 ### Theming
