@@ -7,6 +7,7 @@ import { PublicProps } from 'vue';
 
 declare const __VLS_component: DefineComponent<ColorPickerProps, {
 copyColor: typeof copyColor;
+switchFormat: typeof switchFormat;
 }, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
 "color-change": (data: ColorChangeDetail) => any;
 "color-copy": (data: ColorChangeDetail) => any;
@@ -14,14 +15,13 @@ copyColor: typeof copyColor;
 "onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
 "onColor-copy"?: ((data: ColorChangeDetail) => any) | undefined;
 }>, {
-id: string;
 color: string | ColorHsl | ColorHwb | ColorRgb;
 copy: (cssColor: string) => Promise<void> | void;
+id: string;
 visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
 alphaChannel: AlphaChannelProp_2;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
-colorPicker: HTMLDivElement;
 colorSpace: HTMLDivElement;
 thumb: HTMLDivElement;
 }, HTMLDivElement>;
@@ -32,10 +32,10 @@ declare function __VLS_template(): {
         'hue-range-input-label'?(_: {}): any;
         'alpha-range-input-label'?(_: {}): any;
         'copy-button'?(_: {}): any;
+        actions?(_: {}): any;
         'format-switch-button'?(_: {}): any;
     };
     refs: {
-        colorPicker: HTMLDivElement;
         colorSpace: HTMLDivElement;
         thumb: HTMLDivElement;
     };
@@ -140,6 +140,11 @@ declare function copyColor(): Promise<void>;
 
 declare const plugin: Plugin_2;
 export default plugin;
+
+/**
+ * Sets the next active color format by cycling through the visible color formats.
+ */
+declare function switchFormat(): void;
 
 export declare type VisibleColorFormat = Exclude<ColorFormat, 'hsv'>;
 
