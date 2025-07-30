@@ -4,7 +4,7 @@
 
 A color picker component for Vue.js.
 
-- Distributed is ES module format
+- Distributed in ES module format
 - Not transpiled
 - Uses [vue](https://www.npmjs.com/package/vue) (as a peer dependency)
 
