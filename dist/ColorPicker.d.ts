@@ -22,7 +22,7 @@ visibleFormats: VisibleColorFormat[];
 defaultFormat: VisibleColorFormat;
 alphaChannel: AlphaChannelProp_2;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {
-colorSpace: HTMLDivElement;
+colorSpaceRef: HTMLDivElement;
 thumb: HTMLDivElement;
 }, HTMLDivElement>;
 
@@ -36,7 +36,7 @@ declare function __VLS_template(): {
         'format-switch-button'?(_: {}): any;
     };
     refs: {
-        colorSpace: HTMLDivElement;
+        colorSpaceRef: HTMLDivElement;
         thumb: HTMLDivElement;
     };
     rootEl: HTMLDivElement;

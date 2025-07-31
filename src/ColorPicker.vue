@@ -4,7 +4,7 @@
 		:style="`--vacp-color: ${formatAsCssColor({ format: 'hsl', color: colors.hsl }, true)}`"
 	>
 		<div
-			ref="colorSpace"
+			ref="colorSpaceRef"
 			class="vacp-color-space"
 			:style="`position: relative; background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent); background-color: hsl(${currentHsv.h} 100% 50%)`"
 			@pointerdown="startMovingThumbWithPointer"
@@ -215,7 +215,7 @@ defineExpose({
 /**
  * The color space. It represents the saturation and lightness or the current color’s hue.
  */
-const colorSpace = useTemplateRef('colorSpace')
+const colorSpace = useTemplateRef('colorSpaceRef')
 
 /**
  * Tracks whether a pointer originated from within the color space.

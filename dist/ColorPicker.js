@@ -10,7 +10,7 @@ function Ct(t, e) {
       return !1;
   return !0;
 }
-function k(t) {
+function A(t) {
   const e = [], r = t.length > 5 ? 2 : 1;
   for (let s = 1; s < t.length; s += r) {
     const a = t.substring(s, s + r).repeat(r % 2 + 1), p = parseInt(a, 16);
@@ -32,7 +32,7 @@ function nt(t) {
     a: t.a
   };
 }
-function M(t) {
+function k(t) {
   let e = t.h % 360;
   e < 0 && (e += 360);
   const r = t.s / 100, s = t.l / 100;
@@ -65,7 +65,7 @@ function rt(t) {
   };
 }
 function $(t) {
-  return M(ot(t));
+  return k(ot(t));
 }
 function x(t) {
   const e = t.w / 100, r = t.b / 100;
@@ -90,7 +90,7 @@ function H(t) {
     a
   };
 }
-function A(t) {
+function M(t) {
   return "#" + Object.values(t).map((e, r) => Math.round(r === 3 ? e * 255 : e).toString(16).padStart(2, "0")).join("");
 }
 function F(t) {
@@ -99,34 +99,34 @@ function F(t) {
 const Tt = {
   hex: {
     hex: (t) => t,
-    hsl: (t) => H(k(t)),
-    hsv: (t) => x(F(k(t))),
+    hsl: (t) => H(A(t)),
+    hsv: (t) => x(F(A(t))),
+    hwb: (t) => F(A(t)),
+    rgb: A
+  },
+  hsl: {
+    hex: (t) => M(k(t)),
+    hsl: (t) => t,
+    hsv: nt,
     hwb: (t) => F(k(t)),
     rgb: k
   },
-  hsl: {
-    hex: (t) => A(M(t)),
-    hsl: (t) => t,
-    hsv: nt,
-    hwb: (t) => F(M(t)),
-    rgb: M
-  },
   hsv: {
-    hex: (t) => A($(t)),
+    hex: (t) => M($(t)),
     hsl: ot,
     hsv: (t) => t,
     hwb: rt,
     rgb: $
   },
   hwb: {
-    hex: (t) => A($(x(t))),
+    hex: (t) => M($(x(t))),
     hsl: (t) => H($(x(t))),
     hsv: x,
     hwb: (t) => t,
     rgb: (t) => $(x(t))
   },
   rgb: {
-    hex: A,
+    hex: M,
     hsl: H,
     hsv: (t) => x(F(t)),
     hwb: F,
@@ -224,7 +224,7 @@ const et = {
   hwb: ["h", "w", "b", "a"],
   rgb: ["r", "g", "b", "a"]
 };
-function kt(t) {
+function At(t) {
   if (typeof t != "string") {
     const f = It(t);
     return f === null ? null : { format: f, color: t };
@@ -251,14 +251,14 @@ function kt(t) {
   }));
   return { format: s, color: v };
 }
-function At(t, e, r) {
+function Mt(t, e, r) {
   const s = t.getBoundingClientRect(), a = e - s.left, p = r - s.top;
   return {
     x: s.width === 0 ? 0 : N(a / s.width * 100, 0, 100),
     y: s.height === 0 ? 0 : N((1 - p / s.height) * 100, 0, 100)
   };
 }
-const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Lt = ["id", "value"], St = ["for"], Pt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Rt = ["id", "value"], Ot = { class: "vacp-actions" }, Wt = { class: "vacp-color-inputs" }, jt = { class: "vacp-color-input-group" }, zt = ["for"], Dt = ["id", "value"], _t = ["id", "for", "onInput"], Kt = { class: "vacp-color-input-label-text" }, Yt = ["id", "value", "onInput"], Bt = /* @__PURE__ */ ht({
+const kt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vacp-range-input-label-text vacp-range-input-label-text--hue" }, Lt = ["id", "value"], St = ["for"], Rt = { class: "vacp-range-input-label-text vacp-range-input-label-text--alpha" }, Pt = ["id", "value"], Ot = { class: "vacp-actions" }, Wt = { class: "vacp-color-inputs" }, jt = { class: "vacp-color-input-group" }, zt = ["for"], Dt = ["id", "value"], _t = ["id", "for", "onInput"], Kt = { class: "vacp-color-input-label-text" }, Yt = ["id", "value", "onInput"], Bt = /* @__PURE__ */ ht({
   __name: "ColorPicker",
   props: {
     color: { default: "#ffffffff" },
@@ -275,7 +275,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
       copyColor: X,
       switchFormat: _
     });
-    const v = ft("colorSpace");
+    const v = ft("colorSpaceRef");
     let f = !1;
     const c = pt(a.visibleFormats.includes(a.defaultFormat) ? a.defaultFormat : a.visibleFormats[0]), u = vt({
       hex: "#ffffffff",
@@ -303,27 +303,27 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
       return u.hsv;
     });
     dt(() => a.color, Y), mt(function() {
-      document.addEventListener("pointermove", P, { passive: !1 }), document.addEventListener("touchmove", R, { passive: !1 }), document.addEventListener("pointerup", I), document.addEventListener("touchend", I), Y(a.color);
+      document.addEventListener("pointermove", R, { passive: !1 }), document.addEventListener("touchmove", P, { passive: !1 }), document.addEventListener("pointerup", I), document.addEventListener("touchend", I), Y(a.color);
     }), bt(function() {
-      document.removeEventListener("pointermove", P), document.removeEventListener("touchmove", R), document.removeEventListener("pointerup", I), document.removeEventListener("touchend", I);
+      document.removeEventListener("pointermove", R), document.removeEventListener("touchmove", P), document.removeEventListener("pointerup", I), document.removeEventListener("touchend", I);
     });
     function _() {
       const n = (a.visibleFormats.findIndex((i) => i === c.value) + 1) % a.visibleFormats.length;
       c.value = a.visibleFormats[n];
     }
     function it(o) {
-      f = !0, P(o);
+      f = !0, R(o);
     }
     function lt(o) {
-      f = !0, R(o);
+      f = !0, P(o);
     }
     function I() {
       f = !1;
     }
-    function P(o) {
+    function R(o) {
       o.buttons !== 1 || !f || !(v.value instanceof HTMLElement) || K(v.value, o.clientX, o.clientY);
     }
-    function R(o) {
+    function P(o) {
       if (!f || !(v.value instanceof HTMLElement))
         return;
       o.preventDefault();
@@ -331,7 +331,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
       K(v.value, n.clientX, n.clientY);
     }
     function K(o, n, i) {
-      const l = At(o, n, i), d = Object.assign({}, u.hsv);
+      const l = Mt(o, n, i), d = Object.assign({}, u.hsv);
       d.s = l.x, d.v = l.y, g("hsv", d);
     }
     function ut(o) {
@@ -342,7 +342,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
       m[i] = N(d, 0, 100), g("hsv", m);
     }
     function Y(o) {
-      const n = kt(o);
+      const n = At(o);
       n !== null && g(n.format, n.color);
     }
     function B(o, n) {
@@ -395,8 +395,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
       style: W(`--vacp-color: ${gt(D)({ format: "hsl", color: u.hsl }, !0)}`)
     }, [
       h("div", {
-        ref_key: "colorSpace",
-        ref: v,
+        ref: "colorSpaceRef",
         class: "vacp-color-space",
         style: W(`position: relative; background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent); background-color: hsl(${S.value.h} 100% 50%)`),
         onPointerdown: it,
@@ -411,7 +410,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
           onKeydown: ut
         }, null, 36)
       ], 36),
-      h("div", Mt, [
+      h("div", kt, [
         h("label", {
           class: "vacp-range-input-label vacp-range-input-label--hue",
           for: `${o.id}-hue-slider`
@@ -438,7 +437,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
           class: "vacp-range-input-label vacp-range-input-label--alpha",
           for: `${o.id}-alpha-slider`
         }, [
-          h("span", Pt, [
+          h("span", Rt, [
             T(o.$slots, "alpha-range-input-label", {}, () => [
               n[3] || (n[3] = Z("Alpha", -1))
             ])
@@ -453,7 +452,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
             step: "0.01",
             onKeydownPassive: G,
             onInput: n[1] || (n[1] = (i) => B(i, "a"))
-          }, null, 40, Rt)
+          }, null, 40, Pt)
         ], 8, St)) : Q("", !0)
       ]),
       h("div", Ot, [
