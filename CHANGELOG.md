@@ -1,3 +1,9 @@
+## [5.3.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.3.0...v5.3.1) (2025-07-31)
+
+### Bug Fixes
+
+* avoid false-negative "target is readonly" warning ([8fa8fd3](https://github.com/kleinfreund/vue-accessible-color-picker/commit/8fa8fd30041886c9ef936b4b1f960b3464d4e2f3)), closes [#31](https://github.com/kleinfreund/vue-accessible-color-picker/issues/)
+
 ## [5.3.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.2.0...v5.3.0) (2025-07-19)
 
 ### Features
