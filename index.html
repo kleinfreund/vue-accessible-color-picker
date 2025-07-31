@@ -18,18 +18,28 @@
 	<main id="app"></main>
 
 	<script type="module">
-		import { createApp } from 'vue/dist/vue.esm-bundler.js'
+		import { createApp, ref } from 'vue/dist/vue.esm-bundler.js'
 
 		import ColorPicker from './src/ColorPicker.vue'
 
 		const app = createApp({
 			components: { ColorPicker },
-			template: `<ColorPicker @color-change="handleColorChange" />`,
-			methods: {
-				handleColorChange(event) {
+			template: `
+				<ColorPicker
+					:color="color"
+					@color-change="handleColorChange"
+				/>
+			`,
+			setup() {
+				const color = ref('')
+
+				function handleColorChange(event) {
 					console.log(event)
-				},
-			}
+					color.value = event.cssColor
+				}
+
+				return { color, handleColorChange }
+			},
 		})
 
 		app.mount('#app')
