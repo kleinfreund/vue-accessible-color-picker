@@ -418,7 +418,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
         }, [
           h("span", Et, [
             T(o.$slots, "hue-range-input-label", {}, () => [
-              n[2] || (n[2] = Z("Hue"))
+              n[2] || (n[2] = Z("Hue", -1))
             ])
           ]),
           h("input", {
@@ -440,7 +440,7 @@ const Mt = { class: "vacp-range-input-group" }, Ht = ["for"], Et = { class: "vac
         }, [
           h("span", Pt, [
             T(o.$slots, "alpha-range-input-label", {}, () => [
-              n[3] || (n[3] = Z("Alpha"))
+              n[3] || (n[3] = Z("Alpha", -1))
             ])
           ]),
           h("input", {
