@@ -9,7 +9,7 @@ This project follows a [code of conduct](https://github.com/kleinfreund/vue-acce
 The following software will be required to contribute to this project:
 
 - git
-- Node.js and npm (see .nvmrc file)
+- Node.js and npm (see .node-version file)
 
 ## Development
 

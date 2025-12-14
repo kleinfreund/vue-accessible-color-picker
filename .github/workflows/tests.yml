@@ -21,7 +21,7 @@ jobs:
       - uses: kleinfreund/enforce-required-action-version-format@f6b06269aa74763828a2e1c8fc702a9d038c3612 # v1.0.0
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
         with:
-          node-version-file: .nvmrc
+          node-version-file: .node-version
           cache: npm
       - run: npm clean-install
       - run: npm audit signatures
