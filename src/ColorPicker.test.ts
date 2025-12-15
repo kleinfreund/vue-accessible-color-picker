@@ -326,19 +326,8 @@ describe('ColorPicker', () => {
 				toJSON: vi.fn(),
 			}))
 
-			await colorSpace.trigger('pointerdown', {
-				buttons: 1,
-				// Remove these once pointer events are implemented in JSDOM: https://github.com/jsdom/jsdom/issues/2527
-				clientX: 0,
-				clientY: 0,
-			})
-			await colorSpace.trigger('pointermove', {
-				buttons: 1,
-				preventDefault: vi.fn(),
-				// Remove these once pointer events are implemented in JSDOM: https://github.com/jsdom/jsdom/issues/2527
-				clientX: 0,
-				clientY: 0,
-			})
+			colorSpace.element.dispatchEvent(new PointerEvent('pointerdown', { buttons: 1 }))
+			colorSpace.element.dispatchEvent(new PointerEvent('pointermove', { buttons: 1 }))
 
 			expect(wrapper.emitted('color-change')?.length).toBe(2)
 		})
