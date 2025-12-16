@@ -64,7 +64,7 @@
 		}
 	},
 	"peerDependencies": {
-		"vue": "3.2.x"
+		"vue": "^3.2.x"
 	},
 	"devDependencies": {
 		"@babel/types": "7.28.5",
