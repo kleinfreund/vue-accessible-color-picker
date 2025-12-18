@@ -5,27 +5,52 @@ import { DefineComponent } from 'vue';
 import { Plugin as Plugin_2 } from 'vue';
 import { PublicProps } from 'vue';
 
-declare const __VLS_component: DefineComponent<ColorPickerProps, {
+declare const __VLS_component: DefineComponent<__VLS_Props, {
 copyColor: typeof copyColor;
 switchFormat: typeof switchFormat;
-}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
-"color-change": (data: ColorChangeDetail) => any;
-"color-copy": (data: ColorChangeDetail) => any;
-}, string, PublicProps, Readonly<ColorPickerProps> & Readonly<{
-"onColor-change"?: ((data: ColorChangeDetail) => any) | undefined;
-"onColor-copy"?: ((data: ColorChangeDetail) => any) | undefined;
-}>, {
-color: string | default_2;
-copy: (cssColor: string) => Promise<void> | void;
-id: string;
-visibleFormats: ColorFormat[];
-defaultFormat: ColorFormat;
-alphaChannel: "show" | "hide";
-}, {}, {}, {}, string, ComponentProvideOptions, false, {
+}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+"color-change": (args_0: ColorChangeDetail) => any;
+"color-copy": (args_0: ColorChangeDetail) => any;
+}, string, PublicProps, Readonly<__VLS_Props> & Readonly<{
+"onColor-change"?: ((args_0: ColorChangeDetail) => any) | undefined;
+"onColor-copy"?: ((args_0: ColorChangeDetail) => any) | undefined;
+}>, {}, {}, {}, {}, string, ComponentProvideOptions, false, {
 colorPicker: HTMLDivElement;
 colorSpaceRef: HTMLDivElement;
 thumb: HTMLDivElement;
 }, HTMLDivElement>;
+
+declare type __VLS_Props = {
+    /**
+     * The initially rendered color.
+     */
+    color?: string | default_2;
+    /**
+     * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
+     */
+    copy?: (cssColor: string) => Promise<void> | void;
+    /**
+     * The prefix for all ID attribute values used by the color picker.
+     */
+    id?: string;
+    /**
+     * The list of visible color formats.
+     */
+    visibleFormats?: ColorFormat[];
+    /**
+     * The initially visible color format.
+     */
+    defaultFormat?: ColorFormat;
+    /**
+     * Controls whether the control related to a color’s alpha channel are rendered in the color picker.
+     *
+     * The following settings are available:
+     *
+     * - **show**: Default. The alpha channel range input and the alpha channel value input are rendered.
+     * - **hide**: The alpha channel range input and the alpha channel value input are not rendered. The `color-change` event emits a `cssColor` property without the alpha channel part.
+     */
+    alphaChannel?: 'show' | 'hide';
+};
 
 declare function __VLS_template(): {
     attrs: Partial<{}>;
@@ -66,38 +91,6 @@ export declare type ColorChangeDetail = {
 export declare type ColorFormat = 'hex' | 'hsl' | 'hwb' | 'lab' | 'lch' | 'oklab' | 'oklch' | 'srgb';
 
 export declare const ColorPicker: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
-
-export declare interface ColorPickerProps {
-    /**
-     * The initially rendered color.
-     */
-    color?: string | default_2;
-    /**
-     * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
-     */
-    copy?: (cssColor: string) => Promise<void> | void;
-    /**
-     * The prefix for all ID attribute values used by the color picker.
-     */
-    id?: string;
-    /**
-     * The list of visible color formats.
-     */
-    visibleFormats?: ColorFormat[];
-    /**
-     * The initially visible color format.
-     */
-    defaultFormat?: ColorFormat;
-    /**
-     * Controls whether the control related to a color’s alpha channel are rendered in the color picker.
-     *
-     * The following settings are available:
-     *
-     * - **show**: Default. The alpha channel range input and the alpha channel value input are rendered.
-     * - **hide**: The alpha channel range input and the alpha channel value input are not rendered. The `color-change` event emits a `cssColor` property without the alpha channel part.
-     */
-    alphaChannel?: 'show' | 'hide';
-}
 
 /**
  * Copies the current color (determined by the active color format).
