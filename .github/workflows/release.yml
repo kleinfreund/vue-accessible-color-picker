@@ -21,7 +21,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-      id-token: write
+      id-token: write # required for OIDC
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -35,5 +35,4 @@ jobs:
       - run: npm run build
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: npm run release
