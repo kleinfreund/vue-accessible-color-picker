@@ -173,7 +173,7 @@ You can also register the component and import the styles globally.
 - **Description**: A list of visible color formats. Controls for which formats the color `input` elements are shown and in which order the formats will be cycled through when activating the format switch button.
 - **Type**: `ColorFormat[]`
 - **Required**: No
-- **Default**: `['hex', 'hsl', 'hwb', 'rgb']`
+- **Default**: `['hex', 'hsl', 'hwb', 'srgb']`
 - **Usage**:
 
 	```vue

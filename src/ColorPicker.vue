@@ -188,7 +188,7 @@ import { ALPHA_DEFINITION, CHANNEL_DEFINITIONS, PRECISION } from './constants.js
 const props = withDefaults(defineProps<ColorPickerProps>(), {
 	color: '#ffffffff',
 	id: 'color-picker',
-	visibleFormats: () => ['hex', 'hsl', 'hwb', 'rgb'],
+	visibleFormats: () => ['hex', 'hsl', 'hwb', 'srgb'],
 	defaultFormat: 'hsl',
 	alphaChannel: 'show',
 	copy: undefined,
@@ -234,7 +234,7 @@ const visibleChannels = computed(function () {
 
 	return CHANNEL_DEFINITIONS[format]
 		.map(({ channel, label, preferredType }, index) => {
-			const color = currentColor.value.to(format === 'rgb' ? 'srgb' : format)
+			const color = currentColor.value.to(format)
 			// Mutates `color` so it's in gamut.
 			color.toGamut()
 			const types = typesByCoord[index]!
@@ -407,10 +407,9 @@ function updateColorValue () {
 		return
 	}
 
-	const space = format === 'rgb' ? 'srgb' : format
-	const coords = values.slice(0, 3).map((value) => space === 'srgb' ? value / 255 : value) as [number, number, number]
+	const coords = values.slice(0, 3) as [number, number, number]
 
-	setColor(new Color(space, coords, values[3]))
+	setColor(new Color(format, coords, values[3]))
 }
 
 function setColor (newColor: Color) {

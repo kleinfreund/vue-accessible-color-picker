@@ -148,7 +148,7 @@ export const CHANNEL_DEFINITIONS: Record<Exclude<ColorFormat, 'hex'>, [ChannelDe
 			from: angle.from,
 		},
 	],
-	'rgb': [
+	'srgb': [
 		{
 			channel: 'r',
 			label: 'R',

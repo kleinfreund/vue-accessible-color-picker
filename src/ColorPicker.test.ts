@@ -8,7 +8,7 @@ import { CHANNEL_DEFINITIONS } from './constants.js'
 function createWrapper (options: ComponentMountingOptions<typeof ColorPicker, ColorPickerProps> = {}) {
 	options.props = options.props ?? {}
 	options.props.id = options.props.id ?? 'color-picker'
-	options.props.visibleFormats = options.props.visibleFormats ?? ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'rgb']
+	options.props.visibleFormats = options.props.visibleFormats ?? ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb']
 	return shallowMount(ColorPicker, options)
 }
 
@@ -221,7 +221,7 @@ describe('ColorPicker', () => {
 				['L', 'C', 'H'],
 			],
 			[
-				{ defaultFormat: 'rgb' },
+				{ defaultFormat: 'srgb' },
 				['R', 'G', 'B'],
 			],
 		])('sets active color format to “%s” when providing default format prop', (props, expectedLabels) => {
@@ -544,7 +544,7 @@ describe('ColorPicker', () => {
 
 		test.each<[ColorPickerProps, string]>([
 			[
-				{ defaultFormat: 'rgb', alphaChannel: 'show' },
+				{ defaultFormat: 'srgb', alphaChannel: 'show' },
 				'rgb(255 255 255 / 1)',
 			],
 			[
@@ -626,7 +626,7 @@ describe('ColorPicker', () => {
 			expect(wrapper.find('#color-picker-color-oklch-c').exists()).toBe(true)
 
 			await formatSwitchButton.trigger('click')
-			expect(wrapper.find('#color-picker-color-rgb-r').exists()).toBe(true)
+			expect(wrapper.find('#color-picker-color-srgb-r').exists()).toBe(true)
 
 			await formatSwitchButton.trigger('click')
 			expect(wrapper.find('#color-picker-color-hex').exists()).toBe(true)
@@ -649,7 +649,7 @@ describe('ColorPicker', () => {
 	describe('color value inputs', () => {
 		test.each<[ColorPickerProps, string, string]>([
 			[
-				{ defaultFormat: 'rgb' },
+				{ defaultFormat: 'srgb' },
 				'r',
 				'127.',
 			],
@@ -686,7 +686,7 @@ describe('ColorPicker', () => {
 
 		test.each<[ColorPickerProps, string, string]>([
 			[
-				{ defaultFormat: 'rgb' },
+				{ defaultFormat: 'srgb' },
 				'r',
 				'127.5',
 			],
@@ -840,7 +840,7 @@ describe('ColorPicker', () => {
 			],
 			[
 				{
-					defaultFormat: 'rgb',
+					defaultFormat: 'srgb',
 					color: 'rgb(255 127.5 63.75 / .2)',
 				},
 				{
@@ -852,7 +852,7 @@ describe('ColorPicker', () => {
 			],
 			[
 				{
-					defaultFormat: 'rgb',
+					defaultFormat: 'srgb',
 					// Use `rgba` because `rgb` with percentages isn't parsed by colorjs.io.
 					color: 'rgba(100% 50% 25% / 0)',
 				},

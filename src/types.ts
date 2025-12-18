@@ -12,7 +12,7 @@ export type ColorChangeDetail = {
 	cssColor: string
 }
 
-export type ColorFormat = 'hex' | 'hsl' | 'hwb' | 'lab' | 'lch' | 'oklab' | 'oklch' | 'rgb'
+export type ColorFormat = 'hex' | 'hsl' | 'hwb' | 'lab' | 'lch' | 'oklab' | 'oklch' | 'srgb'
 
 export interface ColorPickerProps {
 	/**
