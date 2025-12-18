@@ -171,6 +171,7 @@ import {
 	onBeforeUnmount,
 	onMounted,
 	ref,
+	toRaw,
 	useTemplateRef,
 	watch,
 } from 'vue'
@@ -444,7 +445,7 @@ async function copyColor (): Promise<void> {
 
 function getColorChangeDetail (): ColorChangeDetail {
 	return {
-		color: currentColor.value,
+		color: toRaw(currentColor.value),
 		cssColor: serialize(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' }),
 	}
 }
