@@ -27,6 +27,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.workflow_run.head_branch }}
+      - uses: kleinfreund/enforce-required-action-version-format@f6b06269aa74763828a2e1c8fc702a9d038c3612 # v1.0.0
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .node-version
