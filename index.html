@@ -27,11 +27,13 @@
 			template: `
 				<ColorPicker
 					:color="color"
+					default-format="oklab"
+					:visible-formats="['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'rgb']"
 					@color-change="handleColorChange"
 				/>
 			`,
 			setup() {
-				const color = ref('')
+				const color = ref('oklab(88% 0.145 -0.392)')
 
 				function handleColorChange(event) {
 					console.log(event)

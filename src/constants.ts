@@ -13,6 +13,11 @@ type ChannelDefinition = {
 const alpha = createPercentageNumber(0, 1, 1)
 const angle = createAngle()
 const percentageNumber = createPercentageNumber(0, 100, 100)
+const labAxis = createPercentageNumber(-125, 125, 1)
+const lchChroma = createPercentageNumber(0, 150, 1)
+const okLightness = createPercentageNumber(0, 1, 1)
+const oklabAxis = createPercentageNumber(-0.4, 0.4, 1)
+const oklchChroma = createPercentageNumber(0, 0.4, 1)
 const rgbNumber = createPercentageNumber(0, 255, 255)
 
 export const ALPHA_DEFINITION: ChannelDefinition = {
@@ -61,6 +66,86 @@ export const CHANNEL_DEFINITIONS: Record<Exclude<ColorFormat, 'hex'>, [ChannelDe
 			label: 'B',
 			preferredType: '<percentage>',
 			from: percentageNumber.from,
+		},
+	],
+	'lab': [
+		{
+			channel: 'l',
+			label: 'L',
+			preferredType: '<percentage>',
+			from: percentageNumber.from,
+		},
+		{
+			channel: 'a',
+			label: 'a',
+			preferredType: '<number>',
+			from: labAxis.from,
+		},
+		{
+			channel: 'b',
+			label: 'b',
+			preferredType: '<number>',
+			from: labAxis.from,
+		},
+	],
+	'lch': [
+		{
+			channel: 'l',
+			label: 'L',
+			preferredType: '<percentage>',
+			from: percentageNumber.from,
+		},
+		{
+			channel: 'c',
+			label: 'C',
+			preferredType: '<number>',
+			from: lchChroma.from,
+		},
+		{
+			channel: 'h',
+			label: 'H',
+			preferredType: '<number>',
+			from: angle.from,
+		},
+	],
+	'oklab': [
+		{
+			channel: 'l',
+			label: 'L',
+			preferredType: '<percentage>',
+			from: okLightness.from,
+		},
+		{
+			channel: 'a',
+			label: 'a',
+			preferredType: '<number>',
+			from: oklabAxis.from,
+		},
+		{
+			channel: 'b',
+			label: 'b',
+			preferredType: '<number>',
+			from: oklabAxis.from,
+		},
+	],
+	'oklch': [
+		{
+			channel: 'l',
+			label: 'L',
+			preferredType: '<percentage>',
+			from: okLightness.from,
+		},
+		{
+			channel: 'c',
+			label: 'C',
+			preferredType: '<number>',
+			from: oklchChroma.from,
+		},
+		{
+			channel: 'h',
+			label: 'H',
+			preferredType: '<number>',
+			from: angle.from,
 		},
 	],
 	'rgb': [

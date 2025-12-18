@@ -8,7 +8,7 @@ import { CHANNEL_DEFINITIONS } from './constants.js'
 function createWrapper (options: ComponentMountingOptions<typeof ColorPicker, ColorPickerProps> = {}) {
 	options.props = options.props ?? {}
 	options.props.id = options.props.id ?? 'color-picker'
-	options.props.visibleFormats = options.props.visibleFormats ?? ['hex', 'hsl', 'hwb', 'rgb']
+	options.props.visibleFormats = options.props.visibleFormats ?? ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'rgb']
 	return shallowMount(ColorPicker, options)
 }
 
@@ -146,6 +146,10 @@ describe('ColorPicker', () => {
 				{ color: 'hwb(180 33% 50% / 1)' },
 				'#548080ff',
 			],
+			[
+				{ color: 'lab(55 -71 111 / 1)' },
+				'#090f',
+			],
 		])('mounts correctly with a valid color prop', (props, expectedHexInputValue) => {
 			const wrapper = createWrapper({
 				props: {
@@ -199,6 +203,22 @@ describe('ColorPicker', () => {
 			[
 				{ defaultFormat: 'hwb' },
 				['H', 'W', 'B'],
+			],
+			[
+				{ defaultFormat: 'lab' },
+				['L', 'a', 'b'],
+			],
+			[
+				{ defaultFormat: 'lch' },
+				['L', 'C', 'H'],
+			],
+			[
+				{ defaultFormat: 'oklab' },
+				['L', 'a', 'b'],
+			],
+			[
+				{ defaultFormat: 'oklch' },
+				['L', 'C', 'H'],
 			],
 			[
 				{ defaultFormat: 'rgb' },
@@ -423,6 +443,32 @@ describe('ColorPicker', () => {
 			expect(keydownEvent.preventDefault).toHaveBeenCalled()
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].cssColor).toEqual(expectedCssColor)
 		})
+
+		test('moves out-of-gamut color with arrow keys correctly', async () => {
+			const wrapper = createWrapper({
+				props: {
+					color: 'oklab(88% 0.145 -0.392)',
+				},
+			})
+
+			const thumb = wrapper.find<HTMLElement>('.vacp-color-space-thumb')
+			expect(thumb.element.style.left).toBe('21.028102086240466%')
+			expect(thumb.element.style.bottom).toBe('100%')
+
+			await thumb.trigger('keydown', { key: 'ArrowDown' })
+			expect(thumb.element.style.left).toBe('21.028102086240466%')
+			expect(thumb.element.style.bottom).toBe('99%')
+			expect(
+				(wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color.toString({ format: 'oklab' }),
+			).toEqual('oklab(85.366% 0.02551 -0.06894)')
+
+			await thumb.trigger('keydown', { key: 'ArrowRight' })
+			expect(thumb.element.style.left).toBe('22.028102086240466%')
+			expect(thumb.element.style.bottom).toBe('99%')
+			expect(
+				(wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color.toString({ format: 'oklab' }),
+			).toEqual('oklab(84.707% 0.02664 -0.07241)')
+		})
 	})
 
 	describe('hue & alpha range inputs', () => {
@@ -510,6 +556,22 @@ describe('ColorPicker', () => {
 				'hwb(0 100% 0% / 1)',
 			],
 			[
+				{ defaultFormat: 'lab', alphaChannel: 'show' },
+				'lab(100% 0 0 / 1)',
+			],
+			[
+				{ defaultFormat: 'lch', alphaChannel: 'show' },
+				'lch(100% 0 0 / 1)',
+			],
+			[
+				{ defaultFormat: 'oklab', alphaChannel: 'show' },
+				'oklab(100% 0 0 / 1)',
+			],
+			[
+				{ defaultFormat: 'oklch', alphaChannel: 'show' },
+				'oklch(100% 0 0 / 1)',
+			],
+			[
 				{ defaultFormat: 'hex', alphaChannel: 'show' },
 				'#ffff',
 			],
@@ -550,6 +612,18 @@ describe('ColorPicker', () => {
 
 			await formatSwitchButton.trigger('click')
 			expect(wrapper.find('#color-picker-color-hwb-w').exists()).toBe(true)
+
+			await formatSwitchButton.trigger('click')
+			expect(wrapper.find('#color-picker-color-lab-a').exists()).toBe(true)
+
+			await formatSwitchButton.trigger('click')
+			expect(wrapper.find('#color-picker-color-lch-c').exists()).toBe(true)
+
+			await formatSwitchButton.trigger('click')
+			expect(wrapper.find('#color-picker-color-oklab-a').exists()).toBe(true)
+
+			await formatSwitchButton.trigger('click')
+			expect(wrapper.find('#color-picker-color-oklch-c').exists()).toBe(true)
 
 			await formatSwitchButton.trigger('click')
 			expect(wrapper.find('#color-picker-color-rgb-r').exists()).toBe(true)
@@ -713,6 +787,54 @@ describe('ColorPicker', () => {
 					h: '180',
 					w: '25%',
 					b: '50%',
+					alpha: '1',
+				},
+			],
+			[
+				{
+					defaultFormat: 'lab',
+					color: 'lab(55 -71 111 / 1)',
+				},
+				{
+					l: '55%',
+					a: '-71',
+					b: '111',
+					alpha: '1',
+				},
+			],
+			[
+				{
+					defaultFormat: 'lch',
+					color: 'lch(69% 7 306)',
+				},
+				{
+					l: '69%',
+					c: '7',
+					h: '306',
+					alpha: '1',
+				},
+			],
+			[
+				{
+					defaultFormat: 'oklab',
+					color: 'oklab(88% 0.145 -0.392)',
+				},
+				{
+					l: '88%',
+					a: '0.145',
+					b: '-0.392',
+					alpha: '1',
+				},
+			],
+			[
+				{
+					defaultFormat: 'oklch',
+					color: 'oklch(93% 0.142 0)',
+				},
+				{
+					l: '93%',
+					c: '0.142',
+					h: '0',
 					alpha: '1',
 				},
 			],
