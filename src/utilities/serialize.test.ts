@@ -1,10 +1,10 @@
 import Color from 'colorjs.io'
 import { describe, test, expect } from 'vitest'
 
-import { format } from './formatAsCssColor.js'
+import { serialize } from './serialize.js'
 
-describe('formatAsCssColor', () => {
-	test.each<[...Parameters<typeof format>, ReturnType<typeof format>]>([
+describe('serialize', () => {
+	test.each<[...Parameters<typeof serialize>, ReturnType<typeof serialize>]>([
 		[new Color('srgb', [1, 1, 1], 1 ), { format: 'srgb' }, 'rgb(255 255 255 / 1)'],
 		[new Color('srgb', [1, 0, 0], 1 ), { format: 'srgb' }, 'rgb(255 0 0 / 1)'],
 		[new Color('srgb', [1, 1, 1], 1 ), { format: 'srgb', alpha: false }, 'rgb(255 255 255)'],
@@ -34,6 +34,6 @@ describe('formatAsCssColor', () => {
 		[new Color('hsl', [0, 0, 100], 0.8 ), { format: 'hwb' }, 'hwb(0 100% 0% / 0.8)'],
 		[new Color('hwb', [0, 100, 0], 0.8 ), { format: 'hsl' }, 'hsl(0 0% 100% / 0.8)'],
 	])('works', (color, options, result) => {
-		expect(format(color, options)).toEqual(result)
+		expect(serialize(color, options)).toEqual(result)
 	})
 })

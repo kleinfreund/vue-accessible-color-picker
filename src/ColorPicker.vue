@@ -2,7 +2,7 @@
 	<div
 		ref="colorPicker"
 		class="vacp-color-picker"
-		:style="`--vacp-color: ${format(currentColor, { format: 'hsl', alpha: false })}`"
+		:style="`--vacp-color: ${serialize(currentColor, { format: 'hsl', alpha: false })}`"
 	>
 		<div
 			ref="colorSpaceRef"
@@ -176,7 +176,7 @@ import {
 } from 'vue'
 
 import { clamp } from './utilities/clamp.js'
-import { format } from './utilities/formatAsCssColor.js'
+import { serialize } from './utilities/serialize.js'
 import {
 	ColorChangeDetail,
 	ColorFormat,
@@ -254,7 +254,7 @@ const visibleChannels = computed(function () {
  * Input value of the color `input` element for the hexadecimal representation of the current color.
  */
 const hexInputValue = computed(function () {
-	return format(currentColor.value, { format: 'hex', alpha: props.alphaChannel === 'show' })
+	return serialize(currentColor.value, { format: 'hex', alpha: props.alphaChannel === 'show' })
 })
 
 /**
@@ -433,7 +433,7 @@ function setColor (newColor: Color) {
  * Only works in secure browsing contexts (i.e. HTTPS).
  */
 async function copyColor (): Promise<void> {
-	const cssColor = format(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' })
+	const cssColor = serialize(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' })
 
 	// Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
 	const copyFunction = props.copy ? props.copy : (data: string) => window.navigator.clipboard.writeText(data)
@@ -445,7 +445,7 @@ async function copyColor (): Promise<void> {
 function getColorChangeDetail (): ColorChangeDetail {
 	return {
 		color: currentColor.value,
-		cssColor: format(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' }),
+		cssColor: serialize(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' }),
 	}
 }
 
