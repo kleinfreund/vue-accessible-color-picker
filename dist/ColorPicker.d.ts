@@ -63,7 +63,7 @@ export declare type ColorChangeDetail = {
     cssColor: string;
 };
 
-export declare type ColorFormat = 'hex' | 'hsl' | 'hwb' | 'rgb';
+export declare type ColorFormat = 'hex' | 'hsl' | 'hwb' | 'lab' | 'lch' | 'oklab' | 'oklch' | 'srgb';
 
 export declare const ColorPicker: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 
