@@ -50,7 +50,7 @@ Links:
 Install the package (and its peer dependencies).
 
 ```sh
-npm install vue-accessible-color-picker vue@^3.2.0
+npm install vue-accessible-color-picker vue@^3.5.0
 ```
 
 Note: this custom element uses colorjs.io and vue under the hood. These dependencies are _peer_ dependencies and will have to be installed as well.
