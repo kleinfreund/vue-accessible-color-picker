@@ -186,14 +186,14 @@ import {
 import { getNewThumbPosition } from './utilities/getNewThumbPosition.js'
 import { ALPHA_DEFINITION, CHANNEL_DEFINITIONS, PRECISION } from './constants.js'
 
-const props = withDefaults(defineProps<ColorPickerProps>(), {
-	color: '#ffffffff',
-	id: 'color-picker',
-	visibleFormats: () => ['hex', 'hsl', 'hwb', 'srgb'],
-	defaultFormat: 'hsl',
-	alphaChannel: 'show',
-	copy: undefined,
-})
+const {
+	color = '#ffffffff',
+	id = 'color-picker',
+	visibleFormats = ['hex', 'hsl', 'hwb', 'srgb'],
+	defaultFormat = 'hsl',
+	alphaChannel = 'show',
+	copy = undefined,
+} = defineProps<ColorPickerProps>()
 
 const emit = defineEmits<(event: 'color-change' | 'color-copy', data: ColorChangeDetail) => void>()
 
@@ -219,7 +219,7 @@ let pointerOriginatedInColorSpace = false
 /**
  * The currently visible color format (i.e. what’s cycled through using the “Switch format” button).
  */
-const activeFormat = ref<ColorFormat>(props.visibleFormats.includes(props.defaultFormat) ? props.defaultFormat : props.visibleFormats[0]!)
+const activeFormat = ref<ColorFormat>(visibleFormats.includes(defaultFormat) ? defaultFormat : visibleFormats[0]!)
 
 /**
  * The current color represented in all supported color formats.
@@ -244,7 +244,7 @@ const visibleChannels = computed(function () {
 
 			return { value, channel, label }
 		})
-		.concat(props.alphaChannel === 'show' ? [{
+		.concat(alphaChannel === 'show' ? [{
 			value: currentColor.value.alpha.toPrecision(PRECISION).replace(/\.?0+$/, ''),
 			channel: ALPHA_DEFINITION.channel,
 			label: ALPHA_DEFINITION.label,
@@ -255,7 +255,7 @@ const visibleChannels = computed(function () {
  * Input value of the color `input` element for the hexadecimal representation of the current color.
  */
 const hexInputValue = computed(function () {
-	return serialize(currentColor.value, { format: 'hex', alpha: props.alphaChannel === 'show' })
+	return serialize(currentColor.value, { format: 'hex', alpha: alphaChannel === 'show' })
 })
 
 /**
@@ -267,7 +267,7 @@ const currentHsv = computed(function () {
 	return hsv
 })
 
-watch(() => props.color, parseAndSetColor, { immediate: true })
+watch(() => color, parseAndSetColor, { immediate: true })
 
 onMounted(function () {
 	document.addEventListener('pointermove', moveThumbWithPointer, { passive: false })
@@ -287,9 +287,9 @@ onBeforeUnmount(function () {
  * Sets the next active color format by cycling through the visible color formats.
  */
 function switchFormat () {
-	const activeFormatIndex = props.visibleFormats.findIndex((format) => format === activeFormat.value)
-	const newFormatIndex = (activeFormatIndex + 1) % props.visibleFormats.length
-	activeFormat.value = props.visibleFormats[newFormatIndex]!
+	const activeFormatIndex = visibleFormats.findIndex((format) => format === activeFormat.value)
+	const newFormatIndex = (activeFormatIndex + 1) % visibleFormats.length
+	activeFormat.value = visibleFormats[newFormatIndex]!
 }
 
 function startMovingThumbWithPointer (event: PointerEvent) {
@@ -396,9 +396,9 @@ function updateHexColorValue (event: Event) {
 function updateColorValue () {
 	const format = activeFormat.value as Exclude<ColorFormat, 'hex'>
 	const values = CHANNEL_DEFINITIONS[format]
-		.concat(props.alphaChannel === 'show' ? [ALPHA_DEFINITION] : [])
+		.concat(alphaChannel === 'show' ? [ALPHA_DEFINITION] : [])
 		.map(({ channel, from }) => {
-			const input = colorPicker.value!.querySelector<HTMLInputElement>(`input[id="${props.id}-color-${format}-${channel}"]`)!
+			const input = colorPicker.value!.querySelector<HTMLInputElement>(`input[id="${id}-color-${format}-${channel}"]`)!
 
 			return from(input.value)
 		})
@@ -434,10 +434,10 @@ function setColor (newColor: Color) {
  * Only works in secure browsing contexts (i.e. HTTPS).
  */
 async function copyColor (): Promise<void> {
-	const cssColor = serialize(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' })
+	const cssColor = serialize(currentColor.value, { format: activeFormat.value, alpha: alphaChannel === 'show' })
 
 	// Note: the Clipboard API’s `writeText` method can throw a `DOMException` error in case of insufficient write permissions (see https://w3c.github.io/clipboard-apis/#dom-clipboard-writetext). This error is explicitly not handled here so that users of this package can see the original error in the console.
-	const copyFunction = props.copy ? props.copy : (data: string) => window.navigator.clipboard.writeText(data)
+	const copyFunction = copy ? copy : (data: string) => window.navigator.clipboard.writeText(data)
 	await copyFunction(cssColor)
 
 	emit('color-copy', getColorChangeDetail())
@@ -446,7 +446,7 @@ async function copyColor (): Promise<void> {
 function getColorChangeDetail (): ColorChangeDetail {
 	return {
 		color: toRaw(currentColor.value),
-		cssColor: serialize(currentColor.value, { format: activeFormat.value, alpha: props.alphaChannel === 'show' }),
+		cssColor: serialize(currentColor.value, { format: activeFormat.value, alpha: alphaChannel === 'show' }),
 	}
 }
 

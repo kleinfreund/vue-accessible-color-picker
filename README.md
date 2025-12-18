@@ -190,7 +190,7 @@ Methods that are exposed on the Vue component instance.
 
   This method behaves the same as activating the “Copy color” button.
 
-  **Only works in secure browsing contexts (i.e. HTTPS) unless a `props.copy` is provided**.
+  **Only works in secure browsing contexts (i.e. HTTPS) unless `props.copy` is provided**.
 - **Return type**: `Promise<void>`
 - **Usage**:
 
