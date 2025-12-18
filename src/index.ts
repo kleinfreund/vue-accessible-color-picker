@@ -15,5 +15,4 @@ export default plugin
 export type {
 	ColorChangeDetail,
 	ColorFormat,
-	ColorPickerProps,
 } from './types.js'

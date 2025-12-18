@@ -181,7 +181,6 @@ import { serialize } from './utilities/serialize.js'
 import {
 	ColorChangeDetail,
 	ColorFormat,
-	ColorPickerProps,
 } from './types.js'
 import { getNewThumbPosition } from './utilities/getNewThumbPosition.js'
 import { ALPHA_DEFINITION, CHANNEL_DEFINITIONS, PRECISION } from './constants.js'
@@ -193,7 +192,42 @@ const {
 	defaultFormat = 'hsl',
 	alphaChannel = 'show',
 	copy = undefined,
-} = defineProps<ColorPickerProps>()
+} = defineProps<{
+	/**
+	 * The initially rendered color.
+	 */
+	color?: string | Color
+
+	/**
+	 * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
+	 */
+	copy?: (cssColor: string) => Promise<void> | void
+
+	/**
+	 * The prefix for all ID attribute values used by the color picker.
+	 */
+	id?: string
+
+	/**
+	 * The list of visible color formats.
+	 */
+	visibleFormats?: ColorFormat[]
+
+	/**
+	 * The initially visible color format.
+	 */
+	defaultFormat?: ColorFormat
+
+	/**
+	 * Controls whether the control related to a color’s alpha channel are rendered in the color picker.
+	 *
+	 * The following settings are available:
+	 *
+	 * - **show**: Default. The alpha channel range input and the alpha channel value input are rendered.
+	 * - **hide**: The alpha channel range input and the alpha channel value input are not rendered. The `color-change` event emits a `cssColor` property without the alpha channel part.
+	 */
+	alphaChannel?: 'show' | 'hide'
+}>()
 
 const emit = defineEmits<{
 	'color-change': [ColorChangeDetail]

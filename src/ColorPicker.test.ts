@@ -1,16 +1,11 @@
 import { beforeAll, beforeEach, describe, test, expect, vi, afterEach } from 'vitest'
-import { shallowMount, flushPromises, ComponentMountingOptions, enableAutoUnmount } from '@vue/test-utils'
+import { shallowMount, flushPromises, enableAutoUnmount } from '@vue/test-utils'
 
 import ColorPicker from './ColorPicker.vue'
-import { ColorChangeDetail, ColorPickerProps } from './types.js'
+import { ColorChangeDetail, ColorFormat } from './types.js'
 import { CHANNEL_DEFINITIONS } from './constants.js'
 
-function createWrapper (options: ComponentMountingOptions<typeof ColorPicker, ColorPickerProps> = {}) {
-	options.props = options.props ?? {}
-	options.props.id = options.props.id ?? 'color-picker'
-	options.props.visibleFormats = options.props.visibleFormats ?? ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb']
-	return shallowMount(ColorPicker, options)
-}
+type ColorPickerProps = InstanceType<typeof ColorPicker>['$props']
 
 enableAutoUnmount(afterEach)
 
@@ -27,7 +22,7 @@ describe('ColorPicker', () => {
 	})
 
 	test('can be mounted', () => {
-		const wrapper = createWrapper()
+		const wrapper = shallowMount(ColorPicker)
 
 		expect(wrapper.html()).toBeTruthy()
 	})
@@ -67,7 +62,7 @@ describe('ColorPicker', () => {
 			alphaChannel: 'hide',
 		},
 	])('initializes color space and thumb correctly with default color value', (props) => {
-		const wrapper = createWrapper({
+		const wrapper = shallowMount(ColorPicker, {
 			props: {
 				defaultFormat: 'hex',
 				...props,
@@ -83,7 +78,7 @@ describe('ColorPicker', () => {
 	})
 
 	test('thumb is inside the color space for out-of-gamut colors', () => {
-		const wrapper = createWrapper({
+		const wrapper = shallowMount(ColorPicker, {
 			props: {
 				color: 'oklab(88% 0.145 -0.392)',
 			},
@@ -96,7 +91,7 @@ describe('ColorPicker', () => {
 	})
 
 	test('removes event listeners on unmount', () => {
-		const wrapper = createWrapper()
+		const wrapper = shallowMount(ColorPicker)
 
 		const colorSpace = wrapper.find('.vacp-color-space')
 
@@ -151,7 +146,7 @@ describe('ColorPicker', () => {
 				'#090f',
 			],
 		])('mounts correctly with a valid color prop', (props, expectedHexInputValue) => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					defaultFormat: 'hex',
 					...props,
@@ -163,7 +158,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('mounts correctly with an invalid color prop', () => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: '#ff',
 					defaultFormat: 'hex',
@@ -174,8 +169,8 @@ describe('ColorPicker', () => {
 			expect(input.value).toBe('#ffff')
 		})
 
-		test('falls back to visible color format when defaultFormat isn\'t a visible format', () => {
-			const wrapper = createWrapper({
+		test('falls back to visible color format when default format isn\'t a visible format', () => {
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: '#fff',
 					defaultFormat: 'hsl',
@@ -225,7 +220,12 @@ describe('ColorPicker', () => {
 				['R', 'G', 'B'],
 			],
 		])('sets active color format to “%s” when providing default format prop', (props, expectedLabels) => {
-			const wrapper = createWrapper({ props })
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					visibleFormats: ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb'],
+					...props,
+				},
+			})
 
 			const inputGroupMarkup = wrapper.find('.vacp-color-input-group').html()
 			for (const expectedLabel of expectedLabels) {
@@ -243,7 +243,7 @@ describe('ColorPicker', () => {
 				'rgb(25% 75% 75% / 1)',
 			],
 		])('recomputes colors when color prop changes', async (colorProp, expectedColorChangePayload) => {
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker)
 
 			await wrapper.setProps({ color: colorProp })
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color.to('srgb').toString({ alpha: true })).toEqual(expectedColorChangePayload)
@@ -253,33 +253,25 @@ describe('ColorPicker', () => {
 		})
 
 		test('id attributes are set correctly', async () => {
-			const id = 'test-color-picker'
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
-					id,
+					visibleFormats: ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb'],
 				},
 			})
 			const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
 
-			const hueInput = wrapper.find(`#${id}-hue-slider`)
+			const hueInput = wrapper.find('#color-picker-hue-slider')
 			expect(hueInput.exists()).toBe(true)
-			const alphaInput = wrapper.find(`#${id}-alpha-slider`)
+			const alphaInput = wrapper.find('#color-picker-alpha-slider')
 			expect(alphaInput.exists()).toBe(true)
 
 			for (const [format, channels] of Object.entries(CHANNEL_DEFINITIONS)) {
-				const attributePrefix = `${id}-color-${format}`
+				const attributePrefix = `color-picker-color-${format}`
 
-				expect(wrapper.find(`[id="${attributePrefix}-${channels[0].channel}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${attributePrefix}-${channels[0].channel}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${attributePrefix}-${channels[0].channel}"]`).exists()).toBe(true)
-
-				expect(wrapper.find(`[id="${attributePrefix}-${channels[1].channel}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${attributePrefix}-${channels[1].channel}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${attributePrefix}-${channels[1].channel}"]`).exists()).toBe(true)
-
-				expect(wrapper.find(`[id="${attributePrefix}-${channels[2].channel}-label"]`).exists()).toBe(true)
-				expect(wrapper.find(`[id="${attributePrefix}-${channels[2].channel}"]`).exists()).toBe(true)
-				expect(wrapper.find(`[for="${attributePrefix}-${channels[2].channel}"]`).exists()).toBe(true)
+				for (const { channel } of channels) {
+					expect(wrapper.find(`[id="${attributePrefix}-${channel}"]`).exists()).toBe(true)
+					expect(wrapper.find(`[for="${attributePrefix}-${channel}"]`).exists()).toBe(true)
+				}
 
 				expect(wrapper.find(`[id="${attributePrefix}-alpha"]`).exists()).toBe(true)
 				expect(wrapper.find(`[for="${attributePrefix}-alpha"]`).exists()).toBe(true)
@@ -293,18 +285,16 @@ describe('ColorPicker', () => {
 			[{ alphaChannel: 'hide' }, false, 'hsl(0 0% 50%)'],
 		])('shows/hides correct elements when setting alphaChannel', async (props, isElementVisible, expectedCssColor) => {
 			const id = 'test-color-picker'
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					id,
 					...props,
 				},
 			})
 
-			const alphaInput = wrapper.find(`#${id}-alpha-slider`)
-			expect(alphaInput.exists()).toBe(isElementVisible)
+			expect(wrapper.find(`#${id}-alpha-slider`).exists()).toBe(isElementVisible)
 
-			const colorHslAlphaInput = wrapper.find(`#${id}-color-hsl-alpha`)
-			expect(colorHslAlphaInput.exists()).toBe(isElementVisible)
+			expect(wrapper.find(`#${id}-color-hsl-alpha`).exists()).toBe(isElementVisible)
 
 			const input = wrapper.find<HTMLInputElement>(`#${id}-color-hsl-l`)
 			await input.setValue('50%')
@@ -314,7 +304,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('sets fully-opaque “--vacp-color” custom property', async () => {
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker)
 			expect(wrapper.element.style.getPropertyValue('--vacp-color')).toBe('hsl(0 0% 100%)')
 
 			await wrapper.setProps({
@@ -326,7 +316,7 @@ describe('ColorPicker', () => {
 
 	describe('color space thumb interactions', () => {
 		test('can initiate moving the color space thumb with a pointer device', () => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: '#f80c',
 				},
@@ -354,7 +344,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('can initiate moving the color space thumb with a touch-based device', async () => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: '#f80c',
 				},
@@ -405,7 +395,7 @@ describe('ColorPicker', () => {
 				preventDefault: vi.fn(),
 			}
 
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker)
 
 			const thumb = wrapper.find('.vacp-color-space-thumb')
 			await thumb.trigger('keydown', keydownEvent)
@@ -429,7 +419,7 @@ describe('ColorPicker', () => {
 				preventDefault: vi.fn(),
 			}
 
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					defaultFormat: 'hwb',
 					color: 'hwb(180 25% 50% / 1)',
@@ -445,7 +435,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('moves out-of-gamut color with arrow keys correctly', async () => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: 'oklab(88% 0.145 -0.392)',
 				},
@@ -478,7 +468,7 @@ describe('ColorPicker', () => {
 				shiftKey: false,
 			}
 
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker)
 			const hueRangeInput = wrapper.find<HTMLInputElement>('#color-picker-hue-slider')
 			const hueRangeInputElement = hueRangeInput.element
 			const originalInputValue = hueRangeInputElement.value
@@ -496,7 +486,7 @@ describe('ColorPicker', () => {
 			['increment', 1, 'ArrowRight', '9'],
 			['increment', 3, 'ArrowRight', '27'],
 		])('can %s range inputs %dx in big steps with %s', async (_, numberOfPresses, key, expectedValue) => {
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker)
 			const hueRangeInput = wrapper.find<HTMLInputElement>('#color-picker-hue-slider')
 			const hueRangeInputElement = hueRangeInput.element
 			const keydownEvent = {
@@ -514,7 +504,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('hue slider updates internal colors', async () => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: '#f00',
 				},
@@ -582,7 +572,12 @@ describe('ColorPicker', () => {
 		])('copy button copies %s format as %s', async (props, cssColor) => {
 			vi.spyOn(global.navigator.clipboard, 'writeText').mockImplementation(vi.fn(() => Promise.resolve()))
 
-			const wrapper = createWrapper({ props })
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					visibleFormats: ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb'],
+					...props,
+				},
+			})
 
 			const copyButton = wrapper.find('.vacp-copy-button')
 			await copyButton.trigger('click')
@@ -592,7 +587,7 @@ describe('ColorPicker', () => {
 
 		test('works with alternative copy function', async () => {
 			const spy = vi.fn()
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					copy: spy,
 				},
@@ -605,7 +600,11 @@ describe('ColorPicker', () => {
 
 	describe('switch format button', () => {
 		test('clicking switch format button cycles through active formats correctly', async () => {
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					visibleFormats: ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb'],
+				},
+			})
 			const formatSwitchButton = wrapper.find('.vacp-format-switch-button')
 
 			expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
@@ -636,7 +635,7 @@ describe('ColorPicker', () => {
 		})
 
 		test('exposes switchFormat method', async () => {
-			const wrapper = createWrapper()
+			const wrapper = shallowMount(ColorPicker)
 
 			expect(wrapper.find('#color-picker-color-hsl-l').exists()).toBe(true)
 
@@ -647,26 +646,30 @@ describe('ColorPicker', () => {
 	})
 
 	describe('color value inputs', () => {
-		test.each<[ColorPickerProps, string, string]>([
+		test.each<[ColorFormat, string, string]>([
 			[
-				{ defaultFormat: 'srgb' },
+				'srgb',
 				'r',
 				'127.',
 			],
 			[
-				{ defaultFormat: 'hsl' },
+				'hsl',
 				's',
 				'a',
 			],
 			[
-				{ defaultFormat: 'hwb' },
+				'hwb',
 				'b',
 				'25.%',
 			],
-		])('updating a color input with an invalid value does not update the internal color data', async (props, channel, channelValue) => {
-			const wrapper = createWrapper({ props })
+		])('updating a color input with an invalid value does not update the internal color data', async (format, channel, channelValue) => {
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					defaultFormat: format,
+				},
+			})
 
-			await wrapper.find<HTMLInputElement>(`#${props.id!}-color-${props.defaultFormat!}-${channel}`).setValue(channelValue)
+			await wrapper.find<HTMLInputElement>(`#color-picker-color-${format}-${channel}`).setValue(channelValue)
 			expect(wrapper.emitted<[ColorChangeDetail]>('color-change')).toBe(undefined)
 		})
 
@@ -674,7 +677,7 @@ describe('ColorPicker', () => {
 			['abc'],
 			['25%'],
 		])('updating a hex color input with an invalid value does not update the internal color data', async (invalidHexColorString) => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					defaultFormat: 'hex',
 				},
@@ -684,33 +687,37 @@ describe('ColorPicker', () => {
 			expect(wrapper.emitted<[ColorChangeDetail]>('color-change')).toBe(undefined)
 		})
 
-		test.each<[ColorPickerProps, string, string]>([
+		test.each<[ColorFormat, string, string]>([
 			[
-				{ defaultFormat: 'srgb' },
+				'srgb',
 				'r',
 				'127.5',
 			],
 			[
-				{ defaultFormat: 'hsl' },
+				'hsl',
 				'l',
 				'75%',
 			],
 			[
-				{ defaultFormat: 'hwb' },
+				'hwb',
 				'b',
 				'25.5%',
 			],
-		])('updating a %s color input with a valid value updates the internal color data', async (props, channel, channelValue) => {
-			const wrapper = createWrapper({ props })
+		])('updating a %s color input with a valid value updates the internal color data', async (format, channel, channelValue) => {
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					defaultFormat: format,
+				},
+			})
 
-			await wrapper.find<HTMLInputElement>(`#${props.id!}-color-${props.defaultFormat!}-${channel}`).setValue(channelValue)
+			await wrapper.find<HTMLInputElement>(`#color-picker-color-${format}-${channel}`).setValue(channelValue)
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).length).toBe(1)
 		})
 
 		test.each([
 			['#ff8800cc'],
 		])('updating a %s color input with a valid value updates the internal color data', async (channelValue) => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					defaultFormat: 'hex',
 				},
@@ -754,7 +761,7 @@ describe('ColorPicker', () => {
 				'#123',
 			],
 		])('shows expected color for hex colors', (props, expectedHexColor) => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					defaultFormat: 'hex',
 					...props,
@@ -765,12 +772,10 @@ describe('ColorPicker', () => {
 			expect(input.element.value).toBe(expectedHexColor)
 		})
 
-		test.each<[ColorPickerProps, Record<string, string>]>([
+		test.each<[ColorFormat, string, Record<string, string>]>([
 			[
-				{
-					defaultFormat: 'hsl',
-					color: 'hsl(270 50% 25% / 0.5)',
-				},
+				'hsl',
+				'hsl(270 50% 25% / 0.5)',
 				{
 					h: '270',
 					s: '50%',
@@ -779,10 +784,8 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'hwb',
-					color: 'hwb(180 25% 50% / 100%)',
-				},
+				'hwb',
+				'hwb(180 25% 50% / 100%)',
 				{
 					h: '180',
 					w: '25%',
@@ -791,10 +794,8 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'lab',
-					color: 'lab(55 -71 111 / 1)',
-				},
+				'lab',
+				'lab(55 -71 111 / 1)',
 				{
 					l: '55%',
 					a: '-71',
@@ -803,10 +804,8 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'lch',
-					color: 'lch(69% 7 306)',
-				},
+				'lch',
+				'lch(69% 7 306)',
 				{
 					l: '69%',
 					c: '7',
@@ -815,10 +814,8 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'oklab',
-					color: 'oklab(88% 0.145 -0.392)',
-				},
+				'oklab',
+				'oklab(88% 0.145 -0.392)',
 				{
 					l: '88%',
 					a: '0.145',
@@ -827,10 +824,8 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'oklch',
-					color: 'oklch(93% 0.142 0)',
-				},
+				'oklch',
+				'oklch(93% 0.142 0)',
 				{
 					l: '93%',
 					c: '0.142',
@@ -839,10 +834,8 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'srgb',
-					color: 'rgb(255 127.5 63.75 / .2)',
-				},
+				'srgb',
+				'rgb(255 127.5 63.75 / .2)',
 				{
 					r: '255',
 					g: '127.5',
@@ -851,11 +844,9 @@ describe('ColorPicker', () => {
 				},
 			],
 			[
-				{
-					defaultFormat: 'srgb',
-					// Use `rgba` because `rgb` with percentages isn't parsed by colorjs.io.
-					color: 'rgba(100% 50% 25% / 0)',
-				},
+				'srgb',
+				// Use `rgba` because `rgb` with percentages isn't parsed by colorjs.io.
+				'rgba(100% 50% 25% / 0)',
 				{
 					r: '255',
 					g: '127.5',
@@ -863,17 +854,23 @@ describe('ColorPicker', () => {
 					alpha: '0',
 				},
 			],
-		])('have correct value per channel', (props, expectedInputValues) => {
-			const wrapper = createWrapper({ props })
+		])('have correct value per channel', (format, color, expectedInputValues) => {
+			const wrapper = shallowMount(ColorPicker, {
+				props: {
+					visibleFormats: ['hex', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'srgb'],
+					defaultFormat: format,
+					color,
+				},
+			})
 
 			for (const [channel, expectedValue] of Object.entries(expectedInputValues)) {
-				const input = wrapper.find<HTMLInputElement>(`#color-picker-color-${props.defaultFormat!}-${channel}`)
+				const input = wrapper.find<HTMLInputElement>(`#color-picker-color-${format}-${channel}`)
 				expect(input.element.value).toBe(expectedValue)
 			}
 		})
 
 		test('outputs in-gamut color', () => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					color: 'oklab(88% 0.145 -0.392)',
 					defaultFormat: 'hsl',
@@ -983,10 +980,9 @@ describe('ColorPicker', () => {
 					},
 				},
 			],
-		])('emits correct data', async (props, expectedData) => {
-			const wrapper = createWrapper({ props })
+		])('emits correct data', (props, expectedData) => {
+			const wrapper = shallowMount(ColorPicker, { props })
 
-			await wrapper.setProps({ color: props.color })
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].cssColor).toEqual(expectedData.cssColor)
 			expect((wrapper.emitted<[ColorChangeDetail]>('color-change') ?? []).at(-1)![0].color).toEqual(expect.objectContaining(expectedData.color))
 		})
@@ -1011,7 +1007,7 @@ describe('ColorPicker', () => {
 				},
 			],
 		])('emits correct data', async (props, expectedData) => {
-			const wrapper = createWrapper({ props })
+			const wrapper = shallowMount(ColorPicker, { props })
 
 			const copyButton = wrapper.find('.vacp-copy-button')
 			await copyButton.trigger('click')
@@ -1055,7 +1051,7 @@ describe('ColorPicker', () => {
 				'#123',
 			],
 		])('shows expected color for hex colors', (props, expectedHexColor) => {
-			const wrapper = createWrapper({
+			const wrapper = shallowMount(ColorPicker, {
 				props: {
 					defaultFormat: 'hex',
 					...props,
