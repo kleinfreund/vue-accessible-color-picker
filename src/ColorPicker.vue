@@ -195,7 +195,10 @@ const {
 	copy = undefined,
 } = defineProps<ColorPickerProps>()
 
-const emit = defineEmits<(event: 'color-change' | 'color-copy', data: ColorChangeDetail) => void>()
+const emit = defineEmits<{
+	'color-change': [ColorChangeDetail]
+	'color-copy': [ColorChangeDetail]
+}>()
 
 defineExpose({
 	copyColor,
