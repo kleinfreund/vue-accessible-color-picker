@@ -200,7 +200,7 @@ const j = 5, ye = f(0, 1, 1), A = ge(), w = f(0, 100, 100), J = f(-125, 125, 1),
   __name: "ColorPicker",
   props: {
     color: { default: "#ffffffff" },
-    copy: { type: Function, default: void 0 },
+    copy: { type: Function },
     id: { default: "color-picker" },
     visibleFormats: { default: () => ["hex", "hsl", "hwb", "srgb"] },
     defaultFormat: { default: "hsl" },
