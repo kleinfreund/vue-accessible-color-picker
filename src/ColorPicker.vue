@@ -191,7 +191,7 @@ const {
 	visibleFormats = ['hex', 'hsl', 'hwb', 'srgb'],
 	defaultFormat = 'hsl',
 	alphaChannel = 'show',
-	copy = undefined,
+	copy,
 } = defineProps<{
 	/**
 	 * The initially rendered color.
@@ -201,6 +201,7 @@ const {
 	/**
 	 * Takes a function that will be used in place of `window.navigator.clipboard.writeText` when triggering the color picker's copy color functionality (programmatically or via the UI).
 	 */
+	// eslint-disable-next-line vue/require-default-prop
 	copy?: (cssColor: string) => Promise<void> | void
 
 	/**
