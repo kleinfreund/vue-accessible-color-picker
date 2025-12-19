@@ -5,7 +5,7 @@ import type { ColorFormat } from '../types.js'
 /**
  * Formats a given color object as a CSS color string.
  */
-export function serialize (color: Color, { format = 'srgb', alpha = true, collapse = true }: { format?: ColorFormat, alpha?: boolean, collapse?: boolean } = { format: 'srgb', alpha: true, collapse: true }): string {
+export function serialize (color: Color, { format = 'srgb', alpha = true }: { format?: ColorFormat, alpha?: boolean } = { format: 'srgb', alpha: true }): string {
 	const options: Parameters<typeof color.toString>[0] = {
 		alpha,
 	}
@@ -18,7 +18,7 @@ export function serialize (color: Color, { format = 'srgb', alpha = true, collap
 		}
 	} else if (format === 'hex') {
 		options.format = 'hex'
-		options.collapse = collapse
+		options.collapse = true
 	}
 
 	const spaceId = 'hex' === format ? 'srgb' : format
