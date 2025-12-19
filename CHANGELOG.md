@@ -1,3 +1,55 @@
+## [6.0.0](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.3.1...v6.0.0) (2025-12-19)
+
+### ⚠ BREAKING CHANGES
+
+* Remove the type `ColorPickerProps`.
+* Rename the color format `'rgb'` to `'srgb'` to match `colorjs.io`'s space IDs.
+* Hexadecimal colors entered into the color picker UI are now always collapsed when possible (e.g. “ff0000cc” previously stayed “ff0000cc” but now changes to “f00c” once other color interactions happen).
+* The type `VisibleColorFormat` is removed. **How to update**: Use `ColorFormat` instead.
+* The types `ColorHsl`, `ColorHsv`, `ColorHwb`, `ColorMap`, `ColorPair`, `ColorPairHex`, `ColorPairHsl`, `ColorPairHsv`, `ColorPairHwb`, `ColorPairRgbColorPicker`, `ColorRgb`, and `VisibleColorPair` are removed. They relate to the pervious internal color representation.
+* The `id` attribute values for color `input` and `label` elements and the `for` attribute values for `label` elements have changed for all "Alpha" inputs to include the substring "-alpha" instead of "-a".
+* The prop `color` no longer accepts objects corresponding to the previous internal color representation. **How to update**: Provide a CSS color string or a colorjs.io `Color` object instead.
+* The text input elements in the color picker UI now update the color on the `change` event rather the `input` event.
+
+### Features
+
+* add support for lab/lch/oklab/oklch colors ([b6db1ee](https://github.com/kleinfreund/vue-accessible-color-picker/commit/b6db1eed5a76739ec429c7ff9eb8b1251b438ce7))
+
+  Closes #1.
+
+### Bug Fixes
+
+* **deps:** declaring vue ^3.2 is required instead of ^3.5 ([fbed3cd](https://github.com/kleinfreund/vue-accessible-color-picker/commit/fbed3cd440f65735215d2145ea00ec1e4c0d57f8))
+
+### Miscellaneous Chores
+
+* define props inline ([e0fe444](https://github.com/kleinfreund/vue-accessible-color-picker/commit/e0fe444a55b2da33c300c092080c38f3450f4be4))
+
+  **BREAKING CHANGE**: Remove the type `ColorPickerProps`.
+* rename rgb format to srgb ([a6fb700](https://github.com/kleinfreund/vue-accessible-color-picker/commit/a6fb700169c26605c3f4f899bbc44bf0d29df427))
+
+  **BREAKING CHANGE**: Rename the color format `'rgb'` to `'srgb'` to match `colorjs.io`'s space IDs.
+
+### Code Refactoring
+
+* use colorjs.io for internal color representation ([3e91a5c](https://github.com/kleinfreund/vue-accessible-color-picker/commit/3e91a5c23bd889ca0dc5618f352ba3df42ec8cd1))
+
+  Rewrite most parts of the color picker's logic to use a colorjs.io `Color` object (https://colorjs.io/docs/the-color-object) for the internal color representation instead a custom structure holding objects for the current color in all supported formats. This change externalizes the responsibilities for color parsing, serialization, comparison, and conversion to the colorjs.io package and allows me to remove a lot of code. Additionally, it provides access to newer browser features like colors in CIELAB and Oklab color spaces. As such, the colorjs.io package (https://www.npmjs.com/package/colorjs.io) becomes a dependency of this package. With this change, the package itself is 22.6% smaller (17257 B to 13356 B); however, colorjs.io also becomes a peer dependency of it, making the overall footprint of this package significantly larger. The upside of this tradeoff is that supporting newer color formats becomes much easier (notably, it's now easily possible to add support for lab/lch colors.
+
+  Add `color` property to the `detail` object emitted with the “color-change” and “color-copy” events. The property's value is a colorjs.io `Color` object.
+
+  **BREAKING CHANGE**: Hexadecimal colors entered into the color picker UI are now always collapsed when possible (e.g. “ff0000cc” previously stayed “ff0000cc” but now changes to “f00c” once other color interactions happen).
+
+  **BREAKING CHANGE**: The type `VisibleColorFormat` is removed. **How to update**: Use `ColorFormat` instead.
+
+  **BREAKING CHANGE**: The types `ColorHsl`, `ColorHsv`, `ColorHwb`, `ColorMap`, `ColorPair`, `ColorPairHex`, `ColorPairHsl`, `ColorPairHsv`, `ColorPairHwb`, `ColorPairRgbColorPicker`, `ColorRgb`, and `VisibleColorPair` are removed. They relate to the pervious internal color representation.
+
+  **BREAKING CHANGE**: The `id` attribute values for color `input` and `label` elements and the `for` attribute values for `label` elements have changed for all "Alpha" inputs to include the substring "-alpha" instead of "-a".
+
+  **BREAKING CHANGE**: The prop `color` no longer accepts objects corresponding to the previous internal color representation. **How to update**: Provide a CSS color string or a colorjs.io `Color` object instead.
+
+  **BREAKING CHANGE**: The text input elements in the color picker UI now update the color on the `change` event rather the `input` event.
+
 ## [5.3.1](https://github.com/kleinfreund/vue-accessible-color-picker/compare/v5.3.0...v5.3.1) (2025-07-31)
 
 ### Bug Fixes
