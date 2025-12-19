@@ -49,7 +49,7 @@
 		"lint:types": "vue-tsc --noEmit",
 		"fix": "run-p fix:*",
 		"fix:code": "npm run lint:code -- --fix",
-		"release": "semantic-release",
+		"release": "semantic-release --dry-run",
 		"prepare": "husky",
 		"prepublishOnly": "npm run build"
 	},
