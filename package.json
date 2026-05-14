@@ -69,8 +69,9 @@
 	},
 	"devDependencies": {
 		"@babel/types": "7.29.0",
-		"@commitlint/cli": "20.5.3",
-		"@commitlint/config-conventional": "20.5.3",
+		"@commitlint/cli": "21.0.1",
+		"@commitlint/config-conventional": "21.0.1",
+		"@commitlint/types": "^21.0.1",
 		"@eslint/js": "9.39.4",
 		"@semantic-release/changelog": "6.0.3",
 		"@semantic-release/commit-analyzer": "13.0.1",
