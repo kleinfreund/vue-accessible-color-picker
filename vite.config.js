@@ -18,7 +18,7 @@ export default defineConfig({
 			fileName: 'ColorPicker',
 			formats: ['es'],
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
 				// Controls the file name of the CSS file.
 				assetFileNames: 'ColorPicker.[ext]',

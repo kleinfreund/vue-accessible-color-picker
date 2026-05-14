@@ -1,16 +1,11 @@
 {
+	"include": ["src/**/*", "src/**/*.vue"],
 	"compilerOptions": {
-		"baseUrl": ".",
-		"rootDir": ".",
 		"sourceMap": false,
-		"target": "es2022",
-		"module": "es2022",
+		"target": "ES2024",
+		"module": "ESNext",
 		"moduleResolution": "Bundler",
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"es2022"
-		],
+		"lib": ["ES2024", "DOM", "DOM.Iterable"],
 		"allowUnreachableCode": false,
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
@@ -21,8 +16,5 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"jsx": "preserve"
-	},
-	"include": [
-		"./src"
-	]
+	}
 }
