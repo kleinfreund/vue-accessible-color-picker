@@ -1,4 +1,4 @@
-import eslint from '@eslint/js'
+import js from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import { globalIgnores } from 'eslint/config'
@@ -7,15 +7,14 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfigWithVueTs(
-	{
-		files: ['**/*.ts', '**/*.vue'],
-	},
 	globalIgnores(['coverage/', 'dist/', 'temp/']),
-	eslint.configs.recommended,
+
+	js.configs.recommended,
 	tseslint.configs.strict,
 	tseslint.configs.stylistic,
 	pluginVue.configs['flat/recommended'],
 	vueTsConfigs.strictTypeChecked,
+
 	{
 		languageOptions: {
 			globals: {
